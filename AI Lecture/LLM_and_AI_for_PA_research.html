@@ -187,6 +187,16 @@
     table.compare th:last-child { background: var(--purple); }
     table.compare tr:nth-child(even) td { background: #e8eef5; }
     .banner { text-align: center; padding: 0.65rem; border-radius: 6px; margin-top: 0.75rem; font-weight: 700; }
+    /* ── 슬라이드 27 가독성 보강 ── */
+    #s27 .card {
+      padding: 0.88rem 0.62rem;
+      line-height: 1.35;
+    }
+    #s27 .card small {
+      font-size: 0.75rem;
+      line-height: 1.4;
+      opacity: 0.98;
+    }
     /* ── 슬라이드 2 로드맵 (큰 폰트·시각 보강) ── */
     .slide-s2 .header-bar { padding: 1rem 1.15rem 0.85rem; }
     .slide-s2 .header-bar h1 { font-size: 1.82rem; }
@@ -1508,22 +1518,22 @@ literacy 조절 β=0.15 *</pre></div>
 <section class="slide" id="s27">
   <div class="header-bar"><h1>AI 보조 연구 전 과정 — 통합 워크플로우</h1><p class="sub">LLM Deep Research 중심 + 인간 직접 독해 + 지도교수 면담 루프</p></div>
   <span class="badge">PART 5 | 종합</span>
-  <div class="slide-inner" style="display:flex;flex-wrap:wrap;gap:0.35rem;font-size:0.66rem;">
-    <div class="card" style="background:var(--blue);flex:1;min-width:84px;text-align:center;">① 아이디어<br/><small>LLM Deep Research</small></div>
-    <div class="card" style="background:#0d47a1;flex:1;min-width:84px;text-align:center;">② RQ·가설<br/><small>FINER 점검</small></div>
-    <div class="card" style="background:var(--teal);flex:1;min-width:84px;text-align:center;">③ 핵심 논문 선별<br/><small>Top 10~20</small></div>
-    <div class="card" style="background:#005c8a;flex:1;min-width:84px;text-align:center;">④ 인간 직접 독해<br/><small>중요 논문 정독</small></div>
-    <div class="card" style="background:var(--purple);flex:1;min-width:84px;text-align:center;">⑤ LLM 보조 정리<br/><small>매트릭스·요약</small></div>
-    <div class="card" style="background:#7b3f00;flex:1;min-width:84px;text-align:center;">⑥ 모형·데이터 설계<br/><small>설정→식별→추정</small></div>
-    <div class="card" style="background:var(--red);flex:1;min-width:84px;text-align:center;">⑦ 통계·해석<br/><small>코드·가정 검증</small></div>
-    <div class="card" style="background:#1a5c2a;flex:1;min-width:84px;text-align:center;">⑧ 지도교수 면담<br/><small>피드백 반영 루프</small></div>
-    <div class="card" style="background:#2d2d44;flex:1;min-width:84px;text-align:center;">⑨ 작성·투명 보고<br/><small>SPARRO·COREQ+LLM</small></div>
+  <div class="slide-inner" style="display:flex;flex-wrap:wrap;gap:0.45rem;font-size:0.78rem;">
+    <div class="card" style="background:var(--blue);flex:1;min-width:112px;text-align:center;">① 아이디어<br/><small>LLM Deep Research</small></div>
+    <div class="card" style="background:#0d47a1;flex:1;min-width:112px;text-align:center;">② RQ·가설<br/><small>FINER 점검</small></div>
+    <div class="card" style="background:var(--teal);flex:1;min-width:112px;text-align:center;">③ 핵심 논문 선별<br/><small>Top 10~20</small></div>
+    <div class="card" style="background:#005c8a;flex:1;min-width:112px;text-align:center;">④ 인간 직접 독해<br/><small>중요 논문 정독</small></div>
+    <div class="card" style="background:var(--purple);flex:1;min-width:112px;text-align:center;">⑤ LLM 보조 정리<br/><small>매트릭스·요약</small></div>
+    <div class="card" style="background:#7b3f00;flex:1;min-width:112px;text-align:center;">⑥ 모형·데이터 설계<br/><small>설정→식별→추정</small></div>
+    <div class="card" style="background:var(--red);flex:1;min-width:112px;text-align:center;">⑦ 통계·해석<br/><small>코드·가정 검증</small></div>
+    <div class="card" style="background:#1a5c2a;flex:1;min-width:112px;text-align:center;">⑧ 지도교수 면담<br/><small>피드백 반영 루프</small></div>
+    <div class="card" style="background:#2d2d44;flex:1;min-width:112px;text-align:center;">⑨ 작성·투명 보고<br/><small>SPARRO·COREQ+LLM</small></div>
   </div>
   <div class="slide-inner" style="padding-top:0;">
-    <div class="banner" style="background:var(--navy);color:var(--cyan);font-size:0.76rem;">권장 운영: LLM은 <strong>탐색·정리·초안</strong>을 맡고, 연구자는 <strong>핵심 논문 직접 독해·이론 판단·최종 해석</strong>을 맡는다.</div>
-    <div class="banner" style="background:var(--purple);font-size:0.75rem;">면담 루프 예시: 주 1회(또는 격주) 지도교수 면담 → RQ·모형·식별 이슈 점검 → 다음 주 LLM 작업 범위 재설정</div>
-    <p style="text-align:center;font-size:0.8rem;color:var(--dark);margin:0.55rem 0 0;">실무 팁: 읽을 논문을 <strong>핵심(직독)·주변(LLM 보조)</strong>으로 구분하면 속도와 학술 신뢰성을 동시에 확보할 수 있다.</p>
-    <p style="text-align:center;font-size:0.82rem;color:var(--cyan);"><strong>① Human-in-the-Loop ② 출처 검증 ③ 투명 보고 ④ 지도교수 피드백 기반 반복 개선</strong></p>
+    <div class="banner" style="background:var(--navy);color:var(--cyan);font-size:0.86rem;">권장 운영: LLM은 <strong>탐색·정리·초안</strong>을 맡고, 연구자는 <strong>핵심 논문 직접 독해·이론 판단·최종 해석</strong>을 맡는다.</div>
+    <div class="banner" style="background:var(--purple);font-size:0.84rem;">면담 루프 예시: 주 1회(또는 격주) 지도교수 면담 → RQ·모형·식별 이슈 점검 → 다음 주 LLM 작업 범위 재설정</div>
+    <p style="text-align:center;font-size:0.88rem;color:var(--dark);margin:0.55rem 0 0;">실무 팁: 읽을 논문을 <strong>핵심(직독)·주변(LLM 보조)</strong>으로 구분하면 속도와 학술 신뢰성을 동시에 확보할 수 있다.</p>
+    <p style="text-align:center;font-size:0.9rem;color:var(--cyan);"><strong>① Human-in-the-Loop ② 출처 검증 ③ 투명 보고 ④ 지도교수 피드백 기반 반복 개선</strong></p>
   </div>
   <span class="slide-num">27 / 30</span>
   <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
