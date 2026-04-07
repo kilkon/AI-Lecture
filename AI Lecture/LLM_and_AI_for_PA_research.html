@@ -216,6 +216,60 @@
       line-height: 1.45;
       margin: 0;
     }
+    #s28 .slide-inner.grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      align-items: stretch;
+    }
+    #s28 .slide-inner.grid-2 .card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    /* ── 슬라이드 27~29 화면 활용도 확장 ── */
+    #s27 .slide-inner:first-of-type {
+      min-height: 285px;
+      align-content: stretch;
+      align-items: stretch;
+    }
+    #s27 .slide-inner:first-of-type .card {
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #s27 .slide-inner:last-of-type .banner {
+      padding: 0.76rem 0.9rem;
+      margin-top: 0.62rem;
+    }
+    #s29 .slide-inner {
+      min-height: 510px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    #s29 .grid-3 {
+      margin-top: 0.78rem;
+      gap: 0.82rem;
+      align-items: stretch;
+    }
+    #s29 .grid-3 .card {
+      min-height: 175px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    #s29 .grid-3 .card strong {
+      font-size: 1.02rem;
+      line-height: 1.3;
+    }
+    #s29 .grid-3 .card p {
+      font-size: 0.88rem;
+      line-height: 1.4;
+      margin-top: 0.35rem;
+    }
     /* ── 슬라이드 2 로드맵 (큰 폰트·시각 보강) ── */
     .slide-s2 .header-bar { padding: 1rem 1.15rem 0.85rem; }
     .slide-s2 .header-bar h1 { font-size: 1.82rem; }
