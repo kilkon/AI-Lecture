@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>COREQ+LLM 보고 점검 리스트 | 행정학 연구</title>
+  <style>
+    :root {
+      --navy: #0d1b3e;
+      --blue: #1a5cb5;
+      --cyan: #00c2d4;
+      --light: #f2f4f8;
+      --dark: #333344;
+      --gold: #f5a623;
+      --purple: #5b279a;
+      --teal: #006a4e;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 18px; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.65;
+      padding-bottom: 3.5rem;
+    }
+    .subpage-step-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      padding: 0.5rem 1rem;
+      background: rgba(13, 27, 62, 0.97);
+      border-top: 3px solid var(--cyan);
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.2);
+    }
+    .subpage-step-nav a {
+      display: inline-block;
+      padding: 0.45rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--blue);
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    .subpage-step-nav a:hover { background: #256fd4; }
+    .subpage-step-nav span { color: var(--gold); font-size: 0.78rem; font-weight: 700; }
+    .top-nav {
+      background: var(--navy);
+      color: var(--cyan);
+      padding: 0.65rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 4px solid var(--cyan);
+    }
+    .top-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .top-nav a:hover { color: var(--gold); }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+    h1 {
+      color: var(--navy);
+      font-size: 1.55rem;
+      margin: 0 0 0.35rem;
+      border-left: 6px solid var(--teal);
+      padding-left: 0.75rem;
+    }
+    .lead {
+      color: var(--purple);
+      font-weight: 600;
+      margin: 0 0 1.25rem;
+      font-size: 0.98rem;
+    }
+    h2 {
+      color: var(--navy);
+      font-size: 1.18rem;
+      margin: 2rem 0 0.65rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--cyan);
+    }
+    h3 { color: var(--blue); font-size: 1.02rem; margin: 1.25rem 0 0.5rem; }
+    p { margin: 0.65rem 0; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.35rem; }
+    li { margin: 0.35rem 0; }
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+      margin: 0.75rem 0;
+    }
+    .checklist li {
+      position: relative;
+      padding-left: 1.5rem;
+      margin: 0.45rem 0;
+      border-left: 3px solid #b8e0d4;
+      padding-top: 0.15rem;
+      padding-bottom: 0.15rem;
+      background: #f4fbf8;
+      border-radius: 0 6px 6px 0;
+    }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0.35rem;
+      color: var(--teal);
+      font-weight: bold;
+    }
+    .callout {
+      background: var(--navy);
+      color: #fff;
+      padding: 1rem 1.15rem;
+      border-radius: 8px;
+      border-left: 5px solid var(--gold);
+      margin: 1rem 0;
+      font-size: 0.92rem;
+    }
+    .callout strong { color: var(--cyan); }
+    .warn {
+      background: #fff8e8;
+      border: 1px solid var(--gold);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+      font-size: 0.9rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+      margin: 0.75rem 0;
+    }
+    th, td { border: 1px solid #ccd; padding: 0.5rem 0.6rem; text-align: left; vertical-align: top; }
+    th { background: var(--navy); color: #fff; width: 26%; }
+    tr:nth-child(even) td { background: #e8eef5; }
+    .cite {
+      font-size: 0.84rem;
+      color: #555;
+      margin-top: 1.5rem;
+      padding: 0.85rem;
+      background: #fff;
+      border: 1px solid #ccd;
+      border-radius: 8px;
+    }
+    .references {
+      font-size: 0.86rem;
+      line-height: 1.55;
+      margin-top: 1.5rem;
+      padding: 1rem 1.1rem;
+      background: #fff;
+      border: 1px solid #c5d4e8;
+      border-radius: 8px;
+      border-left: 5px solid var(--navy);
+    }
+    .references h2 {
+      margin-top: 0;
+      border-bottom: none;
+      font-size: 1.15rem;
+    }
+    .references p {
+      margin: 0.65rem 0;
+      padding-left: 2rem;
+      text-indent: -2rem;
+    }
+    .references a { color: var(--blue); word-break: break-all; }
+    ol.coreq32 {
+      margin: 0.6rem 0 1rem;
+      padding-left: 1.5rem;
+      font-size: 0.86rem;
+    }
+    ol.coreq32 > li { margin: 0.5rem 0; }
+    ol.coreq32 .ko {
+      display: block;
+      color: #555;
+      font-size: 0.92em;
+      margin-top: 0.2rem;
+    }
+    .domain-label {
+      font-weight: 700;
+      color: var(--teal);
+      font-size: 0.9rem;
+      margin: 1.1rem 0 0.35rem;
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 2px solid var(--navy);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="LLM_and_AI_for_PA_research.html#s6">← 강의 6쪽(AI 활용 원칙 3가지)으로 돌아가기</a>
+    <span style="color:var(--gold);font-size:0.8rem;">투명한 보고 · COREQ+LLM</span>
+  </nav>
+
+  <div class="wrap">
+    <h1>COREQ+LLM 보고 점검 리스트</h1>
+    <p class="lead">강의 6쪽 <strong>③ 투명한 보고</strong> 보충. 질적 연구에서 LLM을 사용할 때 논문·프로토콜에 투명히 담아야 할 항목을 점검표 형태로 정리한다.</p>
+
+    <div class="callout">
+      <strong>전제</strong> — 아래 <strong>COREQ 32문항</strong>은 Tong et al.(2007) 원문의 보고 촉구 문항이다. 「LLM 확장」 항목은 Fehring et al.(2025) 프로토콜의 취지에 맞춘 <strong>연구·교육용 점검표</strong>이며, 최종 확정 체크리스트는 공식 COREQ+LLM 개정본을 따른다.
+    </div>
+
+    <h2 id="coreq32">1. COREQ 32문항 체크리스트 (원문·요지)</h2>
+    <p>면접·포커스그룹 질적 연구 보고에 쓰이는 <strong>COREQ</strong> 전체 문항이다. 영문은 Tong et al.(2007)의 보고 촉구 표현을 따르며, 한 줄은 이해 보조용 요지이다.</p>
+
+    <p class="domain-label">도메인 1 — 연구팀 및 성찰 (Research team and reflexivity) · 항목 1–8</p>
+    <ol class="coreq32">
+      <li>Which author conducted the interview or focus group?<span class="ko">누가 면접·포커스그룹을 진행하였는가.</span></li>
+      <li>What were the credentials of the interviewer/facilitator?<span class="ko">진행자의 자격·학위·직함 등.</span></li>
+      <li>What was the occupation of the interviewer/facilitator during the study?<span class="ko">연구 시점 진행자의 직업·소속.</span></li>
+      <li>What was the gender of the interviewer/facilitator?<span class="ko">진행자 성별.</span></li>
+      <li>What experience or training did the interviewer have?<span class="ko">진행자의 경험·훈련.</span></li>
+      <li>Was a relationship established prior to study commencement?<span class="ko">연구 시작 전 참여자와의 관계 형성 여부.</span></li>
+      <li>What knowledge did participants have of the interviewer?<span class="ko">참여자가 진행자에 대해 알고 있던 정보.</span></li>
+      <li>What characteristics of the interviewer were reported?<span class="ko">보고된 진행자의 기타 특성.</span></li>
+    </ol>
+
+    <p class="domain-label">도메인 2 — 연구 설계 (Study design) · 항목 9–23</p>
+    <ol class="coreq32" start="9">
+      <li>What were the research questions?<span class="ko">연구 질문.</span></li>
+      <li>What was the theoretical framework?<span class="ko">이론·방법론적 틀.</span></li>
+      <li>How were participants selected?<span class="ko">참여자 선정 방식.</span></li>
+      <li>How were participants approached?<span class="ko">접촉·모집 방법.</span></li>
+      <li>What was the sample size?<span class="ko">표본 크기.</span></li>
+      <li>How many people refused to participate or dropped out? Reasons?<span class="ko">거절·탈락 인원 및 사유.</span></li>
+      <li>What was the setting of data collection?<span class="ko">자료수집 장소·맥락.</span></li>
+      <li>Were others present besides participants and researchers?<span class="ko">참여자·연구자 외 동석자 여부.</span></li>
+      <li>What was the sample description?<span class="ko">표본의 기술·특성.</span></li>
+      <li>Was an interview guide used?<span class="ko">면접 안내지(가이드) 사용 여부.</span></li>
+      <li>Were repeat interviews carried out?<span class="ko">재면접 실시 여부.</span></li>
+      <li>Was audio/visual recording used?<span class="ko">녹음·녹화 여부.</span></li>
+      <li>Were field notes made during and/or after interviews?<span class="ko">현장 기록 여부.</span></li>
+      <li>What was the duration of interviews?<span class="ko">면접 소요 시간.</span></li>
+      <li>Was data saturation discussed?<span class="ko">자료 포화에 대한 논의 여부.</span></li>
+    </ol>
+
+    <p class="domain-label">도메인 3 — 분석 및 결과 (Analysis and findings) · 항목 24–32</p>
+    <ol class="coreq32" start="24">
+      <li>Were transcripts returned to participants for comment and/or correction?<span class="ko">녹취록을 참여자에게 돌려 검토·수정 요청하였는지.</span></li>
+      <li>How many people coded the data?<span class="ko">코더 수.</span></li>
+      <li>Was a coding tree described?<span class="ko">코딩 체계·트리 기술 여부.</span></li>
+      <li>How were themes derived?<span class="ko">주제 도출 과정.</span></li>
+      <li>Was software used?<span class="ko">분석 소프트웨어 사용 여부.</span></li>
+      <li>Was participant checking used?<span class="ko">참여자 검토(member checking) 여부.</span></li>
+      <li>Were quotations presented to illustrate the findings?<span class="ko">발견을 뒷받침하는 인용문 제시 여부.</span></li>
+      <li>Were the data consistent with the theoretical framework?<span class="ko">자료가 이론적 틀과 어떻게 부합하는지.</span></li>
+      <li>Was there discussion of reflexivity?<span class="ko">성찰(reflexivity) 논의 여부.</span></li>
+    </ol>
+
+    <p style="font-size:0.88rem;color:#555;">원문·번호 체계는 <a href="https://doi.org/10.1093/intqhc/mzm042">Tong et al.(2007)</a> 및 <a href="https://www.equator-network.org/reporting-guidelines/coreq/">EQUATOR Network COREQ 안내</a>와 대조한다.</p>
+
+    <h2 id="llm">2. LLM 확장 보고 점검 항목 (COREQ+LLM 취지)</h2>
+    <p>다음은 질적 연구에서 LLM을 <strong>코딩·주제 도출·요약·번역 초안·해석 보조</strong> 등에 사용할 때, 방법·부록·보충자료에 서술하거나 점검할 항목이다.</p>
+
+    <h3>2-1. 도구·환경</h3>
+    <ul class="checklist">
+      <li>사용한 생성형 AI의 <strong>제품명·제공자</strong>(예: 특정 챗봇·API 서비스)을 밝혔는가.</li>
+      <li><strong>모델명·버전·접근 방식</strong>(웹 UI·API·배치 작업 등)과 <strong>사용 일자·시점</strong>을 명시하였는가.</li>
+      <li>동일 작업을 <strong>재실행</strong>할 경우 결과가 달라질 수 있음을 인지하고, 서술·부록에서 그 한계를 밝혔는가.</li>
+    </ul>
+
+    <h3>2-2. 프롬프트·역할</h3>
+    <ul class="checklist">
+      <li>연구 단계별로 <strong>역할 프롬프트·지시문</strong>의 요지(또는 전문·해시·부록 링크)를 제시하였는가.</li>
+      <li>민감한 원시 발화가 <strong>프롬프트에 직접 입력</strong>되었는지, <strong>가명·추출문</strong>만 입력되었는지 구분하였는가.</li>
+      <li>다단계 대화에서 <strong>맥락 누적</strong>이 분석에 미친 영향을 설명할 수 있는가.</li>
+    </ul>
+
+    <h3>2-3. 데이터·분석 경계</h3>
+    <ul class="checklist">
+      <li>LLM 산출물이 <strong>코드·범주·주제</strong>에 어떻게 반영되었는지(직접 채택·참고·폐기 기준)를 서술하였는가.</li>
+      <li>인간 연구자의 <strong>코딩·재해석·합의</strong> 과정이 병행되었는지, 그 비중과 절차를 밝혔는가.</li>
+      <li>인용·발취가 LLM 요약이 아닌 <strong>원 자료 대조</strong>에 기초함을 보장하였는가.</li>
+    </ul>
+
+    <h3>2-4. 윤리·품질</h3>
+    <ul class="checklist">
+      <li>참여자 동의·기관 윤리 심의 범위 내에서 LLM 사용이 <strong>허용되는지</strong> 확인하였는가.</li>
+      <li><strong>할루시네이션·편향</strong>에 대한 검증 절차(교차 검토, 소규모 수동 검증 등)를 기술하였는가.</li>
+      <li><strong>저자 기여·CRediT</strong> 및 저널의 생성형 AI 공개 규정을 충족하였는가.</li>
+    </ul>
+
+    <h2 id="other">3. 질적 연구 외 논문과의 병행</h2>
+    <p>양적·혼합·서베이 연구 등에서는 <strong>ICMJE 권고</strong>, <strong>COPE</strong>, 해당 <strong>저널·학회의 AI·저작권 정책</strong>을 병행하여 고려한다. 공통축은 <strong>적용 위치·목적의 공개</strong>와 <strong>최종 학술 책임의 연구자 귀속</strong>이다.</p>
+
+    <div class="warn">
+      <strong>주의</strong> — 본 점검표는 강의·초안 작성용이다. 투고 전에는 <strong>대상 저널의 최신 저자 지침</strong>과 공식 COREQ+LLM 개정문을 반드시 대조한다.
+    </div>
+
+    <div class="references" id="references">
+      <h2>참고문헌 (APA 7판)</h2>
+      <p>Committee on Publication Ethics. (n.d.). <em>Resources and guidance for editors</em>. Retrieved March 27, 2026, from <a href="https://publicationethics.org/">https://publicationethics.org/</a></p>
+      <p>EQUATOR Network. (n.d.). <em>Consolidated criteria for reporting qualitative research (COREQ): A 32-item checklist for interviews and focus groups</em> [Reporting guideline summary]. Retrieved March 27, 2026, from <a href="https://www.equator-network.org/reporting-guidelines/coreq/">https://www.equator-network.org/reporting-guidelines/coreq/</a></p>
+      <p>Fehring, L., Frings, J., Rust, P., Kempny, C., Thürmann, P. A., &amp; Meister, S. (2025). Extension of the consolidated criteria for reporting qualitative research guideline to large language models (COREQ+LLM): Protocol for a multiphase study. <em>JMIR Research Protocols</em>, <em>14</em>, Article e78682. <a href="https://doi.org/10.2196/78682">https://doi.org/10.2196/78682</a></p>
+      <p>International Committee of Medical Journal Editors. (2024). <em>Recommendations for the conduct, reporting, editing, and publication of scholarly work in medical journals</em>. Retrieved March 27, 2026, from <a href="https://www.icmje.org/recommendations/">https://www.icmje.org/recommendations/</a></p>
+      <p>Tong, A., Sainsbury, P., &amp; Craig, J. (2007). Consolidated criteria for reporting qualitative research (COREQ): A 32-item checklist for interviews and focus groups. <em>International Journal for Quality in Health Care</em>, <em>19</em>(6), 349–357. <a href="https://doi.org/10.1093/intqhc/mzm042">https://doi.org/10.1093/intqhc/mzm042</a></p>
+    </div>
+
+    <footer>
+      <p><a href="LLM_and_AI_for_PA_research.html#s6" style="color:var(--blue);font-weight:700;">← 강의 6쪽</a>
+        &nbsp;|&nbsp;
+        <a href="LLM_and_AI_for_PA_research.html#s7" style="color:var(--blue);font-weight:700;">강의 7쪽(Promptology) →</a>
+      </p>
+    </footer>
+  </div>
+
+  <div class="subpage-step-nav" aria-label="강의 이동">
+    <a href="LLM_and_AI_for_PA_research.html#s6">◀ 이전 · 강의 6쪽</a>
+    <span>COREQ+LLM 리스트</span>
+    <a href="LLM_and_AI_for_PA_research.html#s7">다음 · 강의 7쪽 ▶</a>
+  </div>
+</body>
+</html>

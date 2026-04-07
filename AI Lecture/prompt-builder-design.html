@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>프롬프트 형성기(Prompt Builder) 설계 고려사항 | 행정학 연구 강의</title>
+  <style>
+    :root {
+      --navy: #0d1b3e;
+      --blue: #1a5cb5;
+      --cyan: #00c2d4;
+      --light: #f2f4f8;
+      --dark: #333344;
+      --gold: #f5a623;
+      --purple: #5b279a;
+      --teal: #006a4e;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 18px; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.65;
+      padding-bottom: 3.5rem;
+    }
+    .body-columns {
+      display: flex;
+      align-items: flex-start;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .toc-panel {
+      flex: 0 0 200px;
+      position: sticky;
+      top: 3.35rem;
+      align-self: flex-start;
+      max-height: calc(100vh - 3.35rem - 3.75rem);
+      overflow-y: auto;
+      padding: 1rem 0.7rem 1.2rem 0.9rem;
+      border-right: 1px solid #c5d4e8;
+      background: #fff;
+      box-shadow: 2px 0 12px rgba(13, 27, 62, 0.06);
+    }
+    .toc-panel > strong {
+      display: block;
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      color: var(--teal);
+      margin-bottom: 0.55rem;
+    }
+    .toc-panel nav { display: flex; flex-direction: column; gap: 0.12rem; }
+    .toc-panel a {
+      color: var(--navy);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 0.28rem 0.35rem;
+      border-radius: 6px;
+      line-height: 1.3;
+    }
+    .toc-panel a:hover { background: #e8f4fc; color: var(--blue); }
+    .layout-main { flex: 1; min-width: 0; }
+    @media (max-width: 880px) {
+      .body-columns { flex-direction: column; }
+      .toc-panel {
+        position: relative;
+        top: auto;
+        max-height: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid var(--cyan);
+      }
+      .toc-panel nav { flex-direction: row; flex-wrap: wrap; gap: 0.25rem; }
+    }
+    nav.top {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--navy);
+      padding: 0.55rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      align-items: center;
+      border-bottom: 4px solid var(--teal);
+    }
+    nav.top a { color: #fff; text-decoration: none; font-size: 0.88rem; }
+    nav.top a:hover { color: var(--gold); }
+    .wrap { max-width: 880px; margin: 0; padding: 1.15rem 1.2rem 2.5rem 1rem; }
+    h1 {
+      color: var(--navy);
+      font-size: 1.38rem;
+      margin: 0 0 0.35rem;
+      border-left: 6px solid var(--gold);
+      padding-left: 0.75rem;
+      line-height: 1.35;
+    }
+    .sub { color: var(--teal); font-weight: 700; margin: 0 0 1rem; font-size: 0.92rem; }
+    .lead {
+      background: linear-gradient(135deg, #e8f6f0 0%, #e8f4fc 100%);
+      border-left: 5px solid var(--teal);
+      padding: 0.9rem 1rem;
+      border-radius: 8px;
+      margin: 1rem 0 1.25rem;
+      font-size: 0.94rem;
+    }
+    h2 {
+      color: var(--navy);
+      font-size: 1.08rem;
+      margin: 2rem 0 0.6rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 3px solid var(--cyan);
+      scroll-margin-top: 3.6rem;
+    }
+    h3 { color: var(--blue); font-size: 0.98rem; margin: 1.1rem 0 0.4rem; scroll-margin-top: 3.6rem; }
+    p { margin: 0.5rem 0; }
+    table.pb {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      margin: 0.65rem 0;
+    }
+    table.pb th, table.pb td {
+      border: 1px solid #c5d4e8;
+      padding: 0.45rem 0.5rem;
+      vertical-align: top;
+      text-align: left;
+    }
+    table.pb th { background: var(--navy); color: #fff; }
+    table.pb tr:nth-child(even) td { background: #f4f7fb; }
+    .callout {
+      background: #fff8e8;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      margin: 0.75rem 0;
+      font-size: 0.88rem;
+    }
+    .cat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.65rem;
+      margin: 0.75rem 0;
+      font-size: 0.82rem;
+    }
+    @media (max-width: 640px) { .cat-grid { grid-template-columns: 1fr; } }
+    .cat-card {
+      background: #fff;
+      border: 1px solid #c5d4e8;
+      border-radius: 8px;
+      padding: 0.65rem 0.75rem;
+      border-top: 4px solid var(--teal);
+    }
+    .cat-card h4 { margin: 0 0 0.35rem; font-size: 0.88rem; color: var(--navy); }
+    .cat-card ul { margin: 0.25rem 0; padding-left: 1.1rem; }
+    .ux-flow {
+      background: #fff;
+      border: 1px solid #c5d4e8;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin: 0.75rem 0;
+      font-size: 0.84rem;
+    }
+    .ux-flow ol { margin: 0.35rem 0; padding-left: 1.2rem; }
+    .ux-flow li { margin: 0.35rem 0; }
+    .ux-sample {
+      background: #0d0d1a;
+      color: #c8e6c9;
+      font-size: 0.74rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      margin: 0.5rem 0;
+      white-space: pre-wrap;
+      font-family: Consolas, "Courier New", monospace;
+    }
+    pre.json {
+      background: #1a1a2e;
+      color: #a8e6cf;
+      font-size: 0.7rem;
+      line-height: 1.45;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 0.65rem 0;
+    }
+    .ethics-list {
+      background: #fdf6f6;
+      border-left: 4px solid #c0392b;
+      padding: 0.65rem 0.85rem 0.65rem 1rem;
+      margin: 0.65rem 0;
+      font-size: 0.86rem;
+    }
+    .ethics-list ol { margin: 0.35rem 0; padding-left: 1.15rem; }
+    .ethics-list li { margin: 0.4rem 0; }
+    hr.sep { border: none; border-top: 1px dashed #b8c5d8; margin: 1.5rem 0; }
+    .subpage-step-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      padding: 0.5rem 1rem;
+      background: rgba(13, 27, 62, 0.97);
+      border-top: 3px solid var(--gold);
+    }
+    .subpage-step-nav a {
+      display: inline-block;
+      padding: 0.45rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--blue);
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    .subpage-step-nav a:hover { background: #256fd4; }
+    .subpage-step-nav span { color: var(--gold); font-size: 0.76rem; font-weight: 700; }
+    footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 2px solid var(--navy);
+      font-size: 0.84rem;
+    }
+  </style>
+</head>
+<body>
+  <nav class="top">
+    <a href="LLM_and_AI_for_PA_research.html#s8">← 강의 8쪽 · 프롬프트 기법</a>
+    <a href="prompt-engineering-chatgpt-gemini.html">ChatGPT vs Gemini 요약 →</a>
+  </nav>
+
+  <div class="body-columns">
+    <aside class="toc-panel" aria-label="목차">
+      <strong>목차</strong>
+      <nav>
+        <a href="#philosophy">I. 설계 철학</a>
+        <a href="#anatomy">II. 8요소</a>
+        <a href="#frameworks">III. 프레임워크</a>
+        <a href="#categories">IV. 목적 분류</a>
+        <a href="#ux">V. UX 흐름</a>
+        <a href="#tech">VI. 기술 구현</a>
+        <a href="#ethics">VII. 윤리</a>
+        <a href="#quality">VIII. 품질 평가</a>
+        <a href="#summary">IX. 핵심 질문</a>
+      </nav>
+    </aside>
+    <div class="layout-main">
+      <div class="wrap">
+        <h1>프롬프트 형성기(Prompt Builder) 설계 고려사항</h1>
+        <p class="sub">대학원생 대상 · 지식 생산을 돕는 지적 도구로 설계하기</p>
+
+        <div class="lead">
+          <strong>핵심:</strong> 단순 문자열 조합기가 아니라, <strong>연구·학습 맥락에서 재사용 가능한 지시문을 체계적으로 만드는 도구</strong>로 본다. 아래는 기획·설계 시 참고할 수 있는 정리이다.
+        </div>
+
+        <h2 id="philosophy">I. 설계 철학 — 무엇을 만들 것인가</h2>
+        <p>형성기의 방향을 먼저 정한다. 대략 세 유형으로 나눌 수 있다.</p>
+        <table class="pb">
+          <tr>
+            <th style="width:18%;">유형</th>
+            <th>개념</th>
+            <th style="width:28%;">적합 대상</th>
+          </tr>
+          <tr>
+            <td><strong>① 템플릿형</strong></td>
+            <td>미리 만든 틀의 빈칸을 채움</td>
+            <td>입문, 빠른 사용</td>
+          </tr>
+          <tr>
+            <td><strong>② 가이드형</strong></td>
+            <td>단계별 질문에 답하면 프롬프트 완성</td>
+            <td>중급, 학습 병행</td>
+          </tr>
+          <tr>
+            <td><strong>③ 프레임워크형</strong></td>
+            <td>이론 기반 구조(예: PACE, RCTF 등)로 조립</td>
+            <td>연구자·고급 사용자</td>
+          </tr>
+        </table>
+        <div class="callout">
+          <strong>대학원생 대상 권장:</strong> <strong>②+③ 혼합</strong> — 가이드 질문으로 입력을 받고, 선택한 프레임워크에 맞춰 조립하는 방식.
+        </div>
+
+        <h2 id="anatomy">II. 핵심 구성 요소 — 최대 8요소</h2>
+        <p>형성기가 어떤 칸을 노출할지 결정할 때 쓸 수 있는 분해표이다. <strong>ROLE·TASK·FORMAT</strong>을 필수에 두고, 나머지는 선택 옵션으로 두는 식이 일반적이다.</p>
+        <table class="pb">
+          <tr>
+            <th>요소</th>
+            <th>의미</th>
+            <th>예시</th>
+          </tr>
+          <tr>
+            <td><strong>ROLE</strong></td>
+            <td>AI 역할</td>
+            <td>「행정학 교수로서」</td>
+          </tr>
+          <tr>
+            <td><strong>CONTEXT</strong></td>
+            <td>배경·맥락</td>
+            <td>「한국 행정학 석사 과정」</td>
+          </tr>
+          <tr>
+            <td><strong>TASK</strong></td>
+            <td>구체 과제</td>
+            <td>「연구 질문 5개 생성」</td>
+          </tr>
+          <tr>
+            <td><strong>FORMAT</strong></td>
+            <td>출력 형식·구조</td>
+            <td>「표 형식으로」</td>
+          </tr>
+          <tr>
+            <td><strong>TONE</strong></td>
+            <td>어조·스타일</td>
+            <td>「학술적으로」</td>
+          </tr>
+          <tr>
+            <td><strong>LENGTH</strong></td>
+            <td>분량·깊이</td>
+            <td>「각 항목 3줄 이내」</td>
+          </tr>
+          <tr>
+            <td><strong>EXAMPLE</strong></td>
+            <td>참고 예시</td>
+            <td>「다음 형식 참고: …」</td>
+          </tr>
+          <tr>
+            <td><strong>CONSTRAIN</strong></td>
+            <td>제약·금지</td>
+            <td>「추측 금지, 출처만」</td>
+          </tr>
+        </table>
+        <p style="font-size:0.86rem;color:#444;">필수 최소: <strong>ROLE + TASK + FORMAT</strong> · 나머지 5개는 과제에 따라 추가.</p>
+
+        <h2 id="frameworks">III. 프레임워크 선택</h2>
+        <p>대학원생용 형성기에 얹을 수 있는 대표 패턴 비교.</p>
+        <table class="pb">
+          <tr>
+            <th>프레임워크</th>
+            <th>구성</th>
+            <th>강점</th>
+            <th>적합 용도</th>
+          </tr>
+          <tr>
+            <td><strong>P.A.C.E.</strong></td>
+            <td>Purpose · Action · Context · Explain</td>
+            <td>직관적, 빠른 학습</td>
+            <td>일반 학습 프롬프트</td>
+          </tr>
+          <tr>
+            <td><strong>R.C.T.F.</strong></td>
+            <td>Role · Context · Task · Format</td>
+            <td>역할·구조가 분명</td>
+            <td>연구·분석 프롬프트</td>
+          </tr>
+          <tr>
+            <td><strong>T.A.G.</strong></td>
+            <td>Task · Action · Goal</td>
+            <td>목표 지향, 단순</td>
+            <td>단일 과제</td>
+          </tr>
+          <tr>
+            <td><strong>C.R.E.A.T.E.</strong></td>
+            <td>Context · Role · Explain · Action · Type · Examples</td>
+            <td>구성이 촘촘함</td>
+            <td>복합 연구 작업</td>
+          </tr>
+          <tr>
+            <td><strong>S.P.I.N.</strong></td>
+            <td>Situation · Problem · Implication · Need</td>
+            <td>문제 해결 지향</td>
+            <td>정책·행정 분석</td>
+          </tr>
+        </table>
+        <div class="callout">
+          <strong>연구용 조합 예:</strong> <strong>R.C.T.F.</strong>를 기본 골격으로 두고, <strong>EXAMPLE + CONSTRAIN</strong>을 심화 옵션으로 연결.
+        </div>
+
+        <h2 id="categories">IV. 사용 목적별 분류(6카테고리)</h2>
+        <p>형성기에서 “목적 선택” 단계에 쓸 수 있는 상위 분류 예시이다.</p>
+        <div class="cat-grid">
+          <div class="cat-card">
+            <h4>[1] 학습·이해</h4>
+            <ul>
+              <li>개념 설명, 비교 분석</li>
+              <li>시험 준비, 오답 분석</li>
+            </ul>
+          </div>
+          <div class="cat-card">
+            <h4>[2] 연구·논문</h4>
+            <ul>
+              <li>연구 질문·문헌 갭·가설</li>
+              <li>방법론 선택, 논문 피드백</li>
+            </ul>
+          </div>
+          <div class="cat-card">
+            <h4>[3] 과제·발표</h4>
+            <ul>
+              <li>보고서 개요, 논증 구성</li>
+              <li>발표 스크립트, Q&amp;A 준비</li>
+            </ul>
+          </div>
+          <div class="cat-card">
+            <h4>[4] 커리어·개발</h4>
+            <ul>
+              <li>역량 진단, 학습 로드맵</li>
+              <li>자기소개서, 면접 준비</li>
+            </ul>
+          </div>
+          <div class="cat-card">
+            <h4>[5] 정책·행정</h4>
+            <ul>
+              <li>정책 분석, 거버넌스·규제</li>
+              <li>사례 분석</li>
+            </ul>
+          </div>
+          <div class="cat-card">
+            <h4>[6] 비판·검증</h4>
+            <ul>
+              <li>AI 출력 사실 확인, 논리 오류</li>
+              <li>편향·윤리 점검</li>
+            </ul>
+          </div>
+        </div>
+
+        <h2 id="ux">V. UX 흐름(4단계)</h2>
+        <div class="ux-flow">
+          <ol>
+            <li><strong>목적 선택</strong> — 위 카테고리 카드(또는 유사 UI)에서 선택. 「무엇을 하려는가?」를 고정.</li>
+            <li><strong>세부 입력</strong> — 가이드형 질문: 분야/주제, AI 역할, 출력 형식, 분량·수준, 제약(선택) 등.</li>
+            <li><strong>생성·미리보기</strong> — 조합된 프롬프트 표시, <strong>복사·수정·저장</strong> 제공.</li>
+            <li><strong>자가 점검</strong> — 역할·맥락·과제·형식·윤리 등 체크리스트(아래 VIII과 연계 가능).</li>
+          </ol>
+          <p style="margin:0.5rem 0 0;font-size:0.8rem;color:#555;">생성 결과 예시 블록은 연구 주제에 맞게 변수 치환한 문자열로 보여 주면 된다.</p>
+          <div class="ux-sample">당신은 {role}입니다. {context} 맥락에서 {task}을(를) {format}에 맞게 작성하세요.
+{constraints}</div>
+        </div>
+
+        <h2 id="tech">VI. 기술 구현 옵션</h2>
+        <table class="pb">
+          <tr>
+            <th>방식</th>
+            <th>도구·기술</th>
+            <th style="width:12%;">난이도</th>
+            <th>특징</th>
+          </tr>
+          <tr>
+            <td>노코드형</td>
+            <td>Notion, Google Forms + Apps Script 등</td>
+            <td>낮음</td>
+            <td>빠른 프로토타입, UX 제약</td>
+          </tr>
+          <tr>
+            <td>로우코드형</td>
+            <td>Bubble, Glide, Webflow 등</td>
+            <td>중간</td>
+            <td>중간 수준 커스터마이징</td>
+          </tr>
+          <tr>
+            <td>풀코드형</td>
+            <td>HTML·CSS·JS 정적 페이지</td>
+            <td>중~높음</td>
+            <td>제어·오프라인 배포 용이</td>
+          </tr>
+          <tr>
+            <td>AI 연동형</td>
+            <td>OpenAI 등 API + 웹앱</td>
+            <td>높음</td>
+            <td>생성·품질 피드백 자동화 가능</td>
+          </tr>
+        </table>
+        <h3>데이터 구조 예시(JSON)</h3>
+        <pre class="json">{
+  "prompt_builder": {
+    "category": "research",
+    "subcategory": "research_question",
+    "components": {
+      "role": "행정학 전문 교수",
+      "context": "한국 전자정부 연구, 석사 과정",
+      "task": "연구 가능한 질문 5개 생성",
+      "format": "표 형식 (질문/방법론/난이도)",
+      "length": "각 항목 2줄 이내",
+      "constraints": "실증 연구 가능한 주제만"
+    },
+    "output_template": "당신은 {role}입니다. {context} 상황에서 {task}을 {format}으로 작성해주세요. {constraints}",
+    "quality_score": null,
+    "ethics_check": true
+  }
+}</pre>
+
+        <h2 id="ethics">VII. 윤리·책임(형성기에 넣을 장치)</h2>
+        <div class="ethics-list">
+          <ol>
+            <li><strong>사용 목적 선언</strong> — 「이 프롬프트는 [ ] 목적으로 쓴다」(학습 보조 / 연구 지원 / 과제 제출 등). 과제 전체 대필에 가까우면 별도 경고.</li>
+            <li><strong>AI 사용 표기 리마인더</strong> — 제출물에 AI 사용 사실을 표기하도록 안내.</li>
+            <li><strong>금지·고위험 용도 경고</strong> — 학문적 진실성에 어긋날 수 있는 패턴에 ⚠️ 메시지.</li>
+            <li><strong>출처 검증 안내</strong> — 출력 오류 가능성, 원문·데이터 직접 확인 문구.</li>
+            <li><strong>지식 주체성</strong> — 「본인의 분석·판단이 포함되었는가?」 확인 질문.</li>
+          </ol>
+        </div>
+        <p style="font-size:0.84rem;">강의의 SPARRO·투명성 보고(6·28쪽)와 맞춰 두면 좋다.</p>
+
+        <h2 id="quality">VIII. 품질 평가(100점 기준 예시)</h2>
+        <table class="pb">
+          <tr>
+            <th>항목</th>
+            <th style="width:10%;">배점</th>
+            <th>판단 기준</th>
+          </tr>
+          <tr><td>역할 명확성</td><td>20</td><td>역할이 구체적인가</td></tr>
+          <tr><td>맥락 충분성</td><td>20</td><td>배경 정보가 충분한가</td></tr>
+          <tr><td>과제 구체성</td><td>25</td><td>수행할 일이 명확한가</td></tr>
+          <tr><td>형식 지정</td><td>15</td><td>출력 형식이 설정됐는가</td></tr>
+          <tr><td>제약 조건</td><td>10</td><td>경계가 있는가</td></tr>
+          <tr><td>윤리 준수</td><td>10</td><td>고위험·부적절 요청이 없는가</td></tr>
+          <tr><td><strong>합계</strong></td><td><strong>100</strong></td><td>80↑ 우수 · 60–79 보통 · 60↓ 개선</td></tr>
+        </table>
+
+        <h2 id="summary">IX. 기획 전 확인할 5가지 질문</h2>
+        <ul>
+          <li><strong>Q1.</strong> 누가 쓰는가? → 타겟 페르소나</li>
+          <li><strong>Q2.</strong> 어디서 쓰는가? → 웹·오프라인 HTML·노션 등</li>
+          <li><strong>Q3.</strong> 몇 개 카테고리를 지원할 것인가? → 초기에는 소수 권장</li>
+          <li><strong>Q4.</strong> AI API를 붙일 것인가? → 실시간 피드백·생성 자동화 여부</li>
+          <li><strong>Q5.</strong> 윤리 경고를 어떻게 넣을 것인가? → 대학원생 대상이면 필수에 가깝다</li>
+        </ul>
+
+        <hr class="sep" />
+
+        <footer>
+          연계: <a href="prompt-engineering-chatgpt-gemini.html">ChatGPT vs Gemini · 프롬프트 엔지니어링</a> ·
+          <a href="prompt-components-chatgpt-api.html">프롬프트 구성요소 &amp; API</a> ·
+          <a href="LLM_and_AI_for_PA_research.html#s8">강의 8쪽</a> ·
+          <a href="LLM_and_AI_for_PA_research.html#s9">SPARRO(9쪽)</a>
+        </footer>
+      </div>
+    </div>
+  </div>
+
+  <div class="subpage-step-nav" aria-label="강의 이동">
+    <a href="prompt-engineering-chatgpt-gemini.html">◀ ChatGPT vs Gemini</a>
+    <span>프롬프트 형성기 설계</span>
+    <a href="prompt-components-chatgpt-api.html">API 구성요소 ▶</a>
+  </div>
+</body>
+</html>

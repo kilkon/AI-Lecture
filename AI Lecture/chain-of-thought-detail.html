@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chain-of-Thought (CoT) — Promptology 상세 설명 | 행정학 연구</title>
+  <style>
+    :root {
+      --navy: #0d1b3e;
+      --blue: #1a5cb5;
+      --cyan: #00c2d4;
+      --light: #f2f4f8;
+      --dark: #333344;
+      --gold: #f5a623;
+      --purple: #5b279a;
+      --teal: #006a4e;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 18px; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.65;
+      padding-bottom: 3.5rem;
+    }
+    .subpage-step-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      padding: 0.5rem 1rem;
+      background: rgba(13, 27, 62, 0.97);
+      border-top: 3px solid var(--cyan);
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.2);
+    }
+    .subpage-step-nav a {
+      display: inline-block;
+      padding: 0.45rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--blue);
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    .subpage-step-nav a:hover { background: #256fd4; }
+    .subpage-step-nav span { color: var(--gold); font-size: 0.78rem; font-weight: 700; }
+    .top-nav {
+      background: var(--navy);
+      color: var(--cyan);
+      padding: 0.65rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 1rem;
+      border-bottom: 4px solid var(--cyan);
+    }
+    .top-nav a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .top-nav a:hover { color: var(--gold); }
+    .wrap { max-width: 860px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
+    h1 {
+      color: var(--navy);
+      font-size: 1.65rem;
+      margin: 0 0 0.35rem;
+      border-left: 6px solid var(--purple);
+      padding-left: 0.75rem;
+    }
+    .lead {
+      color: var(--purple);
+      font-weight: 600;
+      margin: 0 0 1.5rem;
+      font-size: 1rem;
+    }
+    h2 {
+      color: var(--navy);
+      font-size: 1.2rem;
+      margin: 2rem 0 0.65rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 2px solid var(--cyan);
+    }
+    h3 { color: var(--blue); font-size: 1.05rem; margin: 1.25rem 0 0.5rem; }
+    p { margin: 0.65rem 0; }
+    ul, ol { margin: 0.5rem 0; padding-left: 1.35rem; }
+    li { margin: 0.35rem 0; }
+    .callout {
+      background: var(--navy);
+      color: #fff;
+      padding: 1rem 1.15rem;
+      border-radius: 8px;
+      border-left: 5px solid var(--gold);
+      margin: 1rem 0;
+    }
+    .callout strong { color: var(--cyan); }
+    pre.example {
+      background: #0d0d1a;
+      color: #00ff7f;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.82rem;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      margin: 0.75rem 0;
+      line-height: 1.5;
+    }
+    .tag {
+      display: inline-block;
+      background: var(--purple);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      margin-right: 0.35rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+      margin: 0.75rem 0;
+    }
+    th, td { border: 1px solid #ccd; padding: 0.55rem 0.65rem; text-align: left; }
+    th { background: var(--navy); color: #fff; }
+    tr:nth-child(even) td { background: #e8eef5; }
+    .warn {
+      background: #fff3e0;
+      border: 1px solid var(--gold);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 2px solid var(--navy);
+      font-size: 0.85rem;
+      color: var(--dark);
+    }
+  </style>
+</head>
+<body>
+  <nav class="top-nav">
+    <a href="LLM_and_AI_for_PA_research.html#s8">← 강의 8쪽(프롬프트 기법)으로 돌아가기</a>
+    <span style="color:var(--gold);font-size:0.8rem;">Promptology · ③ Chain-of-Thought</span>
+  </nav>
+
+  <div class="wrap">
+    <h1>Chain-of-Thought (CoT)<br/><span style="font-size:1rem;font-weight:600;color:var(--purple);">연쇄 사고 프롬프팅 — 상세 설명</span></h1>
+    <p class="lead">강의 8쪽 <strong>③ Chain-of-Thought</strong> 보충.</p>
+
+    <h2>1. Chain-of-Thought란 무엇인가?</h2>
+    <p><span class="tag">정의</span> <strong>Chain-of-Thought(CoT)</strong> — 답 앞에 <em>중간 추론 단계를 단계별로 쓰게</em> 하는 프롬프팅이다. Wei et al. (NeurIPS 2022) 등.</p>
+
+    <h2>2. 왜 행정학 연구에서 유용한가?</h2>
+    <ul>
+      <li><strong>인과·메커니즘:</strong> “전제 → 중간변수 → 결과” 순으로 밟게 하기</li>
+      <li><strong>RQ·가설:</strong> 선행요약 → 공백 → RQ 초안 등 단계 강제</li>
+      <li><strong>모형·가설:</strong> 이론 비교 → 변수 → 가설 순 요청</li>
+    </ul>
+
+    <h2>3. Zero-shot CoT vs Few-shot CoT</h2>
+    <table>
+      <tr><th>유형</th><th>방법</th><th>특징</th></tr>
+      <tr>
+        <td><strong>Zero-shot CoT</strong></td>
+        <td>질문 끝에 “단계별로 생각해보자”, “Let’s think step by step” 등 한 문장만 추가</td>
+        <td>예시 없이 빠르게 적용. 간단한 추론·초안에 적합.</td>
+      </tr>
+      <tr>
+        <td><strong>Few-shot CoT</strong></td>
+        <td>질문–<em>단계적 풀이–답</em> 예시를 1~3개 넣은 뒤 동일 형식으로 요청</td>
+        <td>논거 구조 등 원하는 형식을 고정하기 쉽다.</td>
+      </tr>
+    </table>
+
+    <h2>4. 행정학 연구용 프롬프트 예시</h2>
+
+    <h3>4-1. 정책 문서의 인과관계 분석 (강의 8쪽 예시 확장)</h3>
+    <pre class="example">[역할] 너는 행정학·정책분석 전문가다.
+
+[과제] 아래 정책 요약에 대해 Chain-of-Thought로 분석하라.
+반드시 다음 순서로 서술한 뒤, 마지막에 한 단락으로 결론을 정리하라.
+
+1) 정책이 명시한 목표와 수단을 구분하라.
+2) 이론적 관점(예: 정부실패, 거버넌스, 신뢰)에서 중간 메커니즘을 추론하라.
+3) 인과관계 주장의 강도(상관 vs 인과)와 검증에 필요한 증거를 구분하라.
+4) 반례·한계(실행 환경, 이해관계자)를 2가지 이상 제시하라.
+
+[정책 요약]
+(여기에 문서 붙여넣기)</pre>
+
+    <h3>4-2. 연구 질문(RQ) 정교화 + FINER</h3>
+    <pre class="example">다음 순서로만 답하라. 각 단계마다 소제목을 붙여라.
+
+Step 1: 관심 주제를 한 문장으로 정리
+Step 2: 선행연구에서 흔한 3가지 접근을 가정해 요약
+Step 3: 연구 공백(research gap) 2~3문장
+Step 4: 이 공백에 맞는 연구 질문 후보 3개
+Step 5: 각 RQ에 대해 FINER(F,I,N,E,R) 항목별로 한 줄씩 평가
+Step 6: 가장 강한 RQ 1개를 선택하고 개선안 제시</pre>
+
+    <h3>4-3. 연구모형·가설 (CRAFT + CoT)</h3>
+    <pre class="example">[C] 명확성: 행정학 석·박사 논문 수준
+[R] 근거: TAM 또는 공공가치 이론 중 하나를 먼저 선택하고 그 이유를 단계별로 서술
+[A] 대상: 지방정부 디지털 서비스·주민 만족 맥락
+[F] 형식: 독립·매개·조절·종속 변수 표 + H1~Hn
+[T] 과제: 먼저 이론 적합성을 논증한 뒤, 변수와 가설을 제시
+
+위 순서를 지켜 단계별로 작성하라.</pre>
+
+    <h2>5. CoT만으로는 부족한 이유 (연구자 필수 행동)</h2>
+    <div class="warn">
+      <strong>⚠️ 주의</strong>
+      <ul style="margin-bottom:0;">
+        <li>단계가 길어도 <strong>사실·인용·통계</strong>는 틀릴 수 있다. 원문 대조.</li>
+        <li>단계 수 ≠ 논리 타당. <strong>Reviewing·Refining</strong>에서 전제·결론을 따로 검증.</li>
+        <li>민감·윤리 이슈는 CoT 출력을 그대로 논문에 넣지 말 것.</li>
+      </ul>
+    </div>
+
+    <h2>6. 다른 기법과의 조합</h2>
+    <ul>
+      <li><strong>Role + CoT:</strong> “행정학 연구방법론 전문가로서 단계별로…”</li>
+      <li><strong>CoT + Structured Output:</strong> 마지막에만 JSON/표 형식으로 요약 출력 요청.</li>
+      <li><strong>CoT → Iterative Refinement:</strong> 1차 CoT 응답 후 「3단계 추론에서 근거가 약한 부분을 보완하라」고 재요청한다.</li>
+    </ul>
+
+    <footer>
+      <p><a href="LLM_and_AI_for_PA_research.html#s8" style="color:var(--blue);font-weight:700;">← 강의 8쪽</a></p>
+    </footer>
+  </div>
+  <div class="subpage-step-nav" aria-label="강의 이동">
+    <a href="LLM_and_AI_for_PA_research.html#s8">◀ 이전 · 강의 8쪽</a>
+    <span>CoT 상세</span>
+    <a href="LLM_and_AI_for_PA_research.html#s9">다음 · 강의 9쪽 ▶</a>
+  </div>
+</body>
+</html>

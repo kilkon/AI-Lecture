@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>프롬프트 엔지니어링: ChatGPT vs Gemini 핵심 요소 | 강의 자료</title>
+  <style>
+    :root {
+      --navy: #0d1b3e;
+      --blue: #1a5cb5;
+      --cyan: #00c2d4;
+      --light: #f2f4f8;
+      --dark: #333344;
+      --gold: #f5a623;
+      --purple: #5b279a;
+      --teal: #006a4e;
+      --gemini: #4285f4;
+      --oai-green: #10a37f;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 18px; scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.65;
+      padding-bottom: 3.5rem;
+    }
+    .body-columns {
+      display: flex;
+      align-items: flex-start;
+      max-width: 1240px;
+      margin: 0 auto;
+      gap: 0;
+    }
+    .toc-panel {
+      flex: 0 0 210px;
+      position: sticky;
+      top: 3.35rem;
+      align-self: flex-start;
+      max-height: calc(100vh - 3.35rem - 3.75rem);
+      overflow-y: auto;
+      padding: 1rem 0.75rem 1.25rem 1rem;
+      border-right: 1px solid #c5d4e8;
+      background: #fff;
+      box-shadow: 2px 0 12px rgba(13, 27, 62, 0.06);
+    }
+    .toc-panel > strong {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: var(--teal);
+      text-transform: uppercase;
+      margin-bottom: 0.65rem;
+    }
+    .toc-panel nav { display: flex; flex-direction: column; gap: 0.15rem; }
+    .toc-panel nav a {
+      color: var(--navy);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.32rem 0.4rem;
+      border-radius: 6px;
+      line-height: 1.35;
+    }
+    .toc-panel nav a:hover { background: #e8f4fc; color: var(--blue); }
+    .layout-main {
+      flex: 1;
+      min-width: 0;
+    }
+    @media (max-width: 900px) {
+      .body-columns { flex-direction: column; }
+      .toc-panel {
+        position: relative;
+        top: auto;
+        max-height: none;
+        flex: none;
+        width: 100%;
+        border-right: none;
+        border-bottom: 2px solid var(--cyan);
+        box-shadow: none;
+      }
+      .toc-panel nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
+    }
+    nav.top {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: var(--navy);
+      padding: 0.55rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.25rem;
+      align-items: center;
+      border-bottom: 4px solid var(--cyan);
+    }
+    nav.top a { color: #fff; text-decoration: none; font-size: 0.88rem; }
+    nav.top a:hover { color: var(--gold); }
+    .wrap { max-width: 920px; margin: 0; padding: 1.2rem 1.2rem 2.5rem 1.1rem; }
+    h1 {
+      color: var(--navy);
+      font-size: 1.42rem;
+      margin: 0 0 0.35rem;
+      border-left: 6px solid var(--gold);
+      padding-left: 0.75rem;
+      line-height: 1.35;
+    }
+    .sub { color: var(--blue); font-weight: 700; margin: 0 0 0.75rem; font-size: 0.95rem; }
+    .lead {
+      background: linear-gradient(135deg, #e8f4fc 0%, #f0f4f8 100%);
+      border-left: 5px solid var(--blue);
+      padding: 0.95rem 1.05rem;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+    .lead strong { color: var(--navy); }
+    h2 {
+      color: var(--navy);
+      font-size: 1.14rem;
+      margin: 2rem 0 0.65rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 3px solid var(--cyan);
+      scroll-margin-top: 3.6rem;
+    }
+    h2.sec-oai { border-bottom-color: var(--oai-green); }
+    h2.sec-gem { border-bottom-color: var(--gemini); }
+    h3 { color: var(--purple); font-size: 1.02rem; margin: 1.15rem 0 0.45rem; scroll-margin-top: 3.6rem; }
+    h4 { color: var(--teal); font-size: 0.95rem; margin: 0.95rem 0 0.35rem; }
+    p { margin: 0.5rem 0; }
+    ul, ol { margin: 0.45rem 0; padding-left: 1.3rem; }
+    li { margin: 0.3rem 0; }
+    a.ext { color: var(--blue); }
+    code {
+      background: #e2e8f0;
+      padding: 0.12rem 0.35rem;
+      border-radius: 4px;
+      font-size: 0.84em;
+    }
+    table.compare {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      margin: 0.75rem 0;
+    }
+    table.compare th, table.compare td {
+      border: 1px solid #c5d4e8;
+      padding: 0.5rem 0.55rem;
+      vertical-align: top;
+    }
+    table.compare th {
+      background: var(--navy);
+      color: #fff;
+      text-align: left;
+    }
+    table.compare tr:nth-child(even) td { background: #f0f4fa; }
+    table.costar th { background: #0d4a32; }
+    table.costar tr:nth-child(even) td { background: #e8f5ef; }
+    .tag-oai { color: var(--oai-green); font-weight: 800; }
+    .tag-gem { color: var(--gemini); font-weight: 800; }
+    .card {
+      background: #fff;
+      border: 1px solid #c5d4e8;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin: 0.65rem 0;
+    }
+    .card.oai { border-top: 4px solid var(--oai-green); }
+    .card.gem { border-top: 4px solid var(--gemini); }
+    pre.ex {
+      background: #0d0d1a;
+      color: #c8e6c9;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 0.5rem 0;
+    }
+    .note {
+      background: #fff8e8;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.85rem;
+      margin: 1rem 0;
+    }
+    .keytip {
+      background: linear-gradient(135deg, var(--navy) 0%, #1a2a5a 100%);
+      color: #fff;
+      padding: 1rem 1.15rem;
+      border-radius: 10px;
+      margin: 1.5rem 0;
+      border-left: 5px solid var(--gold);
+      font-size: 0.95rem;
+    }
+    .keytip strong { color: var(--gold); }
+    .toc {
+      background: #fff;
+      border: 1px solid #c5d4e8;
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      margin: 1rem 0;
+      font-size: 0.88rem;
+    }
+    .toc a { color: var(--blue); }
+    #parts-tips,
+    details.appendix#appendix {
+      scroll-margin-top: 3.6rem;
+    }
+    .gem-step {
+      background: #fff;
+      border: 1px solid #b8d4ff;
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+    }
+    .gem-step strong { color: #1a56c4; }
+    .common-box {
+      background: #f5f0ff;
+      border: 1px solid #c4b5e0;
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin: 0.75rem 0;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      font-family: inherit;
+    }
+    details.appendix {
+      margin: 2rem 0;
+      border: 1px solid #c5d4e8;
+      border-radius: 10px;
+      padding: 0.5rem 1rem 1rem;
+      background: #fafbfc;
+    }
+    details.appendix summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--navy);
+      padding: 0.5rem 0;
+    }
+    .subpage-step-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem 1.25rem;
+      padding: 0.5rem 1rem;
+      background: rgba(13, 27, 62, 0.97);
+      border-top: 3px solid var(--gold);
+      box-shadow: 0 -6px 20px rgba(0,0,0,0.2);
+    }
+    .subpage-step-nav a {
+      display: inline-block;
+      padding: 0.45rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: #fff;
+      background: var(--blue);
+      border-radius: 8px;
+      text-decoration: none;
+    }
+    .subpage-step-nav a:hover { background: #256fd4; }
+    .subpage-step-nav span { color: var(--gold); font-size: 0.78rem; font-weight: 700; }
+    footer { margin-top: 2rem; padding-top: 1rem; border-top: 2px solid var(--navy); font-size: 0.85rem; }
+    blockquote.src {
+      margin: 0.5rem 0;
+      padding: 0.5rem 0.75rem;
+      background: #eef6ff;
+      border-left: 4px solid var(--gemini);
+      font-size: 0.86rem;
+    }
+    table.parts-fw th { background: #4a2c7a; }
+    table.parts-fw tr:nth-child(even) td { background: #f3eef9; }
+    .parts-pre {
+      background: #1a1a2e;
+      color: #e8ecf4;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      border-left: 5px solid var(--purple);
+      white-space: pre-wrap;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      margin: 0.65rem 0;
+    }
+    .tips-parts {
+      background: #e8f6ef;
+      border: 1px solid var(--teal);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      margin: 0.75rem 0;
+      font-size: 0.9rem;
+    }
+    .tips-parts blockquote {
+      margin: 0.5rem 0 0;
+      padding-left: 0.75rem;
+      border-left: 4px solid var(--teal);
+    }
+  </style>
+</head>
+<body>
+  <nav class="top">
+    <a href="LLM_and_AI_for_PA_research.html#s8">← 강의 8쪽 · 프롬프트 기법</a>
+    <a href="prompt-components-chatgpt-api.html">프롬프트 구성요소 &amp; ChatGPT API →</a>
+  </nav>
+
+  <div class="body-columns">
+    <aside class="toc-panel" aria-label="이 페이지 목차">
+      <strong>목차</strong>
+      <nav>
+        <a href="#costar">1. CO-STAR</a>
+        <a href="#chatgpt-extra">2. ChatGPT 추가 설정</a>
+        <a href="#parts-fw">3. PARTS (5단계)</a>
+        <a href="#six-parts">4. 6대 구성요소</a>
+        <a href="#fw-compare">5. 프레임워크 비교</a>
+        <a href="#parts-tips">6. 활용 팁</a>
+        <a href="#gemini-official">7. Gemini 공식 전략</a>
+        <a href="#gemini-params">8. Gemini 파라미터</a>
+        <a href="#common">9. 공통 기법</a>
+        <a href="#diff">10. ChatGPT vs Gemini</a>
+        <a href="#appendix">부록 · API 필드</a>
+        <a href="prompt-builder-design.html" style="margin-top:0.35rem;border-top:1px dashed #c5d4e8;padding-top:0.4rem;">→ 형성기 설계</a>
+      </nav>
+    </aside>
+    <div class="layout-main">
+  <div class="wrap">
+    <h1>🤖 프롬프트 엔지니어링: ChatGPT vs Gemini 핵심 요소</h1>
+    <p class="sub">CO-STAR·PARTS·Gemini 공식 전략·공통 기법 요약</p>
+
+    <p class="lead">
+      같은 모델이라도 <strong>프롬프트</strong>에 따라 출력 품질 차이가 크다. 아래는 정리용 체크리스트다.
+    </p>
+    <p class="lead" style="border-left-color: var(--purple); background: linear-gradient(135deg, #f5f0ff 0%, #f0f4f8 100%);">
+      <strong>용어 정리:</strong> 「PARTS」는 두 가지 뜻으로 쓰인다. (1) 교육·콘텐츠 분야의 <strong>5단계 약어 프레임워크 PARTS</strong>(Persona–Act–Recipient–Theme–Structure), (2) 프롬프트를 지칭할 때의 <strong>구성 요소(parts of a prompt)</strong>—명령·맥락·페르소나 등 <strong>6가지 핵심 요소</strong>. 아래에서 <strong>양쪽</strong>을 정리한다.
+    </p>
+
+    <h2 id="costar" class="sec-oai">🟢 ChatGPT — CO-STAR 프레임워크</h2>
+    <p><strong>CO-STAR</strong> 여섯 칸 채우기. (<a class="ext" href="https://app.dalpha.so/blog/gpt-prompt-engineering/" target="_blank" rel="noopener noreferrer">달파</a>)</p>
+
+    <table class="compare costar">
+      <tr>
+        <th style="width:12%;">요소</th>
+        <th style="width:14%;">영문</th>
+        <th style="width:22%;">설명</th>
+        <th>예시</th>
+      </tr>
+      <tr>
+        <td>🔵 맥락</td>
+        <td><strong>C</strong>ontext</td>
+        <td>요청의 배경·상황</td>
+        <td>「나는 스타트업 마케터이고, 신제품 출시를 앞두고 있다」</td>
+      </tr>
+      <tr>
+        <td>🎯 목적</td>
+        <td><strong>O</strong>bjective</td>
+        <td>달성하려는 목표</td>
+        <td>「인스타그램용 홍보 문구 3개를 만들어줘」</td>
+      </tr>
+      <tr>
+        <td>🎨 스타일</td>
+        <td><strong>S</strong>tyle</td>
+        <td>답변 형식·문체</td>
+        <td>「블로그 형식, 친근하고 감각적인 문체」</td>
+      </tr>
+      <tr>
+        <td>🎭 어조</td>
+        <td><strong>T</strong>one</td>
+        <td>감성·분위기</td>
+        <td>「열정적이고 긍정적인 어조」</td>
+      </tr>
+      <tr>
+        <td>👥 독자</td>
+        <td><strong>A</strong>udience</td>
+        <td>결과를 읽을 대상</td>
+        <td>「20~30대 MZ세대 여성」</td>
+      </tr>
+      <tr>
+        <td>📄 응답형식</td>
+        <td><strong>R</strong>esponse</td>
+        <td>출력물의 구체적 형태</td>
+        <td>「각 문구는 2줄 이내, 해시태그 5개 포함」</td>
+      </tr>
+    </table>
+
+    <h2 id="chatgpt-extra" class="sec-oai">➕ ChatGPT 추가 설정 요소</h2>
+    <div class="card oai">
+      <ul>
+        <li><strong>🛠 Custom Instruction (맞춤 설정)</strong> — 직업, 코딩 스타일, 선호 형식 등을 미리 저장해 매번 반복 입력을 줄임 (웹 UI·앱).</li>
+        <li><strong>📝 마크다운 포맷 활용</strong> — <code>#</code>, <code>-</code>, <code>**</code> 등으로 프롬프트 구조를 나누면 문맥 파악에 유리함.</li>
+        <li><strong>🌡 Temperature (온도)</strong> — 창의 작업 <strong>0.7~1.0</strong>, 사실 전달 <strong>0.3~0.5</strong>, 코드 생성 <strong>0.2~0.4</strong> 권장(일반적 가이드; 과제에 맞게 조정).</li>
+        <li><strong>🎭 Role (역할)</strong> — 「당신은 10년 경력의 카피라이터이다」와 같이 구체적 역할을 <strong>시스템 메시지</strong> 또는 맞춤 설정에 두면 일관성이 높아진다.</li>
+      </ul>
+    </div>
+
+    <h2 id="parts-fw">📦 PARTS 프레임워크 (5단계 약어)</h2>
+    <p><strong>PARTS</strong> 5단계 약어(Persona–Act–Recipient–Theme–Structure). 아래 「6대 구성요소」와 <strong>이름만 비슷하고 뜻은 다름</strong>.</p>
+
+    <table class="compare parts-fw">
+      <tr>
+        <th style="width:8%;">글자</th>
+        <th style="width:14%;">영문</th>
+        <th style="width:14%;">한국어</th>
+        <th>핵심 질문</th>
+      </tr>
+      <tr>
+        <td><strong>P</strong></td>
+        <td><strong>P</strong>ersona</td>
+        <td>페르소나 (역할)</td>
+        <td>AI가 <strong>누구로서</strong> 답해야 하는가?</td>
+      </tr>
+      <tr>
+        <td><strong>A</strong></td>
+        <td><strong>A</strong>ct</td>
+        <td>액션 (행동)</td>
+        <td>AI가 <strong>무엇을</strong> 해야 하는가?</td>
+      </tr>
+      <tr>
+        <td><strong>R</strong></td>
+        <td><strong>R</strong>ecipient</td>
+        <td>수신자 (대상)</td>
+        <td>결과물을 <strong>받을 사람</strong>은 누구인가?</td>
+      </tr>
+      <tr>
+        <td><strong>T</strong></td>
+        <td><strong>T</strong>heme</td>
+        <td>주제 (테마)</td>
+        <td><strong>어떤 주제·내용</strong>을 다루는가?</td>
+      </tr>
+      <tr>
+        <td><strong>S</strong></td>
+        <td><strong>S</strong>tructure</td>
+        <td>구조 (형식)</td>
+        <td><strong>어떤 형태</strong>로 출력해야 하는가?</td>
+      </tr>
+    </table>
+
+    <h3>✏️ PARTS 실전 예시</h3>
+    <div class="parts-pre">[P - Persona]
+당신은 10년 경력의 시니어 마케터이다.
+
+[A - Act]
+다음 제품의 인스타그램 홍보 게시물을 작성해줘.
+
+[R - Recipient]
+20~30대 직장인 여성을 대상으로 해줘.
+
+[T - Theme]
+신제품 에너지 드링크 '모닝부스트' 출시 캠페인.
+
+[S - Structure]
+• 캡션 3문장 이내
+• 이모지 3개 포함
+• 해시태그 5개 포함
+• 행동 유도 문구(CTA) 1개 포함</div>
+
+    <h2 id="six-parts">프롬프트의 핵심 구성 요소 (Parts of a Prompt)</h2>
+    <p>「프롬프트를 구성하는 <strong>parts</strong>」를 말할 때는 아래 <strong>6가지</strong>를 자주 구분한다. 참고: <a class="ext" href="https://www.aiground.co.kr/6-key-components-for-effective-prompts/" target="_blank" rel="noopener noreferrer">AI Ground</a> · <a class="ext" href="https://learnprompting.org/docs/basics/prompt_structure" target="_blank" rel="noopener noreferrer">Learn Prompting — Prompt structure</a></p>
+
+    <table class="compare">
+      <tr>
+        <th style="width:6%;">#</th>
+        <th style="width:16%;">요소</th>
+        <th style="width:30%;">설명</th>
+        <th>예시</th>
+      </tr>
+      <tr>
+        <td>①</td>
+        <td><strong>명령</strong> Task</td>
+        <td>AI에게 <strong>정확히 무엇을</strong> 해야 할지 지시 (<strong>필수</strong>)</td>
+        <td>「~작성해줘」「~요약해줘」「~번역해줘」</td>
+      </tr>
+      <tr>
+        <td>②</td>
+        <td><strong>맥락</strong> Context</td>
+        <td>배경 상황, 조건, 규칙</td>
+        <td>「이 글은 사내 발표용이야, 전문 용어 사용 OK」</td>
+      </tr>
+      <tr>
+        <td>③</td>
+        <td><strong>페르소나</strong> Persona</td>
+        <td>역할·전문가 설정</td>
+        <td>「회계사 입장에서 답변해줘」</td>
+      </tr>
+      <tr>
+        <td>④</td>
+        <td><strong>예시</strong> Example</td>
+        <td>기대 출력의 샘플 (Few-shot)</td>
+        <td>「예시: 제목 - 본문 - 결론 형태처럼」</td>
+      </tr>
+      <tr>
+        <td>⑤</td>
+        <td><strong>포맷</strong> Format</td>
+        <td>출력 형태·분량·구조</td>
+        <td>「마크다운 표로 정리」「500자 이내」</td>
+      </tr>
+      <tr>
+        <td>⑥</td>
+        <td><strong>어조</strong> Tone</td>
+        <td>말투·분위기·스타일</td>
+        <td>「친근한 말투로」「전문적이고 간결하게」</td>
+      </tr>
+    </table>
+
+    <h2 id="fw-compare">PARTS vs 다른 프레임워크 비교</h2>
+    <table class="compare">
+      <tr>
+        <th style="width:22%;">프레임워크</th>
+        <th style="width:32%;">구성</th>
+        <th>특징</th>
+      </tr>
+      <tr>
+        <td><strong>PARTS</strong></td>
+        <td>Persona · Act · Recipient · Theme · Structure</td>
+        <td>교육·콘텐츠 제작에 맞춤</td>
+      </tr>
+      <tr>
+        <td><strong>CO-STAR</strong></td>
+        <td>Context · Objective · Style · Tone · Audience · Response</td>
+        <td>ChatGPT 활용에 널리 알려짐, 요소가 종합적</td>
+      </tr>
+      <tr>
+        <td><strong>CARE</strong></td>
+        <td>Context · Action · Result · Example</td>
+        <td>비즈니스 업무용으로 소개되는 사례가 많다</td>
+      </tr>
+      <tr>
+        <td><strong>RTF</strong></td>
+        <td>Role · Task · Format</td>
+        <td>가장 간결, 빠른 반복 작업에 적합</td>
+      </tr>
+      <tr>
+        <td><strong>PACT</strong></td>
+        <td>Persona · Action · Context · Target</td>
+        <td>마케팅 카피 등에 인용되는 패턴</td>
+      </tr>
+    </table>
+
+    <div class="tips-parts" id="parts-tips">
+      <h3 style="margin-top:0;color:var(--teal);">💡 PARTS·구성요소 활용 팁</h3>
+      <blockquote>
+        <strong>모든 요소를 매회 전부 채울 필요는 없다.</strong><br />
+        • <strong>빠른 작업:</strong> <strong>P + A + S</strong> (페르소나·행동·구조)만으로도 충분한 경우가 많다<br />
+        • <strong>고품질 콘텐츠:</strong> <strong>P + A + R + T + S</strong> (PARTS 5가지)를 채운다<br />
+        • <strong>코드 작업:</strong> <strong>A + T + S</strong> (무엇을 할지·주제·출력 구조) 중심으로 시작한 뒤 필요 시 맥락·예시를 추가한다
+      </blockquote>
+      <p style="margin:0.65rem 0 0;font-size:0.85rem;color:#444;">연구용 기본 순서: <strong>①명령 + ②맥락 + ⑤포맷</strong>, 필요 시 <strong>③페르소나·④예시</strong>. (<a href="prompt-components-chatgpt-api.html">API 7요소</a>)</p>
+    </div>
+
+    <h2 id="gemini-official" class="sec-gem">🔵 Gemini — Google 공식 설계 전략</h2>
+    <p>Google AI for Developers의 프롬프팅 가이드에 맞춘 요지이다. (<a class="ext" href="https://ai.google.dev/gemini-api/docs/prompting-strategies?hl=ko" target="_blank" rel="noopener noreferrer">Google AI — Prompting strategies (한국어)</a>)</p>
+
+    <div class="gem-step"><strong>1️⃣ 명확하고 구체적인 요청</strong><br />
+      모호한 지시 ❌ → 단계별·구체적 지시 ✅<br />
+      <blockquote class="src">「뭔가 재밌는 거 써줘」 ❌ → 「20~30대를 위한 자기계발 관련 유머 3개를 작성해줘」 ✅</blockquote>
+    </div>
+
+    <div class="gem-step"><strong>2️⃣ 제약조건(Constraint) 명시</strong>
+      <ul>
+        <li>응답 길이 제한 (예: 「500자 이내」)</li>
+        <li>해야 할 것 / 하지 말아야 할 것 구분</li>
+        <li>특정 단어·형식 사용 여부 제한</li>
+      </ul>
+    </div>
+
+    <div class="gem-step"><strong>3️⃣ 응답 형식(Output Format) 지정</strong><br />
+      JSON, 표, bullet, 번호 목록 등 <strong>형식을 밝힌다</strong>.</div>
+
+    <div class="gem-step"><strong>4️⃣ 퓨샷(Few-shot) 예시</strong><br />
+      좋은 예시 몇 개를 넣는다. 나쁜 예보다 <strong>따를 본보기</strong>를 보여 주는 쪽이 낫다.</div>
+
+    <div class="gem-step"><strong>5️⃣ 컨텍스트(Context) 정보 추가</strong>
+      <ul>
+        <li>배경 지식, 도메인 정보</li>
+        <li>관련 자료·데이터 첨부(멀티모달)</li>
+        <li>이전 대화 맥락 유지(멀티턴)</li>
+      </ul>
+    </div>
+
+    <div class="gem-step"><strong>6️⃣ 프리픽스(Prefix) 설정</strong><br />
+      <code>입력:</code>, <code>출력:</code>, <code>요약:</code>, <code>번역:</code> 등 레이블로 입력·출력 구역을 나누면 모델이 맥락을 파악하기 쉽다.</div>
+
+    <div class="gem-step"><strong>7️⃣ 모델 파라미터 조정</strong> — 아래 표 참고 (API·Vertex 등).</div>
+
+    <h2 id="gemini-params" class="sec-gem">Gemini — 모델 파라미터 (요약)</h2>
+    <table class="compare">
+      <tr>
+        <th>파라미터</th>
+        <th>역할</th>
+        <th>권장·참고</th>
+      </tr>
+      <tr>
+        <td><strong>Temperature</strong></td>
+        <td>창의성·무작위성</td>
+        <td>시작값 <strong>0.2</strong> 부근에서 시도 후 과제에 맞게 조정</td>
+      </tr>
+      <tr>
+        <td><strong>Top-K</strong></td>
+        <td>후보 토큰 수 제한</td>
+        <td>낮을수록 보수적·예측 가능한 응답에 가까움</td>
+      </tr>
+      <tr>
+        <td><strong>Top-P</strong></td>
+        <td>누적 확률 기반 샘플링</td>
+        <td><strong>0.8~0.95</strong> 구간이 자주 쓰임(모델별 문서 확인)</td>
+      </tr>
+      <tr>
+        <td><strong>Max Output Tokens</strong></td>
+        <td>최대 출력 길이</td>
+        <td>작업 규모·비용에 맞게 설정</td>
+      </tr>
+    </table>
+
+    <h2 id="common">⚡ 공통 고급 기법 (두 모델 모두 적용)</h2>
+    <div class="common-box">🧠 <strong>Chain-of-Thought (CoT)</strong>  →  단계를 쓰게 한 뒤 답하게 한다(추론·산술에 자주 씀).
+
+🔗 <strong>프롬프트 체이닝</strong>  →  복잡한 작업을 여러 단계로 나눠 순차 실행 (요약 → 분류 → 작성 등)
+
+🔁 <strong>반복 최적화 (PDCA)</strong>  →  프롬프트 → 실행 → 결과 분석 → 수정을 3회 이상 반복
+
+🎭 <strong>역할(Persona) 부여</strong>  →  전문가 페르소나로 깊이·용어 수준 조절
+
+📊 <strong>구조화 출력 강제</strong>  →  JSON·표 형식으로 일관된 결과·후처리 용이</div>
+
+    <h2 id="diff">🔑 ChatGPT vs Gemini — 핵심 차이 (강의용)</h2>
+    <table class="compare">
+      <tr>
+        <th style="width:26%;">항목</th>
+        <th><span class="tag-oai">ChatGPT</span></th>
+        <th><span class="tag-gem">Gemini</span></th>
+      </tr>
+      <tr>
+        <td>대표 프레임워크</td>
+        <td><strong>CO-STAR</strong> (맥락·목적·스타일·어조·독자·응답형식)</td>
+        <td>Google 공식 <strong>설계 전략 7단계</strong></td>
+      </tr>
+      <tr>
+        <td>예시 활용</td>
+        <td>역할·맥락 중심 설계와 병행</td>
+        <td><strong>Few-shot</strong> 예시를 적극 권장</td>
+      </tr>
+      <tr>
+        <td>파라미터 접근</td>
+        <td>Playground·API·일부 클라이언트에서 조정</td>
+        <td>API·<strong>Vertex AI</strong> 등에서 세밀 제어</td>
+      </tr>
+      <tr>
+        <td>사전 설정 기능</td>
+        <td><strong>Custom Instructions</strong></td>
+        <td><strong>System Instruction</strong></td>
+      </tr>
+      <tr>
+        <td>특화 강점 (일반적 인상)</td>
+        <td>자연스러운 대화·창작</td>
+        <td>멀티모달, 코드·데이터 분석 연계</td>
+      </tr>
+      <tr>
+        <td>출력 형식 지정</td>
+        <td>마크다운 구조 + JSON 모드(API) 등</td>
+        <td>프리픽스 + <code>responseMimeType</code>·스키마(API) 등</td>
+      </tr>
+    </table>
+
+    <div class="keytip">
+      💡 <strong>최소 체크:</strong> 역할·맥락·목적·형식. Temperature는 <strong>0.2~0.3</strong>부터 올려 본다.
+    </div>
+
+    <div class="note">
+      <strong>윤리·학술:</strong> 인용·수치는 원문·데이터와 대조. <a href="LLM_and_AI_for_PA_research.html#s9">SPARRO</a> · <a href="notebooklm-rag-detail.html">NotebookLM</a>
+    </div>
+
+    <details class="appendix" id="appendix">
+      <summary>부록: API 수준 필드 대응 (개발자용 요약) + 코드 예시</summary>
+      <p style="font-size:0.88rem;">웹 채팅 UI와 달리 API에서는 아래 필드 이름으로 동일 개념을 지정한다.</p>
+      <table class="compare">
+        <tr>
+          <th style="width:22%;">지정하고 싶은 것</th>
+          <th><span class="tag-oai">OpenAI</span></th>
+          <th><span class="tag-gem">Gemini</span></th>
+        </tr>
+        <tr><td>모델</td><td><code>model</code></td><td>모델 ID</td></tr>
+        <tr><td>시스템 지시</td><td><code>role: "system"</code></td><td><code>systemInstruction</code></td></tr>
+        <tr><td>대화</td><td><code>messages</code></td><td><code>contents</code></td></tr>
+        <tr><td>샘플링</td><td><code>temperature</code>, <code>top_p</code></td><td><code>temperature</code>, <code>topP</code>, <code>topK</code></td></tr>
+        <tr><td>출력 길이</td><td><code>max_completion_tokens</code> 등</td><td><code>maxOutputTokens</code></td></tr>
+        <tr><td>JSON 등 형식</td><td><code>response_format</code></td><td><code>responseMimeType</code>, <code>responseSchema</code></td></tr>
+        <tr><td>중단 문자열</td><td><code>stop</code></td><td><code>stopSequences</code></td></tr>
+        <tr><td>도구</td><td><code>tools</code></td><td><code>tools</code> (검색 그라운딩 등)</td></tr>
+        <tr><td>안전</td><td>정책·모델별</td><td><code>safetySettings</code></td></tr>
+      </table>
+      <pre class="ex"># OpenAI Chat Completions (개념)
+client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[
+        {"role": "system", "content": "당신은 행정학 연구방법론 조교이다."},
+        {"role": "user", "content": "..."},
+    ],
+    temperature=0.3,
+    max_completion_tokens=800,
+)</pre>
+      <pre class="ex"># Gemini generationConfig (개념)
+{
+  "systemInstruction": { "parts": [{ "text": "..." }] },
+  "contents": [{ "role": "user", "parts": [{ "text": "..." }] }],
+  "generationConfig": {
+    "temperature": 0.3,
+    "maxOutputTokens": 800,
+    "topP": 0.95,
+    "topK": 40
+  }
+}</pre>
+      <p style="font-size:0.82rem;">프롬프트 구성요소 7가지의 상세는 <a href="prompt-components-chatgpt-api.html">별도 페이지</a>를 참고한다.</p>
+    </details>
+
+    <footer>
+      참고 링크:
+      <a class="ext" href="https://app.dalpha.so/blog/gpt-prompt-engineering/" target="_blank" rel="noopener noreferrer">달파 CO-STAR 소개</a> ·
+      <a class="ext" href="https://www.aiground.co.kr/6-key-components-for-effective-prompts/" target="_blank" rel="noopener noreferrer">AI Ground — 프롬프트 6요소</a> ·
+      <a class="ext" href="https://learnprompting.org/docs/basics/prompt_structure" target="_blank" rel="noopener noreferrer">Learn Prompting — 구조</a> ·
+      <a class="ext" href="https://ai.google.dev/gemini-api/docs/prompting-strategies?hl=ko" target="_blank" rel="noopener noreferrer">Google Gemini 프롬프팅 전략</a>
+      <br />
+      연계: <a href="prompt-components-chatgpt-api.html">프롬프트 구성요소 &amp; ChatGPT API</a> ·
+      <a href="prompt-builder-design.html">프롬프트 형성기 설계</a> ·
+      <a href="LLM_and_AI_for_PA_research.html#s8">강의 8쪽</a>
+    </footer>
+  </div>
+    </div>
+  </div>
+
+  <div class="subpage-step-nav" aria-label="강의 이동">
+    <a href="LLM_and_AI_for_PA_research.html#s8">◀ 강의 8쪽</a>
+    <span>ChatGPT vs Gemini</span>
+    <a href="prompt-components-chatgpt-api.html">API 구성요소 ▶</a>
+  </div>
+</body>
+</html>

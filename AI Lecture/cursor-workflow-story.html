@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cursor로 발표문을 발전시킨 과정</title>
+  <style>
+    :root {
+      --navy: #0d1b3e;
+      --blue: #1a5cb5;
+      --cyan: #00c2d4;
+      --light: #f2f4f8;
+      --dark: #2e3140;
+      --gold: #f5a623;
+      --teal: #006a4e;
+      --purple: #5b279a;
+      --gray: #6b7280;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      background: var(--light);
+      color: var(--dark);
+      line-height: 1.65;
+    }
+    .top {
+      background: linear-gradient(120deg, var(--navy), #152b5c);
+      color: #fff;
+      padding: 2rem 1.25rem 1.6rem;
+      border-bottom: 4px solid var(--cyan);
+    }
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 1.25rem;
+    }
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.7rem;
+    }
+    .sub {
+      margin: 0;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    .section {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      margin: 0.95rem 0;
+      border-left: 6px solid var(--blue);
+      box-shadow: 0 3px 14px rgba(13, 27, 62, 0.07);
+    }
+    .section h2 {
+      margin: 0 0 0.5rem;
+      color: var(--navy);
+      font-size: 1.2rem;
+    }
+    .timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .timeline li {
+      margin: 0.6rem 0;
+      padding: 0.6rem 0.7rem;
+      border: 1px solid #d8deea;
+      border-radius: 8px;
+      background: #fbfcff;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--purple);
+      border-radius: 999px;
+      padding: 0.15rem 0.55rem;
+      margin-right: 0.35rem;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 0.72rem;
+      color: #fff;
+      background: var(--teal);
+      border-radius: 4px;
+      padding: 0.1rem 0.4rem;
+      margin-right: 0.3rem;
+    }
+    ul { margin: 0.35rem 0 0.35rem 1.1rem; }
+    code {
+      background: #f3f5fb;
+      border: 1px solid #d9dfec;
+      border-radius: 4px;
+      padding: 0.08rem 0.35rem;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.85em;
+    }
+    .callout {
+      background: #eef7f4;
+      border: 1px solid #c7e9de;
+      border-left: 6px solid var(--teal);
+      border-radius: 8px;
+      padding: 0.8rem 0.9rem;
+      margin-top: 0.7rem;
+    }
+    .footer {
+      color: var(--gray);
+      font-size: 0.84rem;
+      text-align: center;
+      padding: 1rem 0 2rem;
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <h1>Cursor로 발표문을 발전시킨 과정</h1>
+      <p class="sub">초안 생성 → 구조 고도화 → 근거 강화 → 수업용 실행 흐름 완성</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="section">
+      <h2>1) 시작점: 강의용 초안의 뼈대 구성</h2>
+      <ul>
+        <li>30쪽 슬라이드 구조를 먼저 잡고, <strong>도입–방법–실습–정리</strong> 흐름으로 배치했다.</li>
+        <li>Promptology, SPARRO, CRAFT 등 핵심 개념을 강의 맥락에 맞춰 배치했다.</li>
+        <li>초기 버전은 “빠르게 전체를 보는 개요형”에 가깝고, 세부 근거는 후속 보강 방식으로 진행했다.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>2) 도구 연동: 실습 가능한 발표로 확장</h2>
+      <ul>
+        <li><code>research-prompt-generator.html</code>을 연결해 강의 중 즉시 실행 가능한 데모 환경을 마련했다.</li>
+        <li><code>openai-local-proxy.py</code>에서 API 프록시와 Crossref 조회를 붙여 “개념 설명 → 즉시 실습”으로 전환했다.</li>
+        <li>404 등 라우팅 문제를 수정해 <code>/crossref</code>가 안정적으로 응답하도록 정리했다.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>3) 품질 개선 1: 참고문헌 후보의 신뢰도 향상</h2>
+      <ul>
+        <li>Crossref 후보를 단순 검색이 아닌 <strong>저널 논문 중심</strong>으로 필터링했다.</li>
+        <li><span class="tag">개선</span> <code>type:journal-article</code> 우선 필터 + 응답 재검증 + DOI/저널명 기반 우선순위 적용.</li>
+        <li>중복 DOI를 제거해 후보 목록의 가독성과 실사용성을 높였다.</li>
+      </ul>
+      <div class="callout">
+        핵심 변화: “많이 찾는 것”보다 “학술적으로 쓸 수 있는 후보를 먼저 보여주는 것”으로 기준을 바꾸었다.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>4) 품질 개선 2: 슬라이드 메시지 정교화</h2>
+      <ul>
+        <li>문구·톤을 강의 목적에 맞춰 지속적으로 다듬고, 불필요한 안내 문구는 제거했다.</li>
+        <li>표지/링크 문구를 수업 흐름에 맞게 조정해 시선 분산을 줄였다.</li>
+        <li>문체를 구어체에서 <strong>문어체(학술 발표 톤)</strong>로 통일해 전달력을 높였다.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>5) 근거 확장: COREQ+LLM 상세 페이지 신설</h2>
+      <ul>
+        <li><code>coreq-llm-detail.html</code>을 별도 제작하고 슬라이드 6과 연결했다.</li>
+        <li>COREQ 32문항(원문+요지), LLM 확장 점검 항목, APA 7 참고문헌 링크를 포함했다.</li>
+        <li>강의 자료가 단순 주장형이 아니라, <strong>검증 가능한 근거형</strong> 자료로 강화되었다.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>6) 개념 심화: 연구모형 파트 고도화</h2>
+      <ul>
+        <li>슬라이드 19를 경로 시각화 중심으로 보강했다.</li>
+        <li><strong>Model specification / identification / estimation</strong>의 차이를 표로 구분해 설명했다.</li>
+        <li>용어 요청에 맞춰 specification 번역을 <strong>명세 → 설정</strong>으로 통일했다.</li>
+      </ul>
+    </section>
+
+    <section class="section">
+      <h2>7) 워크플로우 재설계: 현장 적용형으로 전환</h2>
+      <ul>
+        <li>슬라이드 27에서 “도구 중심” 표현을 줄이고 <strong>LLM Deep Research 중심</strong>으로 재구성했다.</li>
+        <li>핵심 논문은 연구자가 직접 읽고, LLM은 정리·보조에 쓰는 역할 분리를 명시했다.</li>
+        <li><strong>지도교수 면담 루프</strong>(주기적 피드백 반영)를 단계에 포함해 실제 대학원 연구 흐름에 맞췄다.</li>
+      </ul>
+      <div class="callout">
+        최종 워크플로우의 핵심: LLM은 속도를 높이고, 인간 연구자는 타당성과 학술적 책임을 보장한다.
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>8) Cursor를 활용한 제작 방식 요약</h2>
+      <ul>
+        <li><span class="badge">Step A</span> 슬라이드 초안 생성 및 구조 고정</li>
+        <li><span class="badge">Step B</span> 사용자 피드백을 즉시 반영해 문구/순서/강조점 반복 수정</li>
+        <li><span class="badge">Step C</span> 상세 설명용 보조 HTML 분리(심화 콘텐츠 모듈화)</li>
+        <li><span class="badge">Step D</span> 링크 연결, 검증, 일관성 점검(문체·용어·참고문헌 형식 통일)</li>
+      </ul>
+      <p>즉, Cursor는 “한 번에 완성” 도구가 아니라, <strong>피드백 기반 반복 개선</strong>을 빠르게 돌리는 연구·강의 제작 환경으로 활용하였다.</p>
+    </section>
+
+    <section class="section">
+      <h2>9) 전체 슬라이드 제작에 사용된 질문 수</h2>
+      <ul>
+        <li>본 발표 자료를 완성하는 과정에서 사용자 질문·수정 요청은 <strong>총 15회</strong> 누적되었다.</li>
+        <li>초기 요구사항 제시 후, 문구·구조·근거·링크·워크플로우가 단계적으로 정교화되었다.</li>
+        <li>즉, 최종본은 “초안 제시 + 14회 후속 개선”의 반복 편집 결과물이다.</li>
+      </ul>
+      <div class="callout">
+        제작 방식의 핵심은 정답을 한 번에 내는 것이 아니라, 질문-수정-검증의 짧은 루프를 여러 번 반복하여 완성도를 끌어올리는 데 있다.
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">
+    Generated for lecture reflection · Cursor workflow narrative
+  </div>
+</body>
+</html>
