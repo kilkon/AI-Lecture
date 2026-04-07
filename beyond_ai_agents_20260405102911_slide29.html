@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Future Operating Model for Organizations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .title-icon {
+        color: #60a5fa;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+    
+    .source-badge {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: #60a5fa;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 120px;
+        left: 40px;
+        right: 40px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .operating-model {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: 100%;
+    }
+    
+    .model-row {
+        display: flex;
+        gap: 20px;
+        flex: 1;
+    }
+    
+    .model-card {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+    
+    .model-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 18px;
+        flex: 0 0 auto;
+    }
+    
+    .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .card-subtitle {
+        font-size: 12px;
+        color: #94a3b8;
+    }
+    
+    .card-content {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        flex: 1;
+    }
+    
+    .content-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .content-item:last-child {
+        border-bottom: none;
+    }
+    
+    .item-icon {
+        color: #3b82f6;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    
+    .item-text {
+        font-size: 13px;
+        color: #e2e8f0;
+        line-height: 1.4;
+    }
+    
+    .status-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        margin-left: auto;
+        white-space: nowrap;
+    }
+    
+    .status-active {
+        background: rgba(34, 197, 94, 0.1);
+        color: #22c55e;
+    }
+    
+    .status-pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+    }
+    
+    .status-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+    }
+    
+    .status-dot.active {
+        background: #22c55e;
+    }
+    
+    .status-dot.pending {
+        background: #f59e0b;
+    }
+    
+    .connection-line {
+        position: relative;
+        height: 2px;
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        margin: 0 20px;
+    }
+    
+    .connection-line::before,
+    .connection-line::after {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #3b82f6;
+        border-radius: 50%;
+        top: -3px;
+    }
+    
+    .connection-line::before {
+        left: -4px;
+    }
+    
+    .connection-line::after {
+        right: -4px;
+    }
+    
+    .bottom-info {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #64748b;
+    }
+    
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .info-icon {
+        color: #60a5fa;
+        font-size: 12px;
+    }
+    
+    .info-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .source-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div>
+<div class="title">
+<i class="fas fa-sitemap title-icon"></i>
+                Future Operating Model for Organizations
+            </div>
+<div class="subtitle">AI COE + Platform team, Federated champions &amp; role hubs, Risk office/procurement/MLOps → AgentOps</div>
+</div>
+<div class="source-badge">
+<i class="fas fa-organization"></i>
+<span>Microsoft Keynote</span>
+</div>
+</div>
+<div class="main-content">
+<div class="operating-model">
+<div class="model-row">
+<div class="model-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-robot"></i>
+</div>
+<div>
+<div class="card-title">AI COE + Platform Team</div>
+<div class="card-subtitle">Central AI capabilities</div>
+</div>
+</div>
+<div class="card-content">
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">AI strategy and governance</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Platform development &amp; maintenance</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Model training &amp; deployment</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+</div>
+</div>
+<div class="model-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-users"></i>
+</div>
+<div>
+<div class="card-title">Federated Champions</div>
+<div class="card-subtitle">Role-based hubs</div>
+</div>
+</div>
+<div class="card-content">
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Role-specific AI training</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Best practice sharing</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Champion network</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+</div>
+</div>
+<div class="model-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-shield-alt"></i>
+</div>
+<div>
+<div class="card-title">Risk Office</div>
+<div class="card-subtitle">Governance &amp; compliance</div>
+</div>
+</div>
+<div class="card-content">
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Risk assessment &amp; mitigation</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Policy enforcement</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Audit &amp; compliance</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="connection-line"></div>
+<div class="model-row">
+<div class="model-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-cogs"></i>
+</div>
+<div>
+<div class="card-title">MLOps → AgentOps</div>
+<div class="card-subtitle">Operational transformation</div>
+</div>
+</div>
+<div class="card-content">
+<div class="content-item">
+<i class="fas fa-arrow-right item-icon"></i>
+<div class="item-text">Automated model deployment</div>
+<div class="status-tag status-pending">
+<div class="status-dot pending"></div>
+<span>Pending</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-arrow-right item-icon"></i>
+<div class="item-text">Agent orchestration</div>
+<div class="status-tag status-pending">
+<div class="status-dot pending"></div>
+<span>Pending</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-arrow-right item-icon"></i>
+<div class="item-text">Monitoring &amp; evaluation</div>
+<div class="status-tag status-pending">
+<div class="status-dot pending"></div>
+<span>Pending</span>
+</div>
+</div>
+</div>
+</div>
+<div class="model-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-handshake"></i>
+</div>
+<div>
+<div class="card-title">Procurement</div>
+<div class="card-subtitle">Vendor management</div>
+</div>
+</div>
+<div class="card-content">
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Vendor evaluation</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Contract management</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Cost optimization</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+</div>
+</div>
+<div class="model-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-chart-line"></i>
+</div>
+<div>
+<div class="card-title">Performance Metrics</div>
+<div class="card-subtitle">Monitoring &amp; KPIs</div>
+</div>
+</div>
+<div class="card-content">
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">AI adoption rates</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">ROI tracking</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+<div class="content-item">
+<i class="fas fa-check item-icon"></i>
+<div class="item-text">Productivity metrics</div>
+<div class="status-tag status-active">
+<div class="status-dot active"></div>
+<span>Active</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-info">
+<div class="info-left">
+<div class="info-item">
+<i class="fas fa-info-circle info-icon"></i>
+<span>Source: Microsoft Keynote (https://www.genspark.ai/api/files/s/7uk2LuBj)</span>
+</div>
+</div>
+<div class="info-right">
+<div class="source-tag">Microsoft</div>
+<div class="source-tag">OpenAI</div>
+<div class="source-tag">SNU</div>
+</div>
+</div>
+</div>
+</body>
+</html>

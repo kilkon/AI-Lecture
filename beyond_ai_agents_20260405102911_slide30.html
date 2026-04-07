@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Design Principles for AI-Native Institutions</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 60px;
+        right: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+    
+    .title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .title-icon {
+        color: #60a5fa;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-left: 44px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 120px;
+        left: 60px;
+        right: 60px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .principles-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        flex: 1;
+    }
+    
+    .principle-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .principle-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .principle-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+        padding-right: 26px;
+    }
+    
+    .principle-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 10px;
+        background: rgba(59, 130, 246, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    
+    .principle-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #ffffff;
+        line-height: 1.25;
+    }
+    
+    .principle-description {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+    
+    .principle-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: auto;
+        padding-right: 8px;
+    }
+    
+    .feature-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+        white-space: nowrap;
+    }
+    
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 12px;
+    }
+    
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-text {
+        font-size: 12px;
+        color: #94a3b8;
+    }
+    
+    .bottom-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.02);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 60px;
+    }
+    
+    .source-text {
+        color: #64748b;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .tag-container {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .tag {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #94a3b8;
+    }
+    
+    .principle-number {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        font-size: 24px;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.1);
+        font-family: 'JetBrains Mono', monospace;
+        line-height: 1;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div class="title-group">
+<div class="title">
+<i class="fas fa-drafting-compass title-icon"></i>
+                Design Principles for AI-Native Institutions
+            </div>
+<div class="subtitle">Guiding values and approaches for building human-centered AI systems</div>
+</div>
+</div>
+<div class="main-content">
+<div class="principles-grid">
+<div class="principle-card">
+<div class="principle-number">01</div>
+<div class="principle-header">
+<div class="principle-icon">
+<i class="fas fa-users"></i>
+</div>
+<div class="principle-title">Human-centered &amp; Safety-by-Design</div>
+</div>
+<div class="principle-description">
+                    Prioritize human agency and well-being in all AI system designs. Implement safety measures from the ground up, not as an afterthought.
+                </div>
+<div class="principle-features">
+<div class="feature-tag">Human oversight</div>
+<div class="feature-tag">Safety first</div>
+<div class="feature-tag">Ethical AI</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<div class="status-text">Core principle</div>
+</div>
+</div>
+<div class="principle-card">
+<div class="principle-number">02</div>
+<div class="principle-header">
+<div class="principle-icon">
+<i class="fas fa-lock-open"></i>
+</div>
+<div class="principle-title">Open Yet Governed Ecosystems</div>
+</div>
+<div class="principle-description">
+                    Balance transparency and collaboration with robust governance. Enable innovation while maintaining control and accountability.
+                </div>
+<div class="principle-features">
+<div class="feature-tag">Transparency</div>
+<div class="feature-tag">Governance</div>
+<div class="feature-tag">Control</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<div class="status-text">Critical requirement</div>
+</div>
+</div>
+<div class="principle-card">
+<div class="principle-number">03</div>
+<div class="principle-header">
+<div class="principle-icon">
+<i class="fas fa-database"></i>
+</div>
+<div class="principle-title">Data Gravity &amp; Quality</div>
+</div>
+<div class="principle-description">
+                    Build systems that attract and retain high-quality data. Ensure data flows to where it creates the most value.
+                </div>
+<div class="principle-features">
+<div class="feature-tag">Data quality</div>
+<div class="feature-tag">Value creation</div>
+<div class="feature-tag">Flow optimization</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<div class="status-text">Foundational</div>
+</div>
+</div>
+<div class="principle-card">
+<div class="principle-number">04</div>
+<div class="principle-header">
+<div class="principle-icon">
+<i class="fas fa-chart-line"></i>
+</div>
+<div class="principle-title">Measurable Value</div>
+</div>
+<div class="principle-description">
+                    Focus on concrete, quantifiable outcomes. Track metrics that matter and iterate based on real performance data.
+                </div>
+<div class="principle-features">
+<div class="feature-tag">KPIs</div>
+<div class="feature-tag">ROI tracking</div>
+<div class="feature-tag">Metrics</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<div class="status-text">Success metric</div>
+</div>
+</div>
+<div class="principle-card">
+<div class="principle-number">05</div>
+<div class="principle-header">
+<div class="principle-icon">
+<i class="fas fa-universal-access"></i>
+</div>
+<div class="principle-title">Inclusivity &amp; Accessibility</div>
+</div>
+<div class="principle-description">
+                    Design for diverse users and use cases. Ensure AI systems are accessible to all, regardless of technical expertise.
+                </div>
+<div class="principle-features">
+<div class="feature-tag">Accessibility</div>
+<div class="feature-tag">Diversity</div>
+<div class="feature-tag">Equity</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<div class="status-text">Essential</div>
+</div>
+</div>
+<div class="principle-card">
+<div class="principle-number">06</div>
+<div class="principle-header">
+<div class="principle-icon">
+<i class="fas fa-shield-alt"></i>
+</div>
+<div class="principle-title">Trust &amp; Accountability</div>
+</div>
+<div class="principle-description">
+                    Build systems that are explainable and auditable. Establish clear accountability for AI decisions and outcomes.
+                </div>
+<div class="principle-features">
+<div class="feature-tag">Explainability</div>
+<div class="feature-tag">Auditability</div>
+<div class="feature-tag">Accountability</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<div class="status-text">Non-negotiable</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-bar">
+<div class="source-text">
+<i class="fas fa-info-circle"></i>
+            Source: SNU SHINE AI &amp; Microsoft Keynote
+        </div>
+<div class="tag-container">
+<div class="tag">AI-Native</div>
+<div class="tag">Design</div>
+<div class="tag">Governance</div>
+</div>
+</div>
+</div>
+</body>
+</html>

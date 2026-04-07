@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Future Skills for Individuals</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        @import url("https://www.genspark.ai/image_placeholder.png");
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            background: #0f0f1e;
+            overflow: hidden;
+        }
+        
+        .slide-container {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            overflow: hidden;
+            color: white;
+        }
+        
+        .grid-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 40px 60px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+        
+        .title {
+            font-size: 36px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            background: linear-gradient(135deg, #ffffff 0%, #a0a0a0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            flex: 1;
+        }
+        
+        .skill-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+            min-height: 496px;
+            box-sizing: border-box;
+        }
+        
+        .skill-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .skill-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        
+        .skill-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex: 0 0 48px;
+        }
+        
+        .skill-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            margin: 0;
+            flex: 1;
+            line-height: 1.25;
+        }
+        
+        .skill-level {
+            font-size: 12px;
+            color: #6b7280;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
+        
+        .skill-description {
+            font-size: 14px;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .skill-tag {
+            font-size: 12px;
+            color: #6b7280;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .stats-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+        }
+        
+        .status-text {
+            font-size: 12px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+<div class="slide-container">
+<div class="grid-pattern"></div>
+<div class="content-wrapper">
+<div class="header">
+<div>
+<h1 class="title">Future Skills for Individuals</h1>
+<p class="subtitle">Key competencies needed for success in the AI-driven workplace</p>
+</div>
+<div class="status-indicator">
+<div class="status-dot"></div>
+<span class="status-text">Skills Matrix</span>
+</div>
+</div>
+<div class="skills-grid">
+<!-- Skill 1: Judgment and Problem Decomposition -->
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-icon" style="background: rgba(59, 130, 246, 0.2); color: #3b82f6;">
+<i class="fas fa-brain"></i>
+</div>
+<div class="skill-title">Judgment &amp; Problem Decomposition</div>
+<div class="skill-level">Critical</div>
+</div>
+<p class="skill-description">
+                    Breaking complex problems into actionable components, identifying patterns, and making strategic decisions with AI assistance.
+                </p>
+<div class="skill-tags">
+<span class="skill-tag">Critical Thinking</span>
+<span class="skill-tag">Pattern Recognition</span>
+<span class="skill-tag">Strategic Analysis</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 85%;"></div>
+</div>
+<div class="stats-row">
+<div class="stat-item">
+<div class="stat-value">85%</div>
+<div class="stat-label">Proficiency</div>
+</div>
+<div class="stat-item">
+<div class="stat-value">A1</div>
+<div class="stat-label">Level</div>
+</div>
+</div>
+</div>
+<!-- Skill 2: System Prompting and Delegation -->
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-icon" style="background: rgba(168, 85, 247, 0.2); color: #a855f7;">
+<i class="fas fa-comments"></i>
+</div>
+<div class="skill-title">System Prompting &amp; Delegation</div>
+<div class="skill-level">Essential</div>
+</div>
+<p class="skill-description">
+                    Effective communication with AI systems, crafting precise prompts, and delegating tasks to agent workflows.
+                </p>
+<div class="skill-tags">
+<span class="skill-tag">Prompt Engineering</span>
+<span class="skill-tag">Task Delegation</span>
+<span class="skill-tag">AI Communication</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 78%;"></div>
+</div>
+<div class="stats-row">
+<div class="stat-item">
+<div class="stat-value">78%</div>
+<div class="stat-label">Proficiency</div>
+</div>
+<div class="stat-item">
+<div class="stat-value">A2</div>
+<div class="stat-label">Level</div>
+</div>
+</div>
+</div>
+<!-- Skill 3: Data Literacy and Agent Operations -->
+<div class="skill-card">
+<div class="skill-header">
+<div class="skill-icon" style="background: rgba(34, 197, 94, 0.2); color: #22c55e;">
+<i class="fas fa-chart-line"></i>
+</div>
+<div class="skill-title">Data Literacy &amp; Agent Operations</div>
+<div class="skill-level">Advanced</div>
+</div>
+<p class="skill-description">
+                    Assessing AI outputs, managing agent workflows, and evaluating system performance for continuous improvement.
+                </p>
+<div class="skill-tags">
+<span class="skill-tag">Data Analysis</span>
+<span class="skill-tag">Performance Evaluation</span>
+<span class="skill-tag">Agent Management</span>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 72%;"></div>
+</div>
+<div class="stats-row">
+<div class="stat-item">
+<div class="stat-value">72%</div>
+<div class="stat-label">Proficiency</div>
+</div>
+<div class="stat-item">
+<div class="stat-value">B1</div>
+<div class="stat-label">Level</div>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<div class="footer-left">
+<i class="fas fa-info-circle"></i>
+<span>Source: OpenAI, Microsoft, and SNU research on AI skills development</span>
+</div>
+<div class="footer-right">
+<span>Updated: 2026</span>
+<span class="status-indicator">
+<div class="status-dot"></div>
+<span class="status-text">Active</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>The Intelligence Layer: Work IQ, Fabric IQ, Foundry IQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+      color: #ffffff;
+    }
+    
+    .header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .title-icon {
+      color: #60a5fa;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    
+    .source-badge {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .main-content {
+      position: absolute;
+      top: 120px;
+      left: 40px;
+      right: 40px;
+      bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .architecture-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      height: 100%;
+    }
+    
+    .layer-row {
+      display: flex;
+      gap: 16px;
+      flex: 1;
+    }
+    
+    .layer-card {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .layer-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .layer-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+    
+    .layer-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+    
+    .layer-info {
+      flex: 1;
+    }
+    
+    .layer-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    
+    .layer-subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    
+    .layer-content {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .layer-description {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    
+    .layer-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .feature-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+    
+    .layer-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .status-active {
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-text {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .layer-connections {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 8px 0;
+    }
+    
+    .connection-line {
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+      border-radius: 1px;
+    }
+    
+    .connection-icon {
+      color: #60a5fa;
+      font-size: 16px;
+    }
+    
+    .bottom-info {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+    
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .info-icon {
+      color: #60a5fa;
+      font-size: 12px;
+    }
+    
+    .info-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .source-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <div>
+        <div class="title">
+          <i class="fas fa-layer-group title-icon"></i>
+          The Intelligence Layer: Work IQ, Fabric IQ, Foundry IQ
+        </div>
+        <div class="subtitle">Three-layer architecture for AI-native organizations</div>
+      </div>
+      <div class="source-badge">
+        <i class="fas fa-quote-left"></i>
+        <span>Microsoft Keynote</span>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="architecture-container">
+        <div class="layer-row">
+          <div class="layer-card">
+            <div class="layer-header">
+              <div class="layer-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="layer-info">
+                <div class="layer-title">Work IQ</div>
+                <div class="layer-subtitle">Employee productivity &amp; copilots</div>
+              </div>
+            </div>
+            <div class="layer-content">
+              <div class="layer-description">Empower employees with AI copilots that enhance productivity and streamline workflows</div>
+              <div class="layer-features">
+                <div class="feature-tag">Copilots</div>
+                <div class="feature-tag">Productivity</div>
+                <div class="feature-tag">Automation</div>
+              </div>
+              <div class="layer-status">
+                <div class="status-dot status-active"></div>
+                <div class="status-text">Active deployment</div>
+              </div>
+            </div>
+          </div>
+          <div class="layer-card">
+            <div class="layer-header">
+              <div class="layer-icon">
+                <i class="fas fa-cogs"></i>
+              </div>
+              <div class="layer-info">
+                <div class="layer-title">Fabric IQ</div>
+                <div class="layer-subtitle">Business process intelligence</div>
+              </div>
+            </div>
+            <div class="layer-content">
+              <div class="layer-description">Integrate AI into business processes for intelligent automation and insights</div>
+              <div class="layer-features">
+                <div class="feature-tag">Processes</div>
+                <div class="feature-tag">Intelligence</div>
+                <div class="feature-tag">Integration</div>
+              </div>
+              <div class="layer-status">
+                <div class="status-dot status-active"></div>
+                <div class="status-text">In production</div>
+              </div>
+            </div>
+          </div>
+          <div class="layer-card">
+            <div class="layer-header">
+              <div class="layer-icon">
+                <i class="fas fa-brain"></i>
+              </div>
+              <div class="layer-info">
+                <div class="layer-title">Foundry IQ</div>
+                <div class="layer-subtitle">Knowledge activation &amp; reuse</div>
+              </div>
+            </div>
+            <div class="layer-content">
+              <div class="layer-description">Activate and reuse organizational knowledge through AI-powered systems</div>
+              <div class="layer-features">
+                <div class="feature-tag">Knowledge</div>
+                <div class="feature-tag">Reuse</div>
+                <div class="feature-tag">Activation</div>
+              </div>
+              <div class="layer-status">
+                <div class="status-dot status-active"></div>
+                <div class="status-text">Scaling up</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="layer-connections">
+          <div class="connection-line"></div>
+          <i class="fas fa-arrow-right connection-icon"></i>
+          <div class="connection-line"></div>
+        </div>
+        <div class="layer-row">
+          <div class="layer-card">
+            <div class="layer-header">
+              <div class="layer-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="layer-info">
+                <div class="layer-title">Work IQ Details</div>
+                <div class="layer-subtitle">Employee productivity metrics</div>
+              </div>
+            </div>
+            <div class="layer-content">
+              <div class="layer-description">Monitor and optimize employee productivity through AI-powered analytics and insights</div>
+              <div class="layer-features">
+                <div class="feature-tag">Analytics</div>
+                <div class="feature-tag">Optimization</div>
+                <div class="feature-tag">Metrics</div>
+              </div>
+            </div>
+          </div>
+          <div class="layer-card">
+            <div class="layer-header">
+              <div class="layer-icon">
+                <i class="fas fa-network-wired"></i>
+              </div>
+              <div class="layer-info">
+                <div class="layer-title">Fabric IQ Details</div>
+                <div class="layer-subtitle">Process intelligence layer</div>
+              </div>
+            </div>
+            <div class="layer-content">
+              <div class="layer-description">Connect business processes with AI for intelligent decision-making and automation</div>
+              <div class="layer-features">
+                <div class="feature-tag">Connections</div>
+                <div class="feature-tag">Automation</div>
+                <div class="feature-tag">Decisions</div>
+              </div>
+            </div>
+          </div>
+          <div class="layer-card">
+            <div class="layer-header">
+              <div class="layer-icon">
+                <i class="fas fa-database"></i>
+              </div>
+              <div class="layer-info">
+                <div class="layer-title">Foundry IQ Details</div>
+                <div class="layer-subtitle">Knowledge management system</div>
+              </div>
+            </div>
+            <div class="layer-content">
+              <div class="layer-description">Build and maintain organizational knowledge through AI-powered systems</div>
+              <div class="layer-features">
+                <div class="feature-tag">Storage</div>
+                <div class="feature-tag">Retrieval</div>
+                <div class="feature-tag">Activation</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-info">
+      <div class="info-left">
+        <div class="info-item">
+          <i class="fas fa-info-circle info-icon"></i>
+          <span>Source: Microsoft Keynote (https://www.genspark.ai/api/files/s/7uk2LuBj)</span>
+        </div>
+      </div>
+      <div class="info-right">
+        <div class="source-tag">Microsoft</div>
+        <div class="source-tag">OpenAI</div>
+        <div class="source-tag">SNU</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

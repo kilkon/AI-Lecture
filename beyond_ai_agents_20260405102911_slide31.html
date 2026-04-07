@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Strategic Roadmap (0-36 Months)</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .title-icon {
+        color: #60a5fa;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+    
+    .source-badge {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: #60a5fa;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 120px;
+        left: 40px;
+        right: 40px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .roadmap-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: 100%;
+    }
+    
+    .timeline-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    
+    .timeline-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .timeline-subtitle {
+        font-size: 13px;
+        color: #94a3b8;
+    }
+    
+    .phases-row {
+        display: flex;
+        gap: 20px;
+        flex: 1;
+    }
+    
+    .phase-card {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+        transition: all 0.3s ease;
+        min-width: 0;
+    }
+    
+    .phase-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(59, 130, 246, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .phase-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .phase-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 20px;
+        flex: 0 0 auto;
+    }
+    
+    .phase-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .phase-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 4px;
+    }
+    
+    .phase-subtitle {
+        font-size: 12px;
+        color: #94a3b8;
+    }
+    
+    .phase-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+        flex: 1;
+    }
+    
+    .phase-description {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+    
+    .milestones {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .milestone-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .milestone-item:last-child {
+        border-bottom: none;
+    }
+    
+    .milestone-icon {
+        color: #3b82f6;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    
+    .milestone-text {
+        font-size: 12px;
+        color: #e2e8f0;
+        line-height: 1.4;
+    }
+    
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    
+    .status-active {
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-pending {
+        background: #f59e0b;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    }
+    
+    .status-text {
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+    
+    .progress-fill.completed {
+        background: #22c55e;
+    }
+    
+    .progress-fill.in-progress {
+        background: #f59e0b;
+    }
+    
+    .bottom-info {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #64748b;
+    }
+    
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .info-icon {
+        color: #60a5fa;
+        font-size: 12px;
+    }
+    
+    .info-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .source-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+    }
+    
+    .chart-container {
+        position: relative;
+        height: 200px;
+        width: 100%;
+        margin-top: 20px;
+    }
+    
+    .legend {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    
+    .legend-color {
+        width: 10px;
+        height: 10px;
+        border-radius: 2px;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div>
+<div class="title">
+<i class="fas fa-route title-icon"></i>
+                Strategic Roadmap (0-36 Months)
+            </div>
+<div class="subtitle">Three-phase implementation plan for AI transformation</div>
+</div>
+<div class="source-badge">
+<i class="fas fa-calendar-alt"></i>
+<span>2025-2028</span>
+</div>
+</div>
+<div class="main-content">
+<div class="roadmap-container">
+<div class="timeline-header">
+<div>
+<div class="timeline-title">Implementation Timeline</div>
+<div class="timeline-subtitle">From pilot to scale across three strategic phases</div>
+</div>
+<div style="display: flex; align-items: center; gap: 8px;">
+<span style="font-size: 12px; color: #94a3b8;">Progress:</span>
+<div style="width: 200px; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+<div style="width: 35%; height: 100%; background: linear-gradient(90deg, #3b82f6, #60a5fa); border-radius: 4px;"></div>
+</div>
+<span style="font-size: 12px; color: #60a5fa;">35%</span>
+</div>
+</div>
+<div class="phases-row">
+<div class="phase-card">
+<div class="phase-header">
+<div class="phase-icon">
+<i class="fas fa-rocket"></i>
+</div>
+<div class="phase-info">
+<div class="phase-title">Phase 1: Foundation (0-6 months)</div>
+<div class="phase-subtitle">Use cases, guardrails, role-based pilots</div>
+</div>
+</div>
+<div class="phase-content">
+<div class="phase-description">Establish AI governance framework and identify high-value use cases for initial deployment</div>
+<div class="milestones">
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Define top-10 role tasks for AI assistance</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Launch role-based pilots with champions</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Publish governance baseline</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Set up AI council and oversight</div>
+</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot status-active"></div>
+<div class="status-text">In Progress</div>
+<div style="margin-left: auto; font-size: 11px; color: #60a5fa;">75%</div>
+</div>
+<div class="progress-bar">
+<div class="progress-fill completed" style="width: 75%;"></div>
+</div>
+</div>
+</div>
+<div class="phase-card">
+<div class="phase-header">
+<div class="phase-icon">
+<i class="fas fa-cogs"></i>
+</div>
+<div class="phase-info">
+<div class="phase-title">Phase 2: Integration (6-18 months)</div>
+<div class="phase-subtitle">Platform, data foundation, orchestration</div>
+</div>
+</div>
+<div class="phase-content">
+<div class="phase-description">Build scalable AI infrastructure and integrate with existing systems</div>
+<div class="milestones">
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Deploy AI platform and tools</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Establish data foundation</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Implement orchestration layer</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Train teams on new processes</div>
+</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot status-pending"></div>
+<div class="status-text">Pending</div>
+<div style="margin-left: auto; font-size: 11px; color: #f59e0b;">25%</div>
+</div>
+<div class="progress-bar">
+<div class="progress-fill in-progress" style="width: 25%;"></div>
+</div>
+</div>
+</div>
+<div class="phase-card">
+<div class="phase-header">
+<div class="phase-icon">
+<i class="fas fa-chart-line"></i>
+</div>
+<div class="phase-info">
+<div class="phase-title">Phase 3: Scale (18-36 months)</div>
+<div class="phase-subtitle">Scale, automate evaluation, multi-agent ops</div>
+</div>
+</div>
+<div class="phase-content">
+<div class="phase-description">Expand AI capabilities across organization and optimize operations</div>
+<div class="milestones">
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Scale to full deployment</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Automate evaluation processes</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Enable multi-agent operations</div>
+</div>
+<div class="milestone-item">
+<i class="fas fa-check milestone-icon"></i>
+<div class="milestone-text">Measure ROI and optimize</div>
+</div>
+</div>
+<div class="status-indicator">
+<div class="status-dot status-pending"></div>
+<div class="status-text">Planned</div>
+<div style="margin-left: auto; font-size: 11px; color: #94a3b8;">0%</div>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 0%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-info">
+<div class="info-left">
+<div class="info-item">
+<i class="fas fa-info-circle info-icon"></i>
+<span>Source: Microsoft Keynote &amp; OpenAI Strategy</span>
+</div>
+</div>
+<div class="info-right">
+<div class="source-tag">Microsoft</div>
+<div class="source-tag">OpenAI</div>
+<div class="source-tag">SNU</div>
+</div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Inside Organizations: The Adoption Reality</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { margin: 0; font-family: 'Inter', sans-serif; background: #f8fafc; }
+    .slide-container { width: 1280px; height: 720px; position: relative; overflow: hidden; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); }
+    .content-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 48px 64px; box-sizing: border-box; }
+    .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .title { font-size: 36px; font-weight: 700; color: white; margin: 0; letter-spacing: -0.5px; }
+    .subtitle { font-size: 16px; color: #94a3b8; margin-top: 8px; }
+    .main-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 18px; }
+    .card { background: rgba(255, 255, 255, 0.95); border-radius: 12px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.1); }
+    .card-header { display: flex; align-items: center; margin-bottom: 16px; }
+    .icon { width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 12px; }
+    .icon-1 { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+    .icon-2 { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+    .icon-3 { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+    .card-title { font-size: 18px; font-weight: 600; color: #1e293b; margin: 0; line-height: 1.2; }
+    .card-desc { font-size: 14px; color: #64748b; line-height: 1.6; margin-top: 8px; }
+    .stat-box { background: rgba(59, 130, 246, 0.1); border-radius: 8px; padding: 12px 16px; margin-top: 16px; }
+    .stat-label { font-size: 12px; color: #64748b; }
+    .stat-value { font-size: 24px; font-weight: 700; color: #3b82f6; line-height: 1.1; }
+    .source { position: absolute; bottom: 18px; right: 64px; font-size: 12px; color: #94a3b8; }
+    .highlight { color: #3b82f6; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="content-wrapper">
+      <div class="header">
+        <div>
+          <h1 class="title">Inside Organizations: The Adoption Reality</h1>
+          <p class="subtitle">The messy reality of AI implementation across enterprises</p>
+        </div>
+        <div class="text-right">
+          <div class="text-white text-sm">Microsoft Keynote</div>
+          <div class="text-gray-400 text-xs">2024</div>
+        </div>
+      </div>
+      <div class="main-grid">
+        <div class="card">
+          <div class="card-header">
+            <div class="icon icon-1">
+              <i class="fas fa-puzzle-piece text-xl"></i>
+            </div>
+            <div>
+              <div class="card-title">Fragmented Pilots &amp; Shadow AI</div>
+              <div class="text-xs text-gray-500">Uncoordinated initiatives</div>
+            </div>
+          </div>
+          <div class="card-desc">
+            AI projects scattered across departments without central coordination. Each team experiments independently, leading to <span class="highlight">duplicated efforts</span> and <span class="highlight">inconsistent approaches</span>.
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Shadow AI Usage</div>
+            <div class="stat-value">67%</div>
+            <div class="text-xs text-gray-500">of employees use unapproved AI tools</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="icon icon-2">
+              <i class="fas fa-database text-xl"></i>
+            </div>
+            <div>
+              <div class="card-title">Data Silos &amp; Compliance</div>
+              <div class="text-xs text-gray-500">Governance challenges</div>
+            </div>
+          </div>
+          <div class="card-desc">
+            Critical data trapped in departmental silos, creating <span class="highlight">integration barriers</span> and <span class="highlight">compliance risks</span>. Inconsistent data standards prevent effective AI training.
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Data Access Issues</div>
+            <div class="stat-value">45%</div>
+            <div class="text-xs text-gray-500">of AI projects stalled due to data</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <div class="icon icon-3">
+              <i class="fas fa-users text-xl"></i>
+            </div>
+            <div>
+              <div class="card-title">Change Fatigue &amp; Skills Gap</div>
+              <div class="text-xs text-gray-500">Organizational resistance</div>
+            </div>
+          </div>
+          <div class="card-desc">
+            Employees overwhelmed by constant change, lacking <span class="highlight">AI literacy</span> and <span class="highlight">technical skills</span> needed for effective human-AI collaboration.
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Skills Gap</div>
+            <div class="stat-value">72%</div>
+            <div class="text-xs text-gray-500">of teams need AI training</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 24px; display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+        <div class="card" style="background: rgba(255, 255, 255, 0.9);">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 18px;">
+            <div style="min-width: 0;">
+              <div style="font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">Key Challenges</div>
+              <div style="font-size: 14px; color: #64748b; line-height: 1.5;">Organizations struggle with fragmented adoption, creating a <span class="highlight">2.84x performance gap</span> between structured and unstructured AI implementations.</div>
+            </div>
+            <div style="text-align: right; flex: 0 0 auto;">
+              <div style="font-size: 24px; font-weight: 700; color: #3b82f6; line-height: 1;">2.84x</div>
+              <div style="font-size: 12px; color: #64748b;">Performance gap</div>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); display: flex; align-items: center; justify-content: center;">
+          <div style="text-align: center;">
+            <div style="font-size: 14px; font-weight: 600; color: #1e293b;">Next Steps</div>
+            <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Establish AI Center of Excellence</div>
+          </div>
+        </div>
+      </div>
+      <div class="source">Source: Microsoft Keynote on AI-Ready Organizations, 2024</div>
+    </div>
+  </div>
+</body>
+</html>

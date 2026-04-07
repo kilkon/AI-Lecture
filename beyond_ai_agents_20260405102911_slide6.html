@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>From Copilots to Agents to Systems</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+      color: #ffffff;
+    }
+
+    .header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .title-icon {
+      color: #60a5fa;
+      font-size: 28px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .progress-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 8px 16px;
+    }
+
+    .progress-dot {
+      width: 8px;
+      height: 8px;
+      background: #3b82f6;
+      border-radius: 50%;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: #60a5fa;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .main-content {
+      position: absolute;
+      top: 120px;
+      left: 40px;
+      right: 40px;
+      bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .evolution-path {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 0 20px;
+    }
+
+    .stage-card {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    .stage-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .stage-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 8px;
+    }
+
+    .stage-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+
+    .stage-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .stage-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .stage-subtitle {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .stage-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .stage-description {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    .stage-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .feature-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+
+    .stage-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    .status-active {
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+
+    .status-upcoming {
+      background: #f59e0b;
+      box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    }
+
+    .status-text {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .arrow-connector {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px;
+    }
+
+    .arrow-icon {
+      color: #3b82f6;
+      font-size: 24px;
+    }
+
+    .arrow-label {
+      font-size: 10px;
+      color: #60a5fa;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .evolution-details {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .detail-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .detail-icon {
+      color: #60a5fa;
+      font-size: 14px;
+    }
+
+    .detail-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .detail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .detail-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    .detail-bullet {
+      width: 6px;
+      height: 6px;
+      background: #3b82f6;
+      border-radius: 50%;
+      flex: 0 0 auto;
+    }
+
+    .bottom-info {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .info-icon {
+      color: #60a5fa;
+      font-size: 12px;
+    }
+
+    .info-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .source-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <div>
+        <div class="title">
+          <i class="fas fa-rocket title-icon"></i>
+          From Copilots to Agents to Systems
+        </div>
+        <div class="subtitle">Evolution from assistive tools to orchestrated agent ecosystems</div>
+      </div>
+      <div class="progress-indicator">
+        <div class="progress-dot"></div>
+        <div class="progress-text">Stage 2 of 3</div>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="evolution-path">
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-icon">
+              <i class="fas fa-hand-holding-heart"></i>
+            </div>
+            <div class="stage-info">
+              <div class="stage-title">Stage 1: Assistive Copilots</div>
+              <div class="stage-subtitle">2022-2023</div>
+            </div>
+          </div>
+          <div class="stage-content">
+            <div class="stage-description">AI as intelligent assistants that augment human capabilities with suggestions and automation</div>
+            <div class="stage-features">
+              <div class="feature-tag">ChatGPT</div>
+              <div class="feature-tag">Copilot</div>
+              <div class="feature-tag">Suggestions</div>
+            </div>
+            <div class="stage-status">
+              <div class="status-dot status-active"></div>
+              <div class="status-text">Completed</div>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-connector">
+          <i class="fas fa-chevron-right arrow-icon"></i>
+          <div class="arrow-label">→</div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-icon">
+              <i class="fas fa-robot"></i>
+            </div>
+            <div class="stage-info">
+              <div class="stage-title">Stage 2: Task-Level Agents</div>
+              <div class="stage-subtitle">2023-2024</div>
+            </div>
+          </div>
+          <div class="stage-content">
+            <div class="stage-description">AI agents with tool access that can perform specific tasks and workflows autonomously</div>
+            <div class="stage-features">
+              <div class="feature-tag">Tool Use</div>
+              <div class="feature-tag">APIs</div>
+              <div class="feature-tag">Automation</div>
+            </div>
+            <div class="stage-status">
+              <div class="status-dot status-active"></div>
+              <div class="status-text">In Progress</div>
+            </div>
+          </div>
+        </div>
+        <div class="arrow-connector">
+          <i class="fas fa-chevron-right arrow-icon"></i>
+          <div class="arrow-label">→</div>
+        </div>
+        <div class="stage-card">
+          <div class="stage-header">
+            <div class="stage-icon">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <div class="stage-info">
+              <div class="stage-title">Stage 3: Orchestrated Systems</div>
+              <div class="stage-subtitle">2025-2026</div>
+            </div>
+          </div>
+          <div class="stage-content">
+            <div class="stage-description">Policy-aware agent systems that can orchestrate complex workflows with human oversight</div>
+            <div class="stage-features">
+              <div class="feature-tag">Orchestration</div>
+              <div class="feature-tag">Multi-agent</div>
+              <div class="feature-tag">Policy</div>
+            </div>
+            <div class="stage-status">
+              <div class="status-dot status-upcoming"></div>
+              <div class="status-text">Upcoming</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="evolution-details">
+        <div class="detail-card">
+          <div class="detail-header">
+            <i class="fas fa-users detail-icon"></i>
+            <div class="detail-title">Human Interaction</div>
+          </div>
+          <div class="detail-list">
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Direct assistance</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Task delegation</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>System oversight</span>
+            </div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-header">
+            <i class="fas fa-cogs detail-icon"></i>
+            <div class="detail-title">Capability Level</div>
+          </div>
+          <div class="detail-list">
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Basic automation</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Task automation</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Full autonomy</span>
+            </div>
+          </div>
+        </div>
+        <div class="detail-card">
+          <div class="detail-header">
+            <i class="fas fa-chart-line detail-icon"></i>
+            <div class="detail-title">Impact Scale</div>
+          </div>
+          <div class="detail-list">
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Individual productivity</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Team efficiency</span>
+            </div>
+            <div class="detail-item">
+              <div class="detail-bullet"></div>
+              <span>Organizational transformation</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-info">
+      <div class="info-left">
+        <div class="info-item">
+          <i class="fas fa-info-circle info-icon"></i>
+          <span>Source: Microsoft, OpenAI keynotes</span>
+        </div>
+      </div>
+      <div class="info-right">
+        <div class="source-tag">Microsoft</div>
+        <div class="source-tag">OpenAI</div>
+        <div class="source-tag">SNU</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

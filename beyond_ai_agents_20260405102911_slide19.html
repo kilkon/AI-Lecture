@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Partnerships and Ecosystem Building</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .title-icon {
+        color: #60a5fa;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+    
+    .source-badge {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: #60a5fa;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 120px;
+        left: 40px;
+        right: 40px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .ecosystem-map {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 40px;
+        position: relative;
+    }
+    
+    .central-node {
+        width: 180px;
+        height: 180px;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+        border: 2px solid rgba(59, 130, 246, 0.3);
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        z-index: 10;
+    }
+    
+    .central-icon {
+        font-size: 48px;
+        color: #60a5fa;
+        margin-bottom: 8px;
+    }
+    
+    .central-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        text-align: center;
+    }
+    
+    .central-subtext {
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    
+    .partnership-ring {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        border: 2px dashed rgba(59, 130, 246, 0.2);
+        border-radius: 50%;
+    }
+    
+    .partner-nodes {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .partner-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        transition: all 0.3s ease;
+        min-width: 320px;
+    }
+    
+    .partner-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .partner-logo {
+        width: 48px;
+        height: 48px;
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 20px;
+        flex: 0 0 auto;
+    }
+    
+    .partner-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .partner-name {
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 4px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .partner-type {
+        font-size: 11px;
+        color: #60a5fa;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 4px;
+        padding: 2px 6px;
+    }
+    
+    .partner-desc {
+        font-size: 12px;
+        color: #94a3b8;
+        line-height: 1.4;
+    }
+    
+    .partner-status {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    
+    .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    
+    .status-active {
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-pending {
+        background: #f59e0b;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    }
+    
+    .status-text {
+        font-size: 10px;
+        color: #94a3b8;
+    }
+    
+    .connection-lines {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        height: 600px;
+        pointer-events: none;
+    }
+    
+    .connection-line {
+        position: absolute;
+        height: 2px;
+        background: linear-gradient(90deg, rgba(59, 130, 246, 0.3) 0%, rgba(59, 130, 246, 0.1) 100%);
+        transform-origin: left center;
+    }
+    
+    .bottom-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 20px;
+    }
+    
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #60a5fa;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #94a3b8;
+    }
+    
+    .bottom-info {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #64748b;
+    }
+    
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .info-icon {
+        color: #60a5fa;
+        font-size: 12px;
+    }
+    
+    .info-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .source-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div>
+<div class="title">
+<i class="fas fa-network-wired title-icon"></i>
+                Partnerships and Ecosystem Building
+            </div>
+<div class="subtitle">Strategic collaborations driving AI innovation and transformation</div>
+</div>
+<div class="source-badge">
+<i class="fas fa-handshake"></i>
+<span>SNU SHINE AI</span>
+</div>
+</div>
+<div class="main-content">
+<div class="ecosystem-map">
+<div class="partnership-ring" style="left: 50%; top: 50%; transform: translate(-50%, -50%);"></div>
+<div class="partner-nodes">
+<div class="partner-card">
+<div class="partner-logo">
+<i class="fas fa-brain"></i>
+</div>
+<div class="partner-info">
+<div class="partner-name">
+<span>SNU - OpenAI</span>
+<span class="partner-type">Strategic MOU</span>
+</div>
+<div class="partner-desc">Strategic partnership for AI research and development, focusing on AGI capabilities</div>
+</div>
+<div class="partner-status">
+<div class="status-indicator status-active"></div>
+<div class="status-text">Active</div>
+</div>
+</div>
+<div class="partner-card">
+<div class="partner-logo">
+<i class="fas fa-cloud"></i>
+</div>
+<div class="partner-info">
+<div class="partner-name">
+<span>SNU - Naver Cloud</span>
+<span class="partner-type">Joint Research</span>
+</div>
+<div class="partner-desc">Collaboration on cloud-based AI infrastructure and services</div>
+</div>
+<div class="partner-status">
+<div class="status-indicator status-active"></div>
+<div class="status-text">Active</div>
+</div>
+</div>
+</div>
+<div class="central-node">
+<div class="central-icon">
+<i class="fas fa-university"></i>
+</div>
+<div class="central-text">SNU</div>
+<div class="central-subtext">AI Native Campus</div>
+</div>
+<div class="partner-nodes">
+<div class="partner-card">
+<div class="partner-logo">
+<i class="fas fa-microchip"></i>
+</div>
+<div class="partner-info">
+<div class="partner-name">
+<span>SNU - Samsung</span>
+<span class="partner-type">NPRC-NPU</span>
+</div>
+<div class="partner-desc">Joint research on neural processing units and AI chips</div>
+</div>
+<div class="partner-status">
+<div class="status-indicator status-active"></div>
+<div class="status-text">Active</div>
+</div>
+</div>
+<div class="partner-card">
+<div class="partner-logo">
+<i class="fas fa-bolt"></i>
+</div>
+<div class="partner-info">
+<div class="partner-name">
+<span>SNU - KEPCO-KT</span>
+<span class="partner-type">MOU</span>
+</div>
+<div class="partner-desc">Partnership for energy-efficient AI infrastructure</div>
+</div>
+<div class="partner-status">
+<div class="status-indicator status-pending"></div>
+<div class="status-text">Pending</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-stats">
+<div class="stat-item">
+<div class="stat-value">4</div>
+<div class="stat-label">Strategic Partners</div>
+</div>
+<div class="stat-item">
+<div class="stat-value">12</div>
+<div class="stat-label">Active Projects</div>
+</div>
+<div class="stat-item">
+<div class="stat-value">₹50B</div>
+<div class="stat-label">Investment</div>
+</div>
+<div class="stat-item">
+<div class="stat-value">200+</div>
+<div class="stat-label">Researchers</div>
+</div>
+</div>
+</div>
+<div class="bottom-info">
+<div class="info-left">
+<div class="info-item">
+<i class="fas fa-info-circle info-icon"></i>
+<span>Source: SNU SHINE AI (https://www.genspark.ai/api/files/s/A16TnqJh)</span>
+</div>
+</div>
+<div class="info-right">
+<div class="source-tag">OpenAI</div>
+<div class="source-tag">Samsung</div>
+<div class="source-tag">Naver</div>
+</div>
+</div>
+</div>
+</body>
+</html>

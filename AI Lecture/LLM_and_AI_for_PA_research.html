@@ -1,0 +1,1733 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</title>
+  <style>
+    :root {
+      --deck-scale: 1;
+      --navy: #0d1b3e;
+      --blue: #1a5cb5;
+      --cyan: #00c2d4;
+      --light: #f2f4f8;
+      --dark: #333344;
+      --gold: #f5a623;
+      --green: #27ae60;
+      --red: #e74c3c;
+      --purple: #5b279a;
+      --teal: #006a4e;
+    }
+    * { box-sizing: border-box; }
+    html { font-size: 18px; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      background: #1a1a2e;
+      color: var(--dark);
+      padding-bottom: 4rem;
+    }
+    #lecture-slide-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem 1rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(13, 27, 62, 0.97);
+      border-top: 3px solid var(--cyan);
+      box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.25);
+    }
+    #lecture-slide-nav button {
+      padding: 0.45rem 1rem;
+      font-size: 0.88rem;
+      font-weight: 800;
+      font-family: inherit;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background: var(--blue);
+      color: #fff;
+    }
+    #lecture-slide-nav button:hover:not(:disabled) {
+      background: #256fd4;
+    }
+    #lecture-slide-nav button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+    #lecture-slide-nav #sn-pos {
+      color: var(--gold);
+      font-weight: 800;
+      min-width: 5rem;
+      text-align: center;
+      font-size: 0.82rem;
+    }
+    #lecture-slide-nav .sn-hint {
+      color: var(--cyan);
+      font-size: 0.72rem;
+      opacity: 0.9;
+      width: 100%;
+      text-align: center;
+      margin: 0;
+      padding: 0 0 0.15rem;
+    }
+    nav.toc {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--navy);
+      color: var(--cyan);
+      padding: 0.5rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: center;
+      font-size: 0.8rem;
+      border-bottom: 3px solid var(--cyan);
+    }
+    nav.toc a {
+      color: var(--light);
+      text-decoration: none;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+    }
+    nav.toc a:hover { background: var(--blue); color: #fff; }
+    nav.toc span { color: var(--gold); margin-right: 0.5rem; font-weight: bold; }
+    .slide {
+      width: 1280px;
+      height: 720px;
+      min-height: 720px;
+      margin: 0.5rem auto;
+      background: var(--light);
+      position: relative;
+      padding-bottom: 2.5rem;
+      border-bottom: 4px solid var(--navy);
+      scroll-margin-top: 3.75rem;
+      overflow: hidden;
+      zoom: var(--deck-scale);
+    }
+    .slide-inner { padding: 0 1.25rem 1rem; }
+    .header-bar {
+      background: var(--navy);
+      color: #fff;
+      padding: 0.85rem 1rem 0.65rem;
+      border-left: 6px solid var(--cyan);
+      border-bottom: 4px solid var(--cyan);
+    }
+    .header-bar h1 { margin: 0; font-size: 1.45rem; font-weight: 700; }
+    .header-bar .sub { margin: 0.35rem 0 0; font-size: 0.92rem; color: var(--cyan); }
+    .badge {
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      background: var(--gold);
+      color: #fff;
+      font-size: 0.76rem;
+      font-weight: 700;
+      padding: 0.35rem 0.75rem;
+      border-radius: 4px;
+    }
+    .footer-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 1280px;
+      margin: 0 auto;
+      background: var(--navy);
+      color: var(--cyan);
+      font-size: 0.76rem;
+      padding: 0.45rem 1rem;
+    }
+    .slide-num {
+      position: absolute;
+      bottom: 2.6rem;
+      right: 1.25rem;
+      font-size: 0.82rem;
+      color: var(--dark);
+    }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-top: 1rem; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+    .card {
+      border-radius: 6px;
+      padding: 0.75rem;
+      color: #fff;
+    }
+    .card h3 { margin: 0 0 0.35rem; font-size: 1.05rem; }
+    .card p { margin: 0; font-size: 0.88rem; opacity: 0.95; line-height: 1.45; }
+    .info-box {
+      background: var(--navy);
+      border-top: 4px solid var(--cyan);
+      border-radius: 6px;
+      padding: 0.75rem;
+      color: #fff;
+      margin-top: 0.5rem;
+    }
+    .info-box .t { color: var(--cyan); font-weight: 700; font-size: 1rem; }
+    pre.code {
+      background: #0d0d1a;
+      color: #00ff7f;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.78rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      margin: 0.5rem 0;
+    }
+    table.compare { width: 100%; border-collapse: collapse; margin-top: 0.75rem; font-size: 0.86rem; }
+    table.compare th, table.compare td { border: 1px solid #ccd; padding: 0.45rem; text-align: center; }
+    table.compare th { background: var(--navy); color: #fff; }
+    table.compare th:last-child { background: var(--purple); }
+    table.compare tr:nth-child(even) td { background: #e8eef5; }
+    .banner { text-align: center; padding: 0.65rem; border-radius: 6px; margin-top: 0.75rem; font-weight: 700; }
+    /* ── 슬라이드 2 로드맵 (큰 폰트·시각 보강) ── */
+    .slide-s2 .header-bar { padding: 1rem 1.15rem 0.85rem; }
+    .slide-s2 .header-bar h1 { font-size: 1.82rem; }
+    .slide-s2 .header-bar .sub { font-size: 1.08rem; line-height: 1.45; }
+    .slide-s2 .slide-inner { padding: 0.65rem 1.35rem 1.25rem; }
+    .slide-s2 .s2-pipeline-visual {
+      margin: 0.35rem 0 0.15rem;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(13, 27, 62, 0.12);
+    }
+    .slide-s2 .s2-pipeline-track {
+      height: 18px;
+      border-radius: 12px;
+      background: linear-gradient(
+        90deg,
+        var(--blue) 0%,
+        #0d47a1 22%,
+        var(--purple) 44%,
+        var(--blue) 66%,
+        var(--teal) 88%,
+        #004d38 100%
+      );
+    }
+    .slide-s2 .s2-pipeline-caption {
+      text-align: center;
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--navy);
+      margin: 0.5rem 0 0.35rem;
+      letter-spacing: 0.02em;
+    }
+    .slide-s2 .roadmap-flow {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      flex-wrap: nowrap;
+      gap: 0.25rem;
+      margin: 0.65rem 0 0.15rem;
+    }
+    .slide-s2 .roadmap-card {
+      flex: 1 1 0;
+      min-width: 0;
+      border-radius: 12px;
+      padding: 1.1rem 0.55rem 1rem;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      border-top: 5px solid rgba(255, 255, 255, 0.35);
+    }
+    .slide-s2 .roadmap-card .ico {
+      font-size: 2.65rem;
+      line-height: 1.15;
+      margin-bottom: 0.45rem;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+    }
+    .slide-s2 .roadmap-card strong {
+      display: block;
+      font-size: 1.08rem;
+      line-height: 1.28;
+      margin-bottom: 0.4rem;
+      font-weight: 800;
+    }
+    .slide-s2 .roadmap-card .tool {
+      display: block;
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.98);
+      line-height: 1.35;
+    }
+    .slide-s2 .roadmap-arrow {
+      flex: 0 0 auto;
+      align-self: center;
+      color: var(--gold);
+      font-size: 1.55rem;
+      font-weight: 900;
+      padding: 0 0.08rem;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+    }
+    .slide-s2 .roadmap-extras {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 1.1rem;
+      align-items: stretch;
+    }
+    .slide-s2 .roadmap-learn,
+    .slide-s2 .roadmap-parts {
+      background: #fff;
+      border: 1px solid #c5d4e8;
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      font-size: 0.98rem;
+      line-height: 1.6;
+      box-shadow: 0 2px 10px rgba(13, 27, 62, 0.06);
+    }
+    .slide-s2 .roadmap-learn {
+      border-left: 6px solid var(--teal);
+    }
+    .slide-s2 .roadmap-parts {
+      border-left: 6px solid var(--purple);
+    }
+    .slide-s2 .roadmap-learn h3,
+    .slide-s2 .roadmap-parts h3 {
+      margin: 0 0 0.55rem;
+      font-size: 1.12rem;
+      color: var(--navy);
+      font-weight: 800;
+    }
+    .slide-s2 .roadmap-learn ul,
+    .slide-s2 .roadmap-parts ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+    .slide-s2 .roadmap-learn li,
+    .slide-s2 .roadmap-parts li {
+      margin: 0.35rem 0;
+    }
+    .slide-s2 .roadmap-footnote {
+      font-size: 0.92rem;
+      color: #444;
+      text-align: center;
+      margin: 0.85rem 0 0;
+      padding: 0.55rem 0.75rem;
+      background: #eef2f8;
+      border-radius: 8px;
+    }
+    .slide-s2 .banner {
+      font-size: 1.12rem;
+      padding: 1rem 1.15rem;
+      margin-top: 1.05rem;
+      line-height: 1.45;
+    }
+    @media (max-width: 960px) {
+      .slide-s2 .roadmap-flow { flex-wrap: wrap; justify-content: center; }
+      .slide-s2 .roadmap-arrow { display: none; }
+      .slide-s2 .roadmap-card { flex: 1 1 42%; min-width: 140px; }
+      .slide-s2 .roadmap-extras { grid-template-columns: 1fr; }
+    }
+    /* ── 슬라이드 9 SPARRO 시각화 ── */
+    .slide-sparro { overflow-x: hidden; }
+    .sparro-intro {
+      background: linear-gradient(135deg, var(--navy) 0%, #1a2a5a 100%);
+      color: var(--light);
+      padding: 0.85rem 1.1rem;
+      border-radius: 10px;
+      margin: 0.75rem 0 1rem;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      border-left: 5px solid var(--gold);
+    }
+    .sparro-intro strong { color: var(--cyan); }
+    .sparro-pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0.15rem 0.05rem;
+      margin: 0.25rem 0 1rem;
+    }
+    .sparro-step {
+      flex: 1 1 155px;
+      max-width: 195px;
+      min-width: 148px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(13, 27, 62, 0.22);
+      display: flex;
+      flex-direction: column;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .sparro-step .stripe {
+      height: 7px;
+      width: 100%;
+    }
+    .sparro-step .stripe.gold { background: linear-gradient(90deg, var(--gold), #ffc966); }
+    .sparro-step .stripe.cyan { background: linear-gradient(90deg, var(--cyan), #5ee8f5); }
+    .sparro-letter {
+      background: #0a0a0f;
+      color: #fff;
+      font-size: 2.15rem;
+      font-weight: 800;
+      text-align: center;
+      padding: 0.45rem 0.25rem;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+    .sparro-head {
+      padding: 0.55rem 0.45rem 0.35rem;
+      text-align: center;
+      font-weight: 800;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      color: #fff;
+      min-height: 3.1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .sparro-head .en { font-size: 0.68rem; font-weight: 600; opacity: 0.92; margin-top: 0.15rem; }
+    .sparro-body {
+      flex: 1;
+      padding: 0.5rem 0.55rem 0.75rem;
+      font-size: 0.72rem;
+      line-height: 1.5;
+      color: var(--light);
+      text-align: center;
+      opacity: 0.96;
+    }
+    .sparro-body .outcome {
+      display: block;
+      margin-top: 0.45rem;
+      padding-top: 0.4rem;
+      border-top: 1px dashed rgba(255,255,255,0.25);
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 0.7rem;
+    }
+    .sparro-arrow {
+      flex: 0 0 auto;
+      align-self: center;
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: bold;
+      padding: 0 0.08rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+    }
+    @media (max-width: 520px) {
+      .sparro-arrow { display: none; }
+      .sparro-step { max-width: 100%; }
+    }
+    .sparro-craft-wrap {
+      background: var(--navy);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+      box-shadow: 0 8px 24px rgba(13, 27, 62, 0.25);
+    }
+    .sparro-craft-wrap .craft-head {
+      padding: 0.65rem 1rem;
+      border-bottom: 4px solid var(--purple);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.5rem;
+    }
+    .sparro-craft-wrap .craft-head h2 {
+      margin: 0;
+      font-size: 1.05rem;
+      color: var(--purple);
+    }
+    .sparro-craft-wrap .craft-head span { color: var(--cyan); font-size: 0.82rem; }
+    .craft-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.45rem;
+      padding: 0.85rem 1rem 1rem;
+    }
+    @media (max-width: 800px) {
+      .craft-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 420px) {
+      .craft-grid { grid-template-columns: 1fr; }
+    }
+    .craft-pill {
+      border-radius: 10px;
+      padding: 0.65rem 0.5rem;
+      text-align: center;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+    .craft-pill .ko { display: block; font-size: 0.72rem; font-weight: 600; opacity: 0.95; margin-top: 0.2rem; }
+    .craft-pill:nth-child(odd) { background: linear-gradient(160deg, var(--purple), #3d1a6e); }
+    .craft-pill:nth-child(even) { background: linear-gradient(160deg, #3a0a6a, #2a0648); }
+    .sparro-footnote {
+      margin-top: 0.85rem;
+      padding: 0.65rem 1rem;
+      background: #e8eef5;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      color: var(--dark);
+      border-left: 4px solid var(--teal);
+    }
+    /* ── 슬라이드 11 Genspark · 연구질문 설계 ── */
+    .slide-g11 .g11-intro {
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--dark);
+      margin: 0 0 0.85rem;
+      padding: 0.65rem 0.85rem;
+      background: #e8f4fc;
+      border-radius: 8px;
+      border-left: 5px solid var(--blue);
+    }
+    .g11-prompt-hero {
+      background: linear-gradient(165deg, #1a1a2e 0%, #12121f 100%);
+      color: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 28px rgba(13, 27, 62, 0.28);
+      margin-bottom: 1rem;
+      border: 1px solid rgba(91, 39, 154, 0.35);
+    }
+    .g11-prompt-hero .ph-head {
+      background: linear-gradient(90deg, var(--purple), #3d1a6e);
+      padding: 0.55rem 1rem;
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: #fff;
+    }
+    .g11-prompt-hero pre {
+      margin: 0;
+      padding: 1rem 1.1rem 1.15rem;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      font-size: 0.86rem;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      color: #f0f4f8;
+    }
+    .g11-prompt-hero pre strong { color: var(--cyan); }
+    .g11-flow {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0.12rem 0;
+      margin: 0.25rem 0 1rem;
+    }
+    .g11-step {
+      flex: 1 1 130px;
+      max-width: 175px;
+      min-width: 118px;
+      background: linear-gradient(180deg, #1a5cb5 0%, #134a94 100%);
+      border-radius: 11px;
+      overflow: hidden;
+      box-shadow: 0 6px 16px rgba(26, 92, 181, 0.28);
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .g11-step .top { height: 6px; background: linear-gradient(90deg, var(--cyan), #5ee8f5); }
+    .g11-step .ico { font-size: 1.65rem; padding: 0.4rem 0.25rem 0.15rem; line-height: 1; }
+    .g11-step .t1 {
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.78rem;
+      line-height: 1.3;
+      padding: 0 0.35rem 0.25rem;
+      min-height: 2.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .g11-step .t2 {
+      color: var(--cyan);
+      font-size: 0.68rem;
+      line-height: 1.4;
+      padding: 0 0.45rem 0.65rem;
+      font-weight: 600;
+    }
+    .g11-arrow {
+      flex: 0 0 auto;
+      align-self: center;
+      color: var(--gold);
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 0 0.06rem;
+    }
+    @media (max-width: 480px) { .g11-arrow { display: none; } }
+    .g11-examples-title {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 1.1rem 0 0.5rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 3px solid var(--gold);
+    }
+    .g11-ex {
+      background: #fff;
+      border: 1px solid #c5d4e8;
+      border-radius: 10px;
+      margin: 0.65rem 0;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(13, 27, 62, 0.06);
+    }
+    .g11-ex .ex-label {
+      background: var(--navy);
+      color: var(--gold);
+      padding: 0.45rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+    .g11-ex pre.code {
+      margin: 0;
+      border-radius: 0;
+      font-size: 0.8rem;
+      line-height: 1.58;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+    .g11-tip {
+      margin-top: 0.85rem;
+      padding: 0.65rem 1rem;
+      background: #fff8e8;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      border-left: 4px solid var(--gold);
+      color: var(--dark);
+    }
+    /* 슬라이드 10 RQ 설계 — 구체 예시 */
+    .slide-s10 .s10-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.45rem;
+      align-items: stretch;
+      margin-top: 0.5rem;
+    }
+    @media (max-width: 850px) {
+      .slide-s10 .s10-row { grid-template-columns: 1fr; }
+      .slide-s10 .s10-arrow-mid { display: none; }
+    }
+    .slide-s10 .s10-arrow-mid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      color: var(--gold);
+      font-weight: 800;
+      min-width: 2rem;
+    }
+    .slide-s10 .s10-box-trad {
+      background: linear-gradient(180deg, #6b6b7b 0%, #5a5a68 100%);
+      color: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .slide-s10 .s10-box-ai {
+      background: linear-gradient(180deg, #1a5cb5 0%, #0d3a8a 100%);
+      color: #fff;
+      padding: 1rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 14px rgba(26, 92, 181, 0.25);
+    }
+    .slide-s10 .s10-h3 {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 1.15rem 0 0.45rem;
+      padding-bottom: 0.35rem;
+      border-bottom: 3px solid var(--gold);
+    }
+    .slide-s10 .s10-timeline {
+      font-size: 0.8rem;
+      line-height: 1.55;
+      background: rgba(0,0,0,0.18);
+      padding: 0.65rem 0.8rem;
+      border-radius: 8px;
+      margin-top: 0.45rem;
+    }
+    .slide-s10 .rq-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+      margin: 0.45rem 0 0.65rem;
+    }
+    @media (max-width: 720px) { .slide-s10 .rq-pair { grid-template-columns: 1fr; } }
+    .slide-s10 .rq-bad {
+      background: #fdecea;
+      border-left: 5px solid var(--red);
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+    .slide-s10 .rq-good {
+      background: #e8f5e9;
+      border-left: 5px solid var(--green);
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+    .slide-s10 .rq-bad strong, .slide-s10 .rq-good strong { display: block; margin-bottom: 0.35rem; font-size: 0.75rem; }
+    .slide-s10 .s10-prompt {
+      background: #1a1a2e;
+      color: #e8ecf4;
+      font-size: 0.78rem;
+      line-height: 1.55;
+      padding: 0.75rem 0.9rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--purple);
+      margin: 0.4rem 0;
+      white-space: pre-wrap;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+    }
+    .slide-s10 .s10-foot {
+      margin-top: 0.85rem;
+      padding: 0.6rem 0.85rem;
+      background: #e8f4fc;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      border-left: 4px solid var(--blue);
+    }
+    @media (max-width: 900px) {
+      .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="toc">
+  <span>슬라이드</span>
+  <a href="#s1">1</a><a href="#s2">2</a><a href="#s3">3</a><a href="#s4">4</a><a href="#s5">5</a>
+  <a href="#s6">6</a><a href="#s7">7</a><a href="#s8">8</a><a href="#s9">9</a><a href="#s10">10</a>
+  <a href="#s11">11</a><a href="#s12">12</a><a href="#s13">13</a><a href="#s14">14</a><a href="#s15">15</a>
+  <a href="#s16">16</a><a href="#s17">17</a><a href="#s18">18</a><a href="#s19">19</a><a href="#s20">20</a>
+  <a href="#s21">21</a><a href="#s22">22</a><a href="#s23">23</a><a href="#s24">24</a><a href="#s25">25</a>
+  <a href="#s26">26</a><a href="#s27">27</a><a href="#s28">28</a><a href="#s29">29</a><a href="#s30">30</a>
+</nav>
+
+<!-- 1 표지 -->
+<section class="slide" id="s1" style="background:linear-gradient(90deg, var(--navy) 64%, #0a1430 64%); color:#fff;">
+  <div class="slide-inner" style="padding-top:2rem;">
+    <p style="display:inline-block;background:var(--blue);color:var(--cyan);padding:0.35rem 1rem;font-size:0.85rem;border-radius:4px;">서울대 행정대학원 특강 | 2026</p>
+    <h1 style="font-size:1.6rem;font-weight:400;color:var(--light);margin:1rem 0 0;">행정학 연구를 위한</h1>
+    <h2 style="font-size:2.2rem;margin:0.25rem 0 0;">AI LLM &amp; AI Agent 활용</h2>
+    <p style="color:var(--cyan);font-size:1.05rem;max-width:520px;line-height:1.5;margin-top:1rem;">
+      NotebookLM · Genspark · Promptology · Vibe Coding으로<br/>바꾸는 연구 패러다임
+    </p>
+    <div style="width:120px;height:4px;background:var(--gold);margin:1.5rem 0;"></div>
+    <p style="color:var(--light);font-size:0.95rem;">서울대 행정대학원 | 고길곤 교수</p>
+    <p style="margin-top:1.05rem;font-size:0.85rem;color:var(--cyan);font-weight:800;">
+      <a href="seoul-ai-prequestions.html" style="color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(245,166,35,0.55);">사전 질문 핵심 아젠다(9개 범주) 보기 →</a>
+    </p>
+    <div style="position:absolute;right:2rem;top:4rem;text-align:center;font-size:1.1rem;line-height:2.2;">
+      <div style="color:#2a3f6f;">Research</div><div style="color:#2a3f6f;">Question</div>
+      <div style="color:#fff;font-size:1.35rem;font-weight:bold;">Promptology</div>
+      <div style="color:#2a3f6f;">Analysis</div><div style="color:#2a3f6f;">Insight</div>
+    </div>
+  </div>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 2 로드맵 -->
+<section class="slide slide-s2" id="s2">
+  <div class="header-bar"><h1>강의 로드맵</h1><p class="sub">1시간 안에 연구 전 과정을 어디에 AI를 둘지 가늠한다 — 도구 이름보다 <strong>Promptology</strong>와 <strong>검증(SPARRO)</strong>이 중심축이다.</p></div>
+  <div class="slide-inner">
+    <div class="s2-pipeline-visual" role="img" aria-label="연구 단계가 왼쪽에서 오른쪽으로 이어지는 색띠">
+      <div class="s2-pipeline-track"></div>
+    </div>
+    <p class="s2-pipeline-caption">질문 설계 → 선행정리 → 프롬프트·윤리 → 모형 → 분석 · 인사이트</p>
+
+    <div class="roadmap-flow">
+      <div class="roadmap-card" style="background:var(--blue);">
+        <div class="ico" aria-hidden="true">🔍</div>
+        <strong>연구질문 설계</strong>
+        <span class="tool">Genspark · Deep Research</span>
+      </div>
+      <span class="roadmap-arrow" aria-hidden="true">▶</span>
+      <div class="roadmap-card" style="background:#0d47a1;">
+        <div class="ico" aria-hidden="true">📚</div>
+        <strong>선행연구 검토</strong>
+        <span class="tool">NotebookLM · RAG</span>
+      </div>
+      <span class="roadmap-arrow" aria-hidden="true">▶</span>
+      <div class="roadmap-card" style="background:var(--purple);">
+        <div class="ico" aria-hidden="true">✍️</div>
+        <strong>Promptology</strong>
+        <span class="tool">SPARRO · CRAFT</span>
+      </div>
+      <span class="roadmap-arrow" aria-hidden="true">▶</span>
+      <div class="roadmap-card" style="background:var(--blue);">
+        <div class="ico" aria-hidden="true">🏗️</div>
+        <strong>연구모형 설계</strong>
+        <span class="tool">Claude 등 LLM</span>
+      </div>
+      <span class="roadmap-arrow" aria-hidden="true">▶</span>
+      <div class="roadmap-card" style="background:var(--teal);">
+        <div class="ico" aria-hidden="true">💻</div>
+        <strong>통계·코딩 실행</strong>
+        <span class="tool">Vibe Coding · 에이전트</span>
+      </div>
+    </div>
+
+    <div class="roadmap-extras">
+      <div class="roadmap-learn">
+        <h3>이번 세션에서 기대할 것</h3>
+        <ul>
+          <li>연구 단계마다 <strong>어느 AI 활용이 유리한지</strong> 거친 메모를 잡을 수 있다.</li>
+          <li><strong>프롬프트 구조</strong>(역할·맥락·과업·형식)을 스스로 짜는 눈을 갖게 된다.</li>
+          <li><strong>SPARRO</strong>로 AI 쓴 구간을 적고, <strong>검증·표절·출처</strong>를 빼먹지 않게 된다.</li>
+          <li>NotebookLM·RAG·Agent 등 <strong>용어를 실무 맥락</strong>에 붙여 말할 수 있다.</li>
+        </ul>
+      </div>
+      <div class="roadmap-parts">
+        <h3>강의 구성(PART 요약)</h3>
+        <ul>
+          <li><strong>PART 1</strong> — LLM·Agent·Promptology 개념</li>
+          <li><strong>PART 2</strong> — 연구질문·선행연구(FINER, Genspark, NotebookLM)</li>
+          <li><strong>PART 3</strong> — 연구모형·가설·이론 프레임</li>
+          <li><strong>PART 4</strong> — 통계·바이브 코딩·분석 파이프라인</li>
+          <li><strong>PART 5</strong> — 총정리·AI 시대 연구 태도</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="roadmap-footnote">위 단계의 <strong>예시 도구</strong>는 교육용이다. 실제 논문에서는 기관 정책·데이터 보안·재현 가능 여부를 먼저 확인한다.</p>
+
+    <div class="banner" style="background:var(--navy);color:var(--gold);">
+      💡 핵심: 「좋은 프롬프트가 좋은 연구를 만든다」 — Promptology는 AI 시대 연구 방법론의 한 축이다.
+    </div>
+  </div>
+  <span class="slide-num">2 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 3 왜 -->
+<section class="slide" id="s3">
+  <div class="header-bar"><h1>왜 행정학 연구자가 AI를 배워야 하는가?</h1><p class="sub">유행을 쫓기 위해서가 아니라, <strong>연구 대상·방법·검증 책임</strong>이 함께 바뀌기 때문이다.</p></div>
+  <span class="badge">PART 1 | 기초 이해</span>
+  <div class="slide-inner">
+    <p style="margin:0 0 0.85rem;font-size:0.95rem;line-height:1.6;color:var(--dark);background:#e8eef5;border-left:5px solid var(--blue);padding:0.65rem 0.9rem;border-radius:0 8px 8px 0;">
+      오늘의 공공부문은 정책 분석, 민원·내부 업무, 채용·평가, 계약·감사 등에 <strong>생성형 AI·에이전트를 실험·도입</strong>하고 있다. 연구자가 그 변화를 ‘관찰만’ 한다고 해서, 도구의 작동 방식·한계·거버넌스를 설명하는 이론과 실증을 쌓기 어렵다.
+    </p>
+    <div class="grid-3">
+      <div class="info-box"><span class="t">1) 연구 대상이 바뀐다</span><p style="margin-top:0.5rem;color:var(--light);">알고리즘 행정, 디지털 접점, 자동화된 의사결정 보조가 현상이 된다. “정책은 무엇인가”와 함께 <strong>“무슨 방식으로 처리·생성되는가”</strong>가 쟁점이다.</p></div>
+      <div class="info-box"><span class="t">2) 연구 실무의 규모가 바뀐다</span><p style="margin-top:0.5rem;color:var(--light);">문헌·공공 데이터·텍스트의 양이 폭증한다. 탐색·정리·코딩 보조까지 <strong>재현 가능한 파이프라인</strong>을 짜야 할 압력이 커진다.</p></div>
+      <div class="info-box"><span class="t">3) 학문적 책임이 바뀐다</span><p style="margin-top:0.5rem;color:var(--light);">할루시네이션, 출처 불명, 편향은 리뷰·윤리·저작권과 직결된다. <strong>투명한 보고·검증</strong>을 논하려면 직접 다뤄 본 경험이 필요하다.</p></div>
+    </div>
+    <div class="grid-2" style="margin-top:0.85rem;">
+      <div class="card" style="background:#0d47a1;color:#fff;"><strong style="font-size:1.02rem;">이론을 대체하라는 뜻이 아니다</strong><p style="margin:0.45rem 0 0;font-size:0.88rem;line-height:1.5;opacity:0.96;">가설·틀·해석·데이터 선택과 윤리 판단의 중심은 여전히 연구자다. AI는 그 전후의 <strong>인지 부담·실행 비용</strong>을 낮추는 층으로 두는 것이 타당하다.</p></div>
+      <div class="card" style="background:var(--teal);color:#fff;border-top:4px solid var(--gold);"><strong style="font-size:1.02rem;">“모르면 평가도, 비판도 어렵다”</strong><p style="margin:0.45rem 0 0;font-size:0.88rem;line-height:1.5;opacity:0.96;">현업·국회·언론이 주장하는 ‘AI 효율’과 ‘리스크’에 학문이 끼어들려면, 도구의 <strong>가능성과 맹점</strong>을 같은 높이에서 말할 수 있어야 한다.</p></div>
+    </div>
+    <div class="banner" style="background:var(--navy);color:var(--cyan);margin-top:1rem;">
+      <strong>AI 행정을 연구하려면 AI 리터러시가 방법론의 일부</strong>이고, 전통 주제를 다루더라도 <strong>문헌·데이터·보고 규범</strong>은 이미 AI 시대로 옮겨 가고 있다.
+    </div>
+  </div>
+  <span class="slide-num">3 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 4 LLM vs Agent -->
+<section class="slide" id="s4">
+  <div class="header-bar"><h1>LLM과 AI Agent: 무엇이 어떻게 다른가?</h1><p class="sub">LLM은 <strong>한 번(또는 한 턴)의 언어 추론</strong>, Agent는 <strong>목표까지 도달할 때까지 스스로 단계를 밟는 루프</strong>에 가깝다.</p></div>
+  <span class="badge">PART 1 | 기초 이해</span>
+  <div class="slide-inner">
+    <div class="grid-2">
+      <div>
+        <div class="card" style="background:var(--blue);"><h3>🤖 LLM</h3><p>예: ChatGPT · Claude · Gemini</p></div>
+        <ul style="font-size:0.84rem;line-height:1.65;background:#0d47a1;color:#fff;padding:0.75rem 1.25rem;border-radius:6px;margin:0.5rem 0 0;">
+          <li><strong>역할:</strong> 텍스트를 이해·생성하는 범용 <strong>모델</strong>(한 턴의 입력 → 응답).</li>
+          <li><strong>한계:</strong> 스스로 검색·파일 실행·스프레드시트 조작을 하지 않는다. (플러그인·챗 UI가 붙으면 ‘에이전트처럼’ 보일 뿐, 그 orchestration이 Agent 층이다.)</li>
+          <li><strong>연구 활용:</strong> 가설 초안, 문헌 요약, 코딩·통계 코드 작성 보조, 서식 맞춘 초고.</li>
+        </ul>
+      </div>
+      <div>
+        <div class="card" style="background:var(--teal);border-top:4px solid var(--gold);"><h3>🚀 AI Agent</h3><p>예: Genspark · AutoGen · CrewAI / LangChain 에이전트</p></div>
+        <ul style="font-size:0.84rem;line-height:1.65;background:#004d38;color:#fff;padding:0.75rem 1.25rem;border-radius:6px;margin:0.5rem 0 0;">
+          <li><strong>정의:</strong> 사용자가 준 <strong>목표(Goal)</strong>를 받아 <strong>계획 → 행동(도구 호출) → 결과 관찰 → 다음 행동</strong>을 반복하는 시스템. 여러 단계가 하나의 ‘작업’으로 묶인다.</li>
+          <li><strong>구성(개념도):</strong> <strong>LLM</strong>(추론·계획) + <strong>도구</strong>(웹 검색, 코드 실행, API, 파일 입출력) + <strong>상태·메모리</strong>(중간 결과·할 일 목록) + <strong>종료 조건</strong>(목표 달성·실패·횟수 제한).</li>
+          <li><strong>루프:</strong> “무엇을 할지” 결정 → 도구 실행 → 출력을 읽고 오류·누락을 보정 → 필요 시 하위 목표로 분해. 사람이 매 단계 프롬프트를 치지 않아도 이어진다.</li>
+          <li><strong>연구 맥락:</strong> 딥리서치(출처 수집·비교·인용 후보), 긴 문헌 정리 파이프라인, 수집→전처리→초석 분석까지 자연어로 위임하는 <strong>다단계 워크플로</strong>.</li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin:0.85rem 0 0;font-size:0.88rem;line-height:1.55;text-align:center;color:var(--dark);background:#eef2f8;border-radius:8px;padding:0.6rem 1rem;">
+      <strong>기억할 것:</strong> Agent는 만능이 아니다. 도구 접근 권한, 할루시네이션, 비용·시간, <strong>검증 책임</strong>은 여전히 연구자에게 있다. 아래 강의의 Promptology·SPARRO는 그 ‘검증 지점’을 어디에 둘지 돕는다.
+    </p>
+  </div>
+  <span class="slide-num">4 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 5 도구 5종 -->
+<section class="slide" id="s5">
+  <div class="header-bar"><h1>오늘 강의에서 활용할 AI 도구 5종</h1><p class="sub">각 도구는 연구의 특정 단계에 최적화 — Promptology가 이 모든 도구를 연결한다</p></div>
+  <span class="badge">PART 1 | 기초 이해</span>
+  <div class="slide-inner">
+    <div class="grid-3">
+      <div class="card" style="background:var(--blue);"><h3>🔍 Genspark</h3><small style="color:var(--cyan);">AI Super Agent</small><p>연구질문 탐색 · 딥리서치, 슬라이드 자동 생성까지 올인원</p></div>
+      <div class="card" style="background:var(--teal);"><h3>📚 NotebookLM</h3><small style="color:var(--cyan);">Google AI 문헌 분석</small><p>업로드 소스만 참조, 신뢰 기반 문헌 분석, 할루시네이션 위험 최소화</p></div>
+      <div class="card" style="background:var(--purple);"><h3>✍️ Promptology</h3><small style="color:var(--gold);">프롬프트 설계 학문</small><p>SPARRO·CRAFT 프레임워크</p></div>
+    </div>
+    <div class="grid-2" style="margin-top:0.75rem;">
+      <div class="card" style="background:#8b4513;"><h3>🤖 Claude / GPT</h3><small style="color:var(--cyan);">대화형 연구 파트너</small><p>연구모형 · 가설 · 설문 문항, 프롬프톨로지 기법 적용</p></div>
+      <div class="card" style="background:#8b0000;"><h3>💻 Cursor / Colab</h3><small style="color:var(--cyan);">바이브 코딩 환경</small><p>자연어로 Python, 통계분석 자동 실행</p></div>
+    </div>
+  </div>
+  <span class="slide-num">5 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 6 원칙 3가지 -->
+<section class="slide" id="s6">
+  <div class="header-bar"><h1>AI 활용 연구의 핵심 원칙 3가지</h1><p class="sub">도구를 사용하기 전에 — 방법론적·윤리적 기반을 먼저</p></div>
+  <span class="badge">PART 1 | 기초 이해</span>
+  <div class="slide-inner">
+    <div class="card" style="background:var(--blue);margin-bottom:0.5rem;display:grid;grid-template-columns:50px 1fr;gap:0.75rem;align-items:start;">
+      <strong style="font-size:1.5rem;">①</strong><div><strong>Human-in-the-Loop</strong> — AI는 보조, 최종 판단은 연구자<br/><small>연구의 지적 책임은 항상 인간 연구자에게 있다.</small></div>
+    </div>
+    <div class="card" style="background:var(--red);margin-bottom:0.5rem;display:grid;grid-template-columns:50px 1fr;gap:0.75rem;">
+      <strong style="font-size:1.5rem;">②</strong><div><strong>출처 검증 필수</strong> — AI는 그럴듯한 거짓말을 한다<br/><small>모든 AI 출력은 원출처와 대조 검증이 필수.</small></div>
+    </div>
+    <div class="card" style="background:var(--teal);display:grid;grid-template-columns:50px 1fr;gap:0.75rem;">
+      <strong style="font-size:1.5rem;">③</strong><div><strong>투명한 보고</strong> — 논문에 AI 활용 방식을 명시<br/><small>질적 연구에는 <strong>COREQ+LLM</strong>을, 양적·일반 논문에는 <strong>저널·학회(ICMJE·COPE 등)</strong>의 AI 공개 규정을 병행하여 고려하여야 한다.</small></div>
+    </div>
+    <div style="margin-top:0.6rem;padding:0.65rem 0.85rem;background:#e8f6f0;border-radius:8px;border-left:5px solid var(--teal);font-size:0.76rem;line-height:1.48;color:var(--dark);">
+      <p style="margin:0 0 0.45rem;"><strong style="color:#0d5c4b;">COREQ+LLM (2025 전후, 국제 합의 진행)</strong> — <strong>COREQ</strong>(Consolidated criteria for reporting qualitative research, 2007·이후 EQUATOR 등)는 질적 연구에서 <em>누가·어디서·어떤 맥락으로·어떻게 분석하였는지</em>를 투명히 보고하도록 한 체크리스트이다. 최근 질적 연구에 LLM이 개입(코딩·주제 도출·요약·해석 보조 등)함에 따라 기존 COREQ만으로는 <strong>모델·버전·프롬프트·역할·인간 검증(Human-in-the-Loop)</strong>이 드러나지 않는 공백이 발생하였다. 이를 보완하기 위한 확장안이 <strong>COREQ+LLM</strong>이며, <strong>JMIR Research Protocols</strong> 등에 프로토콜로 보고된 다단계 연구(문헌 정리·델파이·파일럿 등)를 통해 국제 패널 합의에 따라 정교화되고 있다. 논문 <strong>방법(Methods) 또는 부록</strong>에서 LLM 개입 단계·도구·재현 가능한 수준의 서술을 요구하는 흐름과도 부합한다.</p>
+      <p style="margin:0;"><strong style="color:#0d5c4b;">그 밖의 국제 학술 규범</strong> — 질적 연구에 한정되지 않고, <strong>ICMJE</strong> 권고·<strong>COPE</strong> 윤리 지침·출판사·저널별 <strong>생성형 AI·저작권·기여(CRediT)</strong> 정책이 신속히 갱신되고 있다. 공통축은 생성형 AI 사용 시 <strong>적용 위치·목적</strong>의 공개와 <strong>최종 학술 책임의 연구자 귀속</strong>이다.</p>
+      <p style="margin:0.5rem 0 0;text-align:right;font-size:0.74rem;"><a href="coreq-llm-detail.html" style="color:#0d5c4b;font-weight:800;text-decoration:underline;">COREQ+LLM 보고 점검 리스트(전문) →</a></p>
+    </div>
+  </div>
+  <span class="slide-num">6 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 7 Promptology 정의 -->
+<section class="slide" id="s7">
+  <div class="header-bar"><h1>Promptology — AI 시대의 새로운 연구 방법론 언어</h1><p class="sub">MDPI Information, 2024 | Olla et al.</p></div>
+  <span class="badge" style="background:var(--purple);">★ Promptology</span>
+  <div class="slide-inner">
+    <div class="card" style="background:var(--purple);border-left:6px solid var(--gold);">
+      <p style="font-size:0.9rem;line-height:1.5;">"Promptology is an interdisciplinary field that focuses on designing strategic and secure prompts for generative AI systems. It integrates technical skills, cognitive science, and frameworks to optimize human-AI interactions."</p>
+      <small style="color:var(--gold);">— Olla et al., MDPI Information, 2024</small>
+    </div>
+    <div class="grid-3" style="margin-top:1rem;">
+      <div class="info-box"><span class="t">🔬 학문적 정의</span><p>독립적 학제간 연구 분야 (언어학+인지과학+AI)</p></div>
+      <div class="info-box"><span class="t">🎯 핵심 목적</span><p>AI와의 상호작용을 효율적·윤리적·정확하게 최적화</p></div>
+      <div class="info-box"><span class="t">🔗 연구와의 연결</span><p>프롬프트 설계 능력 = 연구 설계 능력</p></div>
+    </div>
+    <div class="banner" style="background:var(--navy);color:var(--gold);">💡 비유: 언어학이 인간 언어를 연구하듯, Promptology는 "AI와 소통하는 언어"를 연구한다</div>
+    <p style="text-align:center;margin:1rem 0 0;padding:0.75rem 1rem;background:#e8f4fc;border-radius:10px;border:1px solid var(--cyan);font-size:0.9rem;">
+      <a href="prompt-components-chatgpt-api.html" style="color:var(--blue);font-weight:800;text-decoration:none;">📡 API로 프롬프트 구현하기</a>
+      <span style="color:var(--dark);font-weight:600;"> — 구성요소 7가지 &amp; ChatGPT API(Python) 예시 →</span>
+    </p>
+    <p style="text-align:center;margin:0.5rem 0 0;padding:0.65rem 1rem;background:#f0f4ff;border-radius:10px;border:1px solid var(--purple);font-size:0.88rem;">
+      <a href="research-prompt-generator.html" style="color:var(--purple);font-weight:800;text-decoration:none;">🧩 연구 단계별 프롬프트 생성기 (8구성요소·OpenAI API)</a>
+    </p>
+  </div>
+  <span class="slide-num">7 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 8 기법 6가지 -->
+<section class="slide" id="s8">
+  <div class="header-bar"><h1>Promptology 핵심 기법 — 행정학 연구에 바로 적용하는 6가지 전략</h1><p class="sub">Zero-shot부터 Chain-of-Thought까지</p></div>
+  <span class="badge" style="background:var(--purple);">★ Promptology</span>
+  <div class="slide-inner" style="font-size:0.82rem;">
+    <div class="grid-3">
+      <div class="card" style="background:var(--blue);"><strong>① Zero-shot</strong><br/>예시 없이 직접 질문<pre class="code" style="font-size:0.75rem;">"이 정책 문서의 핵심 논거를 3가지로 요약해줘"</pre><small>간단한 요약·분류에 적합</small></div>
+      <div class="card" style="background:var(--teal);"><strong>② Few-shot</strong><br/>예시 제공<pre class="code" style="font-size:0.75rem;">[예시]→[출력] 패턴 후 문서 분석</pre><small>일관된 형식 반복 작업</small></div>
+      <div class="card" style="background:var(--purple);"><strong>③ Chain-of-Thought</strong><br/>단계별 사고<pre class="code" style="font-size:0.75rem;">단계별로 정책 인과관계 분석</pre><small>복잡한 논리 추론</small>
+        <p style="margin-top:0.65rem;font-size:0.82rem;"><a href="chain-of-thought-detail.html" style="color:var(--gold);font-weight:700;text-decoration:underline;">📖 Chain-of-Thought 상세 설명 보기 →</a></p></div>
+    </div>
+    <div class="grid-3" style="margin-top:0.5rem;">
+      <div class="card" style="background:#8b4513;"><strong>④ Role Prompting</strong><br/>전문가 역할 부여<pre class="code" style="font-size:0.75rem;">행정학 연구방법론 전문가로 가설 타당성 검토</pre></div>
+      <div class="card" style="background:#005c8a;"><strong>⑤ Structured Output</strong><br/>JSON 등 형식 지정<pre class="code" style="font-size:0.75rem;">{저자, 연도, 주요발견, 방법론}</pre></div>
+      <div class="card" style="background:#7b1f1f;"><strong>⑥ Iterative Refinement</strong><br/>반복 개선<pre class="code" style="font-size:0.75rem;">이론 연결 부족 부분 보완 요청</pre></div>
+    </div>
+    <p style="text-align:center;margin:0.85rem 0 0;padding:0.65rem 1rem;background:#f0f4ff;border-radius:10px;border:1px solid var(--purple);font-size:0.88rem;">
+      <a href="prompt-engineering-chatgpt-gemini.html" style="color:var(--purple);font-weight:800;text-decoration:none;">⚖️ ChatGPT vs Gemini — 프롬프트 엔지니어링 시 지정 항목 비교</a>
+      <span style="color:var(--dark);"> (API·생성 설정) →</span>
+    </p>
+    <p style="text-align:center;margin:0.5rem 0 0;padding:0.55rem 1rem;background:#fff8e8;border-radius:10px;border:1px solid var(--gold);font-size:0.84rem;">
+      <a href="prompt-builder-design.html" style="color:var(--navy);font-weight:800;text-decoration:none;">🛠️ 프롬프트 형성기(Prompt Builder) 설계 고려사항</a>
+      <span style="color:var(--dark);"> — 대학원생용 도구 기획 · UX · 윤리 →</span>
+    </p>
+    <p style="text-align:center;margin:0.45rem 0 0;padding:0.5rem 1rem;background:#e8f6f0;border-radius:10px;border:1px solid var(--teal);font-size:0.82rem;">
+      <a href="research-prompt-generator.html" style="color:var(--teal);font-weight:800;text-decoration:none;">🧩 연구 단계별 프롬프트 생성기 실행 페이지</a>
+      <span style="color:var(--dark);"> (8구성요소 표준 예시 · API 키 입력 후 실행)</span>
+    </p>
+  </div>
+  <span class="slide-num">8 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 9 SPARRO -->
+<section class="slide slide-sparro" id="s9">
+  <div class="header-bar"><h1>SPARRO 프레임워크 — 학술 연구에서 AI를 윤리적으로 활용하는 6단계</h1><p class="sub">Olla et al. (2024) | Promptology 기반 AI 연구 통합 가이드라인</p></div>
+  <span class="badge" style="background:var(--purple);">★ Promptology</span>
+  <div class="slide-inner">
+    <p class="sparro-intro"><strong>SPARRO</strong>는 논문 작성 전 과정에서 <strong>언제·어떻게 AI를 쓸지</strong>를 구조화하는 흐름이다. 왼쪽(S)에서 전략을 세우고, 오른쪽(O)으로 갈수록 <strong>검증·완성도</strong>가 높아진다. <strong>P 단계</strong>의 프롬프트 설계에는 아래 <strong>CRAFT</strong> 5원칙을 적용한다.</p>
+
+    <div class="sparro-pipeline" aria-label="SPARRO 6단계 흐름">
+      <article class="sparro-step" style="background:linear-gradient(180deg,#1a5cb5 0%,#134a94 100%);">
+        <div class="stripe gold"></div>
+        <div class="sparro-letter">S</div>
+        <div class="sparro-head">전략 수립<span class="en">Strategy</span></div>
+        <div class="sparro-body">AI 활용 <strong>범위·역할·한계</strong>를 사전에 명확히 계획한다.<span class="outcome">→ AI 활용 선언문 작성</span></div>
+      </article>
+      <span class="sparro-arrow" aria-hidden="true">▶</span>
+      <article class="sparro-step" style="background:linear-gradient(180deg,#5b279a 0%,#3d1a6e 100%);">
+        <div class="stripe cyan"></div>
+        <div class="sparro-letter">P</div>
+        <div class="sparro-head">프롬프트 설계<span class="en">Prompt Design</span></div>
+        <div class="sparro-body"><strong>CRAFT</strong> 적용<br/><small style="opacity:0.9;">명확성·근거·대상·형식·과제</small><span class="outcome">→ 프롬프트 정리</span></div>
+      </article>
+      <span class="sparro-arrow" aria-hidden="true">▶</span>
+      <article class="sparro-step" style="background:linear-gradient(180deg,#006a4e 0%,#004d38 100%);">
+        <div class="stripe gold"></div>
+        <div class="sparro-letter">A</div>
+        <div class="sparro-head">출력 통합<span class="en">Adopting</span></div>
+        <div class="sparro-body">AI 생성 내용을 연구자 <strong>자신의 논문</strong>에 통합한다.<span class="outcome">→ 목소리·논지 유지</span></div>
+      </article>
+      <span class="sparro-arrow" aria-hidden="true">▶</span>
+      <article class="sparro-step" style="background:linear-gradient(180deg,#8b4513 0%,#6b3410 100%);">
+        <div class="stripe cyan"></div>
+        <div class="sparro-letter">R</div>
+        <div class="sparro-head">내용 검토<span class="en">Reviewing</span></div>
+        <div class="sparro-body"><strong>정확성·관련성·일관성</strong> 비판적 평가, 원출처 대조.<span class="outcome">→ 할루시네이션 제거</span></div>
+      </article>
+      <span class="sparro-arrow" aria-hidden="true">▶</span>
+      <article class="sparro-step" style="background:linear-gradient(180deg,#7b1f1f 0%,#5c1515 100%);">
+        <div class="stripe gold"></div>
+        <div class="sparro-letter">R</div>
+        <div class="sparro-head">반복 개선<span class="en">Refining</span></div>
+        <div class="sparro-body">논거 재구성·언어 다듬기, <strong>연구자 통찰</strong> 추가.<span class="outcome">→ 학술적 수준 확보</span></div>
+      </article>
+      <span class="sparro-arrow" aria-hidden="true">▶</span>
+      <article class="sparro-step" style="background:linear-gradient(180deg,#1a5c2a 0%,#123d1c 100%);">
+        <div class="stripe cyan"></div>
+        <div class="sparro-letter">O</div>
+        <div class="sparro-head">최적화<span class="en">Optimizing</span></div>
+        <div class="sparro-body"><strong>표절 검사</strong> + 출처 검증, 원본성·학술 정직성 확인.<span class="outcome">→ 최종 논문 완성</span></div>
+      </article>
+    </div>
+
+    <div class="sparro-craft-wrap">
+      <div class="craft-head">
+        <h2>📐 CRAFT 모델</h2>
+        <span>P 단계에서 쓰는 체크리스트</span>
+      </div>
+      <div class="craft-grid">
+        <div class="craft-pill">C<span class="ko">Clarity · 명확성</span></div>
+        <div class="craft-pill">R<span class="ko">Rationale · 근거</span></div>
+        <div class="craft-pill">A<span class="ko">Audience · 대상</span></div>
+        <div class="craft-pill">F<span class="ko">Format · 형식</span></div>
+        <div class="craft-pill">T<span class="ko">Tasks · 과제</span></div>
+      </div>
+    </div>
+
+    <p class="sparro-footnote"><strong>보고:</strong> 방법론에 <em>S~O 중 어디서 AI 썼는지</em> 짧게 적으면 된다(강의 6·28쪽). R·O 단계를 빼면 할루시네이션·표절 리스크가 커진다.</p>
+  </div>
+  <span class="slide-num">9 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 10 RQ 설계 -->
+<section class="slide slide-s10" id="s10">
+  <div class="header-bar"><h1>연구 질문(RQ) 설계 — 왜 어렵고, AI가 어떻게 도울 수 있는가?</h1><p class="sub">선행·RQ 단계에서의 AI 보조</p></div>
+  <span class="badge">PART 2 | 연구질문·선행연구</span>
+  <div class="slide-inner">
+    <div class="s10-row">
+      <div class="s10-box-trad">
+        <strong style="font-size:1rem;">😓 기존 방식</strong>
+        <ol style="font-size:0.85rem;margin:0.5rem 0 0;padding-left:1.2rem;line-height:1.55;">
+          <li>관심 분야 막연히 설정</li>
+          <li>교수 상담 → 피드백 대기</li>
+          <li>논문 수십 편 수작업 검색</li>
+          <li>연구 공백 파악에 수 주</li>
+          <li>RQ 초안 → 다시 수정 반복</li>
+        </ol>
+      </div>
+      <div class="s10-arrow-mid" aria-hidden="true">→</div>
+      <div class="s10-box-ai">
+        <strong style="font-size:1rem;">🚀 AI + Promptology</strong>
+        <ol style="font-size:0.85rem;margin:0.5rem 0 0;padding-left:1.2rem;line-height:1.55;">
+          <li>Role 프롬프트로 전문가 모드</li>
+          <li>Genspark Deep Research 실행</li>
+          <li>연구 공백(Gap) AI 자동 도출</li>
+          <li>Chain-of-Thought로 RQ 정교화</li>
+          <li>FINER 기준 자동 평가 요청</li>
+        </ol>
+      </div>
+    </div>
+
+    <h2 class="s10-h3">구체적 예시 ① — 같은 출발점, 다른 속도 (주제: 지방정부 디지털 서비스 × 주민 신뢰)</h2>
+    <div class="rq-pair">
+      <div class="s10-timeline" style="background:#5a5a68;color:#fff;border:none;">
+        <strong>기존 방식 타임라인</strong><br/>
+        1주: 「디지털 정부에 관심이 있다」는 수준의 표현만으로 상담 신청<br/>
+        2~3주: RISS·KISS 키워드 검색, 논문 40편 제목 스캔<br/>
+        4~5주: 메모 흩어짐, 공백이 뭔지 문장으로 못 씀<br/>
+        6주~: 교수 피드백 후 RQ 초안 1차
+      </div>
+      <div class="s10-timeline" style="background:#0d47a1;color:#fff;border:none;">
+        <strong>AI 보조 시 (같은 주제)</strong><br/>
+        당일: Role+CoT 프롬프트로 현황·트렌드·gap 3가지 수렴<br/>
+        당일: RQ 후보 5개 + FINER 체크 한 번에 요청<br/>
+        이후: 11쪽 예시처럼 Iterative로 1개 RQ만 정교화 → 지도교수 상담은 「검증·각색」에 집중
+      </div>
+    </div>
+
+    <h2 class="s10-h3">구체적 예시 ② — 연구질문 문장 (모호함 → 측정·검증 가능)</h2>
+    <div class="rq-pair">
+      <div class="rq-bad"><strong>❌ 모호한 질문에 가까움</strong>「디지털 정부가 주민에게 좋은가?」「공무원이 친절하면 신뢰가 올라가나?」→ 독립·종속 변수·분석 단위가 불명확하여 논문 RQ로 쓰기 어렵다.</div>
+      <div class="rq-good"><strong>✅ 검증 가능한 RQ 예시</strong>「<em>지방정부 모바일 행정서비스의 지각된 유용성과 신뢰성</em>은 <em>주민의 정부 신뢰</em>에 어떤 영향을 미치는가?」「<em>적극행정 교육 이수</em>가 <em>공무원의 조직몰입</em>에 미치는 효과는 무엇인가? (전후 비교 설문)」</div>
+    </div>
+
+    <h2 class="s10-h3">구체적 예시 ③ — 바로 넣어 쓰는 프롬프트 (요약형)</h2>
+    <p style="font-size:0.85rem;margin:0.25rem 0 0.35rem;color:var(--dark);">아래는 11쪽 긴 예시에 앞서 쓰는 <strong>1차 탐색용</strong> 짧은 버전이다.</p>
+    <div class="s10-prompt"><strong>[역할]</strong> 행정학 연구방법론 전문가.
+<strong>[맥락]</strong> 석사논문, 주제는 「지역사회 돌봄 서비스 민관협력과 거주 만족도」.
+<strong>[과업]</strong> ① 선행연구에서 자주 쓰는 이론 3가지 bullet ② 연구 공백 2문장 ③ 위 공백에 맞는 RQ 3개(각 한 문장).
+<strong>[출력]</strong> 번호 목록만, 각 RQ 뒤에 가능한 분석방법 한 단어(설문/면담/준실험 등).</div>
+    <div class="s10-prompt"><strong>Deep Research 한 블록 예시:</strong>
+「한국 지방자치단체 <strong>AI 챗봇 도입</strong>과 <strong>민원 처리 만족도</strong> 관련 국내외 학술·정책 동향을 요약하고, 체계적으로 다루지 않은 연구 공백 3가지와, 각 공백에 대응하는 연구질문 1개씩(총 3개) 제시하라. 표와 bullet을 섞어 작성하라.」</div>
+
+    <p class="s10-foot"><strong>11쪽</strong>에 FINER·JSON·Deep Research 예시. AI 출력은 <strong>Reviewing</strong>에서 원문 대조.</p>
+  </div>
+  <span class="slide-num">10 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 11 Genspark 데모 -->
+<section class="slide slide-g11" id="s11">
+  <div class="header-bar"><h1>🔧 [실습 데모] Genspark으로 연구 질문 설계하기</h1><p class="sub">Deep Research Agent + Promptology 기법 적용</p></div>
+  <span class="badge">PART 2 | 연구질문·선행연구</span>
+  <div class="slide-inner">
+    <p class="g11-intro"><strong>Genspark</strong> 등 AI 에이전트에 아래 프롬프트를 입력하면 <strong>웹·학술 정보 탐색 → 공백 도출 → RQ 초안</strong>까지 한 흐름으로 얻을 수 있다. 핵심은 <strong>Role(역할)</strong>과 <strong>Chain-of-Thought(단계 순서)</strong>를 명시하는 것이다.</p>
+
+    <div class="g11-prompt-hero">
+      <div class="ph-head">💬 Promptology — Role + Chain-of-Thought (강의·PPT 기본 예시)</div>
+      <pre><strong>[역할]</strong> 너는 행정학 연구방법론 전문가야.
+<strong>[단계적 사고]</strong> 다음 순서로 분석해줘:
+① 한국 지방정부 디지털 전환·주민 신뢰 연구의 현황 정리 →
+② 연구 공백(research gap) 3가지 도출 →
+③ FINER 기준을 충족하는 연구 질문(RQ) 5개 제안</pre>
+    </div>
+
+    <p style="margin:0 0 0.45rem;font-size:0.88rem;font-weight:800;color:var(--navy);text-align:center;">에이전트가 수행하는 흐름 (시각화)</p>
+    <div class="g11-flow" aria-label="Genspark 연구질문 설계 흐름">
+      <div class="g11-step"><div class="top"></div><div class="ico">🌐</div><div class="t1">실시간<br/>웹 탐색</div><div class="t2">학술 DB<br/>최신 논문</div></div>
+      <span class="g11-arrow">▶</span>
+      <div class="g11-step"><div class="top"></div><div class="ico">📊</div><div class="t1">연구 흐름<br/>시각화</div><div class="t2">트렌드<br/>자동 정리</div></div>
+      <span class="g11-arrow">▶</span>
+      <div class="g11-step"><div class="top"></div><div class="ico">🔭</div><div class="t1">Gap<br/>분석</div><div class="t2">미개척 영역<br/>도출</div></div>
+      <span class="g11-arrow">▶</span>
+      <div class="g11-step"><div class="top"></div><div class="ico">❓</div><div class="t1">RQ 초안<br/>생성</div><div class="t2">5개 즉시<br/>생성</div></div>
+      <span class="g11-arrow">▶</span>
+      <div class="g11-step"><div class="top"></div><div class="ico">✅</div><div class="t1">FINER<br/>자동 평가</div><div class="t2">기준 충족<br/>검토</div></div>
+    </div>
+
+    <h2 class="g11-examples-title">프롬프트로 연구질문 설계 구현 — 복사해 쓰는 예시</h2>
+
+    <div class="g11-ex">
+      <div class="ex-label">예시 A · 주제 치환형 (석·박 논문용, 단계 상세)</div>
+      <pre class="code">[역할] 너는 행정학 박사과정 지도 경험이 있는 연구방법론 전문가야.
+
+[맥락] 나는 다음 주제로 논문을 준비 중이야:
+「[여기에 관심 주제 한 문장을 적으세요. 예: 지방자치단체 생성형 AI 도입이 공무원 업무 몰입에 미치는 영향]」
+
+[단계별 출력] 아래 순서를 반드시 지켜 작성해줘.
+
+1) 이 주제의 국내·국외 선행연구 흐름을 5~7문장으로 요약
+2) 선행연구에서 다루지 않거나 약한 연구 공백(gap)을 3가지 bullet로 제시
+3) 공백에 대응하는 연구 질문(RQ) 후보 5개 (각각 한 문장, 측정 가능한 표현 권장)
+4) 각 RQ에 대해 FINER(F,I,N,E,R) 항목별로 한 줄씩 체크리스트 평가
+5) 논문으로 가장 적합한 RQ 1개를 추천하고 그 이유를 3문장으로 설명
+
+[형식] 각 섹션에 소제목(##)을 달아줘.</pre>
+    </div>
+
+    <div class="g11-ex">
+      <div class="ex-label">예시 B · Structured Output (RQ 목록을 표·JSON으로 고정)</div>
+      <pre class="code">[역할] 행정학 연구방법론 전문가.
+
+[과제] 주제: 「[주제 한 문장]」
+먼저 연구 공백 3가지를 bullet로 쓴 뒤,
+연구 질문 5개를 아래 JSON 배열 형식만 출력해줘 (다른 설명 없이 JSON만).
+
+[
+  {"rq":"연구질문 한 문장", "핵심개념": "독립·종속 등", "예상기여": "한 줄"},
+  ...
+]
+
+마지막에 별도 단락으로: 추천 RQ 1개 + FINER 요약 5줄.</pre>
+    </div>
+
+    <div class="g11-ex">
+      <div class="ex-label">예시 C · Deep Research용 브리프 (한 블록으로 붙여넣기)</div>
+      <pre class="code">Deep Research 요청:
+
+주제(한국 행정·정책 맥락): [예: 스마트시티 정책과 주민 정부 신뢰]
+범위: 최근 10년 학술·정책 동향
+해야 할 일:
+(1) 핵심 쟁점·이론 프레임 3가지 정리
+(2) 체계적으로 다루지 않은 연구 공백 3가지
+(3) 공백에 맞는 검증 가능한 연구 질문(RQ) 5개 + 각 RQ에 적합한 방법론(설문·실험·준실험 등) 한 줄씩
+(4) 참고할 만한 논문·보고서 검색 키워드 10개
+
+출력은 표와 bullet을 섞어 읽기 쉽게.</pre>
+    </div>
+
+    <div class="g11-ex">
+      <div class="ex-label">예시 D · RQ 확정 후 FINER 정교화 (Iterative Refinement)</div>
+      <pre class="code">아래는 내가 고른 연구 질문이야:
+「[선택한 RQ 한 문장]」
+
+[역할] 행정학 연구방법론 심사위원 역할로 FINER(F,I,N,E,R) 기준으로 평가해줘.
+각 항목: 충족도(상/중/하) + 한 줄 근거 + 개선하면 좋은 한 문장.
+마지막에 개선된 RQ 최종안 2개(원문 유지형 / 범위 조정형)를 제시해줘.</pre>
+    </div>
+
+    <p class="g11-tip"><strong>팁:</strong> 답이 길면 단계별로 다시 요청. 인용·통계는 <strong>Reviewing</strong>에서 대조.</p>
+  </div>
+  <span class="slide-num">11 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 12 FINER -->
+<section class="slide" id="s12">
+  <div class="header-bar"><h1>좋은 연구 질문의 조건 — FINER 기준 + AI 정교화</h1><p class="sub">Iterative Refinement로 RQ를 다듬는다</p></div>
+  <span class="badge">PART 2 | 연구질문·선행연구</span>
+  <div class="slide-inner" style="font-size:0.82rem;">
+    <table class="compare" style="text-align:left;">
+      <tr><th style="width:40px;">F</th><td><strong>Feasible</strong> 실현 가능한가?</td><td>자원·시간 안에 수행 가능한가</td></tr>
+      <tr><th>I</th><td><strong>Interesting</strong> 흥미로운가?</td><td>학계·실무 기여</td></tr>
+      <tr><th>N</th><td><strong>Novel</strong> 새로운가?</td><td>기존 연구에서 다루지 않은 측면</td></tr>
+      <tr><th>E</th><td><strong>Ethical</strong> 윤리적인가?</td><td>연구 대상·데이터</td></tr>
+      <tr><th>R</th><td><strong>Relevant</strong> 적합한가?</td><td>행정학 이론·정책 실무 연결</td></tr>
+    </table>
+    <div class="banner" style="background:var(--purple);color:#fff;font-size:0.8rem;">✍️ "이 RQ가 FINER를 충족하는지 평가하고, Chain-of-Thought로 개선안을 단계별로 제시해줘"</div>
+  </div>
+  <span class="slide-num">12 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 13 NotebookLM -->
+<section class="slide" id="s13">
+  <div class="header-bar"><h1>NotebookLM — 내가 업로드한 문헌만 참조하는 AI</h1><p class="sub">할루시네이션 위험 최소화</p></div>
+  <span class="badge">PART 2 | 연구질문·선행연구</span>
+  <div class="slide-inner">
+    <div class="banner" style="background:var(--teal);color:#fff;">🔑 업로드한 소스만 참조 → 인용 추적 + 신뢰성</div>
+    <div class="grid-2" style="margin-top:0.75rem;">
+      <div><strong>📂 지원 소스</strong><br/>PDF, Google Docs, URL, YouTube, 오디오, 텍스트</div>
+      <div><strong>⚙️ 주요 기능</strong><ul style="font-size:0.85rem;"><li>자동 요약 (Structured Output)</li><li>인용 출처 추적</li><li>오디오 오버뷰</li><li>Deep Research 모드</li><li>Few-shot 문헌 분류</li></ul></div>
+    </div>
+    <p style="text-align:center;margin:1rem 0 0;padding:0.75rem 1rem;background:#e8f6f0;border-radius:10px;border:1px solid var(--teal);font-size:0.9rem;">
+      <a href="notebooklm-rag-detail.html" style="color:var(--teal);font-weight:800;text-decoration:none;">📓 NotebookLM 상세 보기</a>
+      <span style="color:var(--dark);"> — 기능 소개 &amp; <strong>RAG(검색 증강 생성)</strong> 작동 방식 →</span>
+    </p>
+  </div>
+  <span class="slide-num">13 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 14 NotebookLM 데모 -->
+<section class="slide" id="s14">
+  <div class="header-bar"><h1>🔧 [실습 데모] NotebookLM으로 선행연구 검토하기</h1><p class="sub">Structured Output + Few-shot</p></div>
+  <span class="badge">PART 2 | 연구질문·선행연구</span>
+  <div class="slide-inner grid-3">
+    <div class="card" style="background:var(--blue);"><strong>STEP 1 소스 업로드</strong><p>논문 10~20편 PDF 등</p></div>
+    <div class="card" style="background:var(--teal);"><strong>STEP 2 Structured Output</strong><p>저자·연도·이론·방법론·주요발견 JSON</p></div>
+    <div class="card" style="background:var(--purple);"><strong>STEP 3 매트릭스</strong><p>공통 이론·매개·방법론 분류 → 선행연구 표</p></div>
+  </div>
+  <div class="slide-inner" style="padding-top:0;">
+    <div class="banner" style="background:#1a1a2e;color:var(--cyan);font-size:0.82rem;">출력: 저자 | 연도 | 이론 | 방법론 | 주요 발견 → 선행연구 매트릭스 자동 완성</div>
+  </div>
+  <span class="slide-num">14 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 15 방법론 -->
+<section class="slide" id="s15">
+  <div class="header-bar"><h1>NotebookLM 활용의 방법론적 의미와 한계</h1><p class="sub">AI는 패턴을 인식한다 — 연구자의 해석적 판단이 핵심</p></div>
+  <span class="badge">PART 2 | 연구질문·선행연구</span>
+  <div class="slide-inner grid-2">
+    <div style="background:#5a5a6a;color:#fff;padding:1rem;border-radius:6px;"><strong>🕰️ 전통</strong><ul><li>각 논문 직접 정독</li><li>수작업 메모·분류</li><li>수 주~수 개월</li></ul></div>
+    <div style="background:var(--teal);color:#fff;padding:1rem;border-radius:6px;"><strong>🚀 NotebookLM</strong><ul><li>업로드 → 자동 분류·요약</li><li>Structured Output으로 표 즉시</li><li>수 시간</li></ul></div>
+  </div>
+  <div class="slide-inner grid-2" style="padding-top:0;">
+    <div class="info-box"><span class="t">⚠️ 이해 vs 패턴</span><p>AI는 '이해'가 아니라 패턴 인식. 해석적 판단 필수.</p></div>
+    <div class="info-box"><span class="t">📋 COREQ+LLM (2025)</span><p>질적 연구 LLM 활용 보고 국제 표준. Strategy 단계에서 선언.</p></div>
+  </div>
+  <span class="slide-num">15 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 16 비교표 -->
+<section class="slide" id="s16">
+  <div class="header-bar"><h1>Genspark vs NotebookLM — 언제 무엇을 쓰나?</h1><p class="sub">상호 보완 — Promptology로 극대화</p></div>
+  <span class="badge">PART 2 | 연구질문·선행연구</span>
+  <div class="slide-inner">
+    <table class="compare">
+      <tr><th>연구 단계</th><th>Genspark</th><th>NotebookLM</th><th style="min-width:180px;">Promptology</th></tr>
+      <tr><td>연구 주제 탐색</td><td>✅</td><td>—</td><td style="text-align:left;">Zero-shot Deep Research</td></tr>
+      <tr><td>연구 질문 초안</td><td>✅</td><td>—</td><td style="text-align:left;">Role+CoT</td></tr>
+      <tr><td>확보 문헌 심층 분석</td><td>—</td><td>✅</td><td style="text-align:left;">Structured Output</td></tr>
+      <tr><td>선행연구 매트릭스</td><td>—</td><td>✅</td><td style="text-align:left;">Few-shot + 인용</td></tr>
+      <tr><td>이론·가설 정교화</td><td>—</td><td>—</td><td style="text-align:left;">Claude + Iterative</td></tr>
+      <tr><td>통계 코드</td><td>—</td><td>—</td><td style="text-align:left;">Cursor + 바이브 코딩</td></tr>
+    </table>
+  </div>
+  <span class="slide-num">16 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 17 연구모형 역할 -->
+<section class="slide" id="s17">
+  <div class="header-bar"><h1>연구모형 설계 — LLM은 어떤 역할을 할 수 있는가?</h1><p class="sub">이론적 연결고리 · 변수 구조화</p></div>
+  <span class="badge">PART 3 | 연구모형 설계</span>
+  <div class="slide-inner grid-2">
+    <div style="background:var(--teal);color:#fff;padding:1rem;border-radius:6px;"><strong>✅ LLM이 도울 수 있는 것</strong><ul style="font-size:0.85rem;"><li>이론 탐색·비교</li><li>변수 관계 정리</li><li>가설 초안</li><li>대안 모형 제안</li><li>설문 문항 초안</li><li>모형 정당화</li></ul></div>
+    <div style="background:var(--red);color:#fff;padding:1rem;border-radius:6px;"><strong>❌ 대체 불가</strong><ul style="font-size:0.85rem;"><li>이론적 기여</li><li>맥락·현장 판단</li><li>학문적 책임</li><li>이론 선택 정당화</li><li>가설 방향 최종 결정</li><li>독창성</li></ul></div>
+  </div>
+  <span class="slide-num">17 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 18 모형 데모 -->
+<section class="slide" id="s18">
+  <div class="header-bar"><h1>🔧 [실습 데모] Claude와 함께 연구모형 설계하기</h1><p class="sub">CRAFT 모델 적용</p></div>
+  <span class="badge">PART 3 | 연구모형 설계</span>
+  <div class="slide-inner">
+    <div style="background:#1a1a2e;color:#fff;padding:0.75rem;border-left:6px solid var(--purple);">
+      <strong style="color:var(--purple);">CRAFT</strong> 행정학 전문가 | TAM·공공가치·전자정부 수용 비교 | 석사 논문 수준 | 변수표+H1~H5 | 독립·매개·조절·종속 + 통계방법
+    </div>
+    <div class="grid-2" style="margin-top:0.75rem;">
+      <pre class="code">추천 이론: TAM 확장
+독립: 서비스 품질(5차원)
+매개: 이용 의도
+조절: 디지털 리터러시
+종속: 주민 만족도
+H1, H2... SEM + 위계 회귀</pre>
+      <div class="info-box"><strong style="color:var(--purple);">SPARRO 검토</strong><ul style="font-size:0.8rem;"><li>S: 활용 범위 선언?</li><li>P: CRAFT 적용?</li><li>A: 논문 맥락 일치?</li><li>R: 이론 출처 검증?</li><li>R: 가설 방향?</li></ul></div>
+    </div>
+  </div>
+  <span class="slide-num">18 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 19 시각화 -->
+<section class="slide" id="s19">
+  <div class="header-bar"><h1>연구모형 시각화 &amp; 측정 도구 설계</h1><p class="sub">LLM 출력 → Adopting·Refining → 연구자 완성 · 설정·식별·추정의 구분</p></div>
+  <span class="badge">PART 3 | 연구모형 설계</span>
+  <div class="slide-inner" style="font-size:0.74rem;line-height:1.4;">
+    <p style="margin:0 0 0.45rem;text-align:center;color:var(--purple);font-weight:700;">예시: 매개(이용 의도) + 조절(디지털 리터러시)이 있는 경로모형</p>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:0.15rem;margin-bottom:0.45rem;">
+      <div class="card" style="background:var(--teal);padding:0.35rem 0.85rem;text-align:center;min-width:8rem;">W — 디지털 리터러시<br/><small style="opacity:0.95;">(조절: X→M 경로)</small></div>
+      <div style="color:var(--gold);font-weight:800;line-height:1;">↓</div>
+      <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:0.35rem;">
+        <div class="card" style="background:var(--blue);padding:0.45rem 0.55rem;text-align:center;min-width:5.5rem;"><strong>X</strong><br/>디지털<br/>서비스 품질</div>
+        <span style="color:var(--cyan);font-weight:800;">→</span>
+        <div class="card" style="background:var(--purple);padding:0.45rem 0.55rem;text-align:center;min-width:5.5rem;"><strong>M</strong><br/>이용 의도</div>
+        <span style="color:var(--cyan);font-weight:800;">→</span>
+        <div class="card" style="background:var(--red);padding:0.45rem 0.55rem;text-align:center;min-width:5.5rem;"><strong>Y</strong><br/>만족도</div>
+      </div>
+      <p style="margin:0.35rem 0 0;font-size:0.68rem;color:#4a4a5c;max-width:42rem;text-align:center;">직접효과(X→Y)·매개(M)·조절(W×X)을 동시에 넣을지는 <strong>이론·선행연구</strong>로 정하고, 화살표·변수 기호는 논문의 경로도와 회귀·SEM 표기를 일치시킨다.</p>
+    </div>
+    <div class="banner" style="background:var(--navy);color:var(--cyan);font-size:0.7rem;line-height:1.35;padding:0.45rem 0.6rem;">예시 식(조절된 매개의 일부):&nbsp; M = α₀ + α₁X + α₂W + α₃(X×W) + u,&nbsp;&nbsp; Y = β₀ + β₁X + β₂M + β₃W + ε — 계수는 아래 <strong>추정(estimation)</strong> 단계에서 산출</div>
+    <table class="compare" style="font-size:0.68rem;margin-top:0.45rem;">
+      <tr><th style="width:22%;">구분</th><th style="width:38%;">무엇을 말하는가</th><th>행정학 연구에서의 질문·예</th></tr>
+      <tr>
+        <td><strong>Model specification</strong><br/><small>모형 설정</small></td>
+        <td>어떤 <strong>변수·경로(인과 방향)·오차 구조</strong>로 가설을 수식·경로도로 옮길 것인가. “무엇을 가정하는가.”</td>
+        <td>품질→의도→만족 매개를 둘지, 리터러시가 X→M을 조절한다고 볼지, 통제변수(인구통계 등)를 넣을지 결정.</td>
+      </tr>
+      <tr>
+        <td><strong>Model identification</strong><br/><small>모형 식별</small></td>
+        <td>주어진 자료·표본에서 계수·잔차분산 등이 <strong>유일하게(또는 과식별되게)</strong> 추정 가능한가. “추정이 논리적으로 가능한가.”</td>
+        <td>회귀: 설명변수 간 다중공선성·도구변수(IV) 개수(도구 ≥ 내생 설명변수 수). SEM: t-규칙·순위조건·자유도, 측정모형의 인자 수.</td>
+      </tr>
+      <tr>
+        <td><strong>Estimation</strong><br/><small>추정</small></td>
+        <td>식별이 확보된 모형 설정에 대해 <strong>어떤 절차</strong>로 모수값을 계산할 것인가. “어떤 방법으로 숫자를 얻는가.”</td>
+        <td>OLS, 최우도(ML)·GLS, 2SLS/IV, 구조방정식(SEM: ML·가중최소제곱 등). 표본·분포 가정에 따라 선택.</td>
+      </tr>
+    </table>
+    <p style="margin:0.4rem 0 0;font-size:0.68rem;color:#4a4a5c;text-align:center;">순서: 보통 <strong>설정 → 식별 점검 → 추정</strong>. 설정만 바꿔도 식별 여부가 달라지므로, LLM이 제안한 모형도 이 순서로 검토한다.</p>
+    <p style="text-align:center;font-size:0.78rem;margin:0.45rem 0 0;"><strong>설문 문항 예시:</strong> "이 지방정부 온라인 서비스는 내가 필요한 정보를 정확하게 제공한다 (1~5)" — <small style="color:#5c5c6e;">측정은 설정에 맞춘 척도·타당도(탐색적·확인적 요인분석)로 설계</small></p>
+  </div>
+  <span class="slide-num">19 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 20 모형 한계 -->
+<section class="slide" id="s20">
+  <div class="header-bar"><h1>연구모형 설계 — AI 보조의 한계와 연구자의 역할</h1><p class="sub">프롬프트를 잘 짜는 것 = 연구 설계 능력</p></div>
+  <span class="badge">PART 3 | 연구모형 설계</span>
+  <div class="slide-inner grid-2">
+    <div class="info-box"><span class="t">🎯 이론 선택</span><p>'왜 이 이론인가'는 연구자가 설명. Reviewing에서 원문 대조.</p></div>
+    <div class="info-box"><span class="t">↔️ 가설 방향</span><p>AI는 양방향 제시. 최종은 이론·연구자 판단.</p></div>
+    <div class="info-box"><span class="t">✍️ 프롬프트 = 설계</span><p>CRAFT 적용하려면 연구 문제를 명확히 알아야 함.</p></div>
+    <div class="info-box"><span class="t">🔍 할루시네이션</span><p>이론·논문·통계는 원출처 대조. 존재하지 않는 논문 인용 빈번.</p></div>
+  </div>
+  <span class="slide-num">20 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 21 바이브 코딩 -->
+<section class="slide" id="s21">
+  <div class="header-bar"><h1>바이브 코딩(Vibe Coding) — 자연어로 코딩하는 시대</h1><p class="sub">Andrej Karpathy | 2025년 2월</p></div>
+  <span class="badge">PART 4 | 통계분석</span>
+  <div class="slide-inner">
+    <div class="banner" style="background:var(--navy);border-left:6px solid var(--cyan);color:#fff;text-align:center;">
+      "코드를 직접 작성하지 않고, 자연어로 AI에게 원하는 것을 말하면 AI가 코드를 생성·실행·디버깅한다"
+    </div>
+    <div class="grid-2" style="margin-top:1rem;">
+      <div style="background:#6b6b7b;color:#fff;padding:1rem;"><strong>❌ 기존</strong><p>Python/R/SPSS 학습 → 오류 → 검색 → 수 시간~일</p></div>
+      <div style="background:var(--blue);color:#fff;padding:1rem;"><strong>✅ 바이브 코딩</strong><p>자연어 설명 → AI 생성·실행 → 수 분</p></div>
+    </div>
+    <div class="card" style="background:var(--teal);margin-top:0.75rem;"><strong>🎓 행정학 연구자에게</strong><p>Python·R 몰라도 회귀·SEM·텍스트 분석 가능. Cursor · Claude Code · Copilot · AI Studio.</p></div>
+  </div>
+  <span class="slide-num">21 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 22 비교 -->
+<section class="slide" id="s22">
+  <div class="header-bar"><h1>바이브 코딩 vs 전통적 통계분석</h1><p class="sub">진입 장벽 해소 · 속도 혁신 · 한계 존재</p></div>
+  <span class="badge">PART 4 | 통계분석</span>
+  <div class="slide-inner">
+    <table class="compare">
+      <tr><th>항목</th><th>전통</th><th>바이브 코딩</th></tr>
+      <tr><td>진입 장벽</td><td>문법 학습</td><td>자연어</td></tr>
+      <tr><td>오류 대응</td><td>수동 검색</td><td>AI 디버깅</td></tr>
+      <tr><td>분석 시간</td><td>수 시간</td><td>수 분</td></tr>
+      <tr><td>결과 해석</td><td>연구자</td><td>AI 초안 + SPARRO</td></tr>
+      <tr style="background:#fff3e0;"><td>코드 검증</td><td>직접</td><td>⚠️ 수동 검증 필수</td></tr>
+      <tr style="background:#fff3e0;"><td>통계 적합성</td><td>연구자</td><td>⚠️ AI는 요청 분석 무조건 실행</td></tr>
+    </table>
+  </div>
+  <span class="slide-num">22 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 23 데모1 -->
+<section class="slide" id="s23">
+  <div class="header-bar"><h1>🔧 [실습 데모 1] 자연어로 회귀분석 실행하기</h1><p class="sub">Structured Output + Chain-of-Thought</p></div>
+  <span class="badge">PART 4 | 통계분석</span>
+  <div class="slide-inner grid-2">
+    <pre class="code">import pandas as pd
+import statsmodels.api as sm
+df = pd.read_csv('survey_data.csv')
+X = sm.add_constant(df[['quality','access','literacy']])
+y = df['satisfaction']
+model = sm.OLS(y, X).fit()
+print(model.summary())</pre>
+    <div class="info-box"><strong style="color:var(--gold);">📊 결과 요약</strong><pre class="code" style="color:#fff;">R² = 0.542 ***
+quality β=0.42 ***
+literacy 조절 β=0.15 *</pre></div>
+  </div>
+  <span class="slide-num">23 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 24 데모2 -->
+<section class="slide" id="s24">
+  <div class="header-bar"><h1>🔧 [실습 데모 2] 통계 결과를 AI로 해석하기</h1><p class="sub">SPARRO Reviewing·Refining</p></div>
+  <span class="badge">PART 4 | 통계분석</span>
+  <div class="slide-inner">
+    <div style="background:#1a1a2e;padding:0.75rem;border-radius:6px;color:#fff;font-size:0.85rem;">
+      <strong style="color:var(--purple);">Iterative Refinement</strong><br/>
+      "회귀 결과를 행정학 석사 논문 결과 섹션에 맞게 해석. APA + H1~H3 연결."
+    </div>
+    <div class="info-box" style="margin-top:0.75rem;">
+      <p style="font-size:0.88rem;">디지털 서비스 품질(β=.42, p&lt;.001)은 만족도에 유의한 정의 영향, H1 지지. 리터러시 조절(β=.15, p&lt;.05) H3 지지. R²=.542.</p>
+    </div>
+    <p style="color:var(--gold);font-weight:bold;text-align:center;font-size:0.85rem;">⚠️ AI 해석은 초안 — 과대해석 가능. Refining에서 이론 보완.</p>
+  </div>
+  <span class="slide-num">24 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 25 한계 -->
+<section class="slide" id="s25">
+  <div class="header-bar"><h1>바이브 코딩의 가능성과 한계</h1><p class="sub">맹목적 의존 경계</p></div>
+  <span class="badge">PART 4 | 통계분석</span>
+  <div class="slide-inner grid-2">
+    <div style="background:#005c3a;color:#fff;padding:1rem;border-radius:6px;"><strong>✅ 가능성</strong><ul><li>코딩 장벽 제거</li><li>분석 속도·모형 시도</li><li>해석 초안 자동화</li><li>디버깅 자동화</li></ul></div>
+    <div style="background:#7b1f1f;color:#fff;padding:1rem;border-radius:6px;"><strong>⚠️ 한계</strong><ul><li>코드 수동 검증</li><li>방법 적합성은 연구자</li><li>해석 과의존 금지</li><li>민감 데이터 보안</li></ul></div>
+  </div>
+  <span class="slide-num">25 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 26 Vibe Analytics -->
+<section class="slide" id="s26">
+  <div class="header-bar"><h1>Vibe Analytics — 바이브 코딩의 다음 단계</h1><p class="sub">MIT Sloan Management Review, 2025.7</p></div>
+  <span class="badge">PART 4 | 통계분석</span>
+  <div class="slide-inner">
+    <div class="banner" style="background:var(--navy);color:var(--cyan);">"바이브 코딩이 프로그래밍에 하는 것을, 바이브 애널리틱스는 데이터 분석에 한다"</div>
+    <div class="grid-2" style="grid-template-columns:repeat(4,1fr);font-size:0.72rem;">
+      <div class="card" style="background:var(--blue);text-align:center;">📂 업로드<br/>e-나라·KOSIS</div>
+      <div class="card" style="background:var(--navy);text-align:center;">🔍 자동 탐색</div>
+      <div class="card" style="background:var(--blue);text-align:center;">📈 시각화</div>
+      <div class="card" style="background:var(--navy);text-align:center;">💡 인사이트</div>
+    </div>
+    <div class="banner" style="background:var(--teal);color:#fff;">연구자 역할: 분석을 '하는' 사람 → 분석을 '설계하고 판단하는' 사람</div>
+  </div>
+  <span class="slide-num">26 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 27 워크플로우 -->
+<section class="slide" id="s27">
+  <div class="header-bar"><h1>AI 보조 연구 전 과정 — 통합 워크플로우</h1><p class="sub">LLM Deep Research 중심 + 인간 직접 독해 + 지도교수 면담 루프</p></div>
+  <span class="badge">PART 5 | 종합</span>
+  <div class="slide-inner" style="display:flex;flex-wrap:wrap;gap:0.35rem;font-size:0.66rem;">
+    <div class="card" style="background:var(--blue);flex:1;min-width:84px;text-align:center;">① 아이디어<br/><small>LLM Deep Research</small></div>
+    <div class="card" style="background:#0d47a1;flex:1;min-width:84px;text-align:center;">② RQ·가설<br/><small>FINER 점검</small></div>
+    <div class="card" style="background:var(--teal);flex:1;min-width:84px;text-align:center;">③ 핵심 논문 선별<br/><small>Top 10~20</small></div>
+    <div class="card" style="background:#005c8a;flex:1;min-width:84px;text-align:center;">④ 인간 직접 독해<br/><small>중요 논문 정독</small></div>
+    <div class="card" style="background:var(--purple);flex:1;min-width:84px;text-align:center;">⑤ LLM 보조 정리<br/><small>매트릭스·요약</small></div>
+    <div class="card" style="background:#7b3f00;flex:1;min-width:84px;text-align:center;">⑥ 모형·데이터 설계<br/><small>설정→식별→추정</small></div>
+    <div class="card" style="background:var(--red);flex:1;min-width:84px;text-align:center;">⑦ 통계·해석<br/><small>코드·가정 검증</small></div>
+    <div class="card" style="background:#1a5c2a;flex:1;min-width:84px;text-align:center;">⑧ 지도교수 면담<br/><small>피드백 반영 루프</small></div>
+    <div class="card" style="background:#2d2d44;flex:1;min-width:84px;text-align:center;">⑨ 작성·투명 보고<br/><small>SPARRO·COREQ+LLM</small></div>
+  </div>
+  <div class="slide-inner" style="padding-top:0;">
+    <div class="banner" style="background:var(--navy);color:var(--cyan);font-size:0.76rem;">권장 운영: LLM은 <strong>탐색·정리·초안</strong>을 맡고, 연구자는 <strong>핵심 논문 직접 독해·이론 판단·최종 해석</strong>을 맡는다.</div>
+    <div class="banner" style="background:var(--purple);font-size:0.75rem;">면담 루프 예시: 주 1회(또는 격주) 지도교수 면담 → RQ·모형·식별 이슈 점검 → 다음 주 LLM 작업 범위 재설정</div>
+    <p style="text-align:center;font-size:0.8rem;color:var(--dark);margin:0.55rem 0 0;">실무 팁: 읽을 논문을 <strong>핵심(직독)·주변(LLM 보조)</strong>으로 구분하면 속도와 학술 신뢰성을 동시에 확보할 수 있다.</p>
+    <p style="text-align:center;font-size:0.82rem;color:var(--cyan);"><strong>① Human-in-the-Loop ② 출처 검증 ③ 투명 보고 ④ 지도교수 피드백 기반 반복 개선</strong></p>
+  </div>
+  <span class="slide-num">27 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 28 4대 원칙 -->
+<section class="slide" id="s28">
+  <div class="header-bar"><h1>행정학 연구자를 위한 AI 활용 4대 원칙</h1><p class="sub">학문적 책임과 연구자의 정체성</p></div>
+  <span class="badge">PART 5 | 종합</span>
+  <div class="slide-inner grid-2">
+    <div class="card" style="background:var(--blue);"><strong>① Augmentation, not Replacement</strong><p>AI는 증폭. Promptology는 증폭의 언어.</p></div>
+    <div class="card" style="background:var(--red);"><strong>② 비판적 AI 리터러시</strong><p>SPARRO Reviewing 절대 생략 금지.</p></div>
+    <div class="card" style="background:var(--teal);"><strong>③ 투명한 보고</strong><p>COREQ+LLM(2025).</p></div>
+    <div class="card" style="background:var(--purple);"><strong>④ 연구 아젠다 선도</strong><p>AI 거버넌스·책임성 연구 선도.</p></div>
+  </div>
+  <span class="slide-num">28 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 29 마무리 -->
+<section class="slide" id="s29">
+  <div class="header-bar"><h1>AI 시대 행정학 연구자의 새로운 역량</h1><p class="sub">오늘부터 당장 시작할 수 있는 실천 3가지</p></div>
+  <span class="badge">PART 5 | 종합</span>
+  <div class="slide-inner">
+    <div class="banner" style="background:var(--navy);color:var(--cyan);">"20년 전 SPSS는 낯선 도구였다. 지금은 기본 소양. Promptology·LLM·AI Agent도 마찬가지다."</div>
+    <div class="grid-3" style="margin-top:1rem;">
+      <div class="card" style="background:var(--blue);text-align:center;"><div style="font-size:1.5rem;">🔍</div><strong>내일 당장</strong><p>Genspark Deep Research</p></div>
+      <div class="card" style="background:var(--teal);text-align:center;"><div style="font-size:1.5rem;">📚</div><strong>이번 학기</strong><p>NotebookLM 5편 + Structured Output</p></div>
+      <div class="card" style="background:var(--purple);text-align:center;"><div style="font-size:1.5rem;">✍️</div><strong>이번 주</strong><p>CRAFT 프롬프트 3개 설계</p></div>
+    </div>
+    <div class="banner" style="background:var(--gold);color:var(--navy);">🏆 Promptology를 아는 연구자가 AI 시대의 행정학을 이끈다</div>
+  </div>
+  <span class="slide-num">29 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<!-- 30 참고 -->
+<section class="slide" id="s30">
+  <div class="header-bar"><h1>참고 자료 &amp; 도구 링크 | Q&amp;A</h1><p class="sub">도구·Promptology 문헌·프레임워크</p></div>
+  <div class="slide-inner grid-2">
+    <div>
+      <strong>🛠️ 주요 도구</strong>
+      <ul style="font-size:0.85rem;line-height:1.8;">
+        <li><strong>연구 프롬프트 생성기</strong> — <a href="research-prompt-generator.html" style="color:var(--blue);">research-prompt-generator.html</a> (로컬: <code style="font-size:0.78rem;">python openai-local-proxy.py</code> 후 브라우저에서 열기)</li>
+        <li><strong>발표 제작 과정</strong> — <a href="cursor-workflow-story.html" style="color:var(--blue);">cursor-workflow-story.html</a> (Cursor 기반 반복 개선 기록)</li>
+        <li><strong>Genspark</strong> — genspark.ai</li>
+        <li><strong>NotebookLM</strong> — notebooklm.google.com</li>
+        <li><strong>Claude</strong> — claude.ai</li>
+        <li><strong>Cursor</strong> — cursor.com</li>
+        <li><strong>Claude Code</strong> — docs.anthropic.com/claude-code</li>
+        <li><strong>Google Colab</strong> — colab.research.google.com</li>
+      </ul>
+    </div>
+    <div>
+      <strong>📚 참고 문헌</strong>
+      <ul style="font-size:0.78rem;line-height:1.5;">
+        <li>Olla et al., Promptology (MDPI Information, 2024)</li>
+        <li>Scaling Hermeneutics (EPJ Data Science, 2025)</li>
+        <li>COREQ+LLM (Research Protocols, 2025)</li>
+        <li>Vibe Analytics (MIT Sloan MR, 2025)</li>
+        <li>NIA, AI 활용 정부서비스 사례 (2025)</li>
+        <li>공공부문 AI 에이전트 도입 현황 (정부혁신, 2025)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="banner" style="background:var(--navy);color:var(--cyan);margin:0 1.25rem 1rem;">💬 Q &amp; A — 강의자료 공유 예정</div>
+  <span class="slide-num">30 / 30</span>
+  <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
+</section>
+
+<p style="text-align:center;padding:2rem;color:var(--light);font-size:0.85rem;">HTML 변환본 — 원본: LLM and AI for PA research.py (30슬라이드 강의)</p>
+
+<div id="lecture-slide-nav" aria-label="슬라이드 이전·다음">
+  <p class="sn-hint">← → 키 또는 PageUp / PageDown 으로도 이동</p>
+  <button type="button" id="sn-prev" aria-label="이전 슬라이드">◀ 이전</button>
+  <span id="sn-pos">1 / 30</span>
+  <button type="button" id="sn-next" aria-label="다음 슬라이드">다음 ▶</button>
+</div>
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('section.slide[id^="s"]'))
+    .filter(function (el) { return /^s\d+$/.test(el.id); })
+    .sort(function (a, b) {
+      return parseInt(a.id.slice(1), 10) - parseInt(b.id.slice(1), 10);
+    });
+  if (!slides.length) return;
+
+  function indexFromViewport() {
+    var best = 0;
+    var bestScore = -1;
+    for (var i = 0; i < slides.length; i++) {
+      var r = slides[i].getBoundingClientRect();
+      var top = Math.max(r.top, 0);
+      var bot = Math.min(r.bottom, window.innerHeight);
+      var vis = Math.max(0, bot - top);
+      if (vis > bestScore) {
+        bestScore = vis;
+        best = i;
+      }
+    }
+    return best;
+  }
+
+  function currentIndex() {
+    return indexFromViewport();
+  }
+
+  function syncHashToSlide() {
+    var i = indexFromViewport();
+    var el = slides[i];
+    if (el && location.hash !== '#' + el.id) {
+      history.replaceState(null, '', '#' + el.id);
+    }
+  }
+
+  function updateUI() {
+    var i = currentIndex();
+    var prev = document.getElementById('sn-prev');
+    var next = document.getElementById('sn-next');
+    var pos = document.getElementById('sn-pos');
+    if (prev) prev.disabled = i <= 0;
+    if (next) next.disabled = i >= slides.length - 1;
+    if (pos) pos.textContent = (i + 1) + ' / ' + slides.length;
+  }
+
+  function stickyTocOffset() {
+    var nav = document.querySelector('nav.toc');
+    if (!nav) return 0;
+    return Math.ceil(nav.getBoundingClientRect().height);
+  }
+
+  function applyDeckScale() {
+    var baseW = 1280;
+    var baseH = 720;
+    var toc = document.querySelector('nav.toc');
+    var bottomNav = document.getElementById('lecture-slide-nav');
+    var tocH = toc ? Math.ceil(toc.getBoundingClientRect().height) : 0;
+    var navH = bottomNav ? Math.ceil(bottomNav.getBoundingClientRect().height) : 0;
+    var reserve = tocH + navH + 24;
+    var availW = Math.max(320, window.innerWidth - 24);
+    var availH = Math.max(220, window.innerHeight - reserve);
+    var scale = Math.min(availW / baseW, availH / baseH);
+    scale = Math.max(0.3, Math.min(1, scale));
+    document.documentElement.style.setProperty('--deck-scale', scale.toFixed(4));
+  }
+
+  /** 슬라이드 맨 위(제목 바)가 sticky 목차 아래에 오도록 스크롤 */
+  function scrollSlideTop(el, smooth) {
+    var pad = stickyTocOffset() + 6;
+    var y = window.scrollY + el.getBoundingClientRect().top - pad;
+    window.scrollTo({ top: Math.max(0, y), behavior: smooth ? 'smooth' : 'auto' });
+  }
+
+  function go(delta) {
+    var i = currentIndex() + delta;
+    if (i < 0 || i >= slides.length) return;
+    var el = slides[i];
+    scrollSlideTop(el, true);
+    history.replaceState(null, '', '#' + el.id);
+    setTimeout(updateUI, 450);
+  }
+
+  var prevBtn = document.getElementById('sn-prev');
+  var nextBtn = document.getElementById('sn-next');
+  if (prevBtn) prevBtn.addEventListener('click', function () { go(-1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { go(1); });
+
+  document.addEventListener('keydown', function (e) {
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      go(-1);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      go(1);
+    } else if (e.key === 'PageUp') {
+      e.preventDefault();
+      go(-1);
+    } else if (e.key === 'PageDown') {
+      e.preventDefault();
+      go(1);
+    }
+  });
+
+  var scrollTimer;
+  window.addEventListener('scroll', function () {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(function () {
+      syncHashToSlide();
+      updateUI();
+    }, 120);
+  }, { passive: true });
+
+  window.addEventListener('hashchange', function () {
+    if (location.hash && /^#s\d+$/.test(location.hash)) {
+      var t = document.querySelector(location.hash);
+      if (t) scrollSlideTop(t, false);
+    }
+    updateUI();
+  });
+
+  window.addEventListener('resize', applyDeckScale);
+  window.addEventListener('orientationchange', applyDeckScale);
+
+  window.addEventListener('load', function () {
+    applyDeckScale();
+    if (location.hash && /^#s\d+$/.test(location.hash)) {
+      var target = document.querySelector(location.hash);
+      if (target) {
+        setTimeout(function () {
+          scrollSlideTop(target, false);
+          updateUI();
+          applyDeckScale();
+        }, 50);
+        return;
+      }
+    }
+    updateUI();
+    applyDeckScale();
+  });
+})();
+</script>
+</body>
+</html>
