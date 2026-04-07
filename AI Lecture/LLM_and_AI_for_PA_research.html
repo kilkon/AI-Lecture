@@ -1389,11 +1389,29 @@ H1, H2... SEM + 위계 회귀</pre>
     <div class="banner" style="background:var(--navy);border-left:6px solid var(--cyan);color:#fff;text-align:center;">
       "코드를 직접 작성하지 않고, 자연어로 AI에게 원하는 것을 말하면 AI가 코드를 생성·실행·디버깅한다"
     </div>
-    <div class="grid-2" style="margin-top:1rem;">
-      <div style="background:#6b6b7b;color:#fff;padding:1rem;"><strong>❌ 기존</strong><p>Python/R/SPSS 학습 → 오류 → 검색 → 수 시간~일</p></div>
-      <div style="background:var(--blue);color:#fff;padding:1rem;"><strong>✅ 바이브 코딩</strong><p>자연어 설명 → AI 생성·실행 → 수 분</p></div>
+    <div class="grid-2" style="margin-top:0.8rem;">
+      <div style="background:#6b6b7b;color:#fff;padding:0.85rem;"><strong>❌ 기존 방식</strong><p style="margin:0.35rem 0 0;">문법 학습 → 코드 작성 → 오류 검색/수정<br/>반복이 길어 초보자가 중간에 포기하기 쉬움</p></div>
+      <div style="background:var(--blue);color:#fff;padding:0.85rem;"><strong>✅ 바이브 코딩</strong><p style="margin:0.35rem 0 0;">분석 목표를 한국어로 설명 → AI가 코드 초안 생성·실행<br/>연구자는 결과 해석과 타당성 점검에 집중</p></div>
     </div>
-    <div class="card" style="background:var(--teal);margin-top:0.75rem;"><strong>🎓 행정학 연구자에게</strong><p>Python·R 몰라도 회귀·SEM·텍스트 분석 가능. Cursor · Claude Code · Copilot · AI Studio.</p></div>
+    <div class="info-box" style="margin-top:0.65rem;padding:0.65rem 0.75rem;">
+      <span class="t">🧭 3단계로 이해하기</span>
+      <p style="margin:0.25rem 0 0;font-size:0.82rem;line-height:1.45;">
+        <strong>1) 목표를 말한다:</strong> "만족도를 종속변수로 OLS 회귀를 돌려줘."<br/>
+        <strong>2) AI가 만든 코드를 검토한다:</strong> 변수명·결측치 처리·모형식 확인.<br/>
+        <strong>3) 결과를 논문 문장으로 바꾼다:</strong> 계수·유의수준·해석을 SPARRO로 검증.
+      </p>
+    </div>
+    <div class="grid-2" style="margin-top:0.55rem;grid-template-columns:1.25fr 0.75fr;gap:0.55rem;">
+      <pre class="code" style="margin:0;font-size:0.69rem;line-height:1.32;">프롬프트 예시
+  "survey_data.csv를 불러와 satisfaction을 종속변수로,
+  quality/access/literacy를 독립변수로 OLS 회귀를 실행해줘.
+  코드 + 핵심 결과표 + 해석 3줄을 보여줘."</pre>
+      <div class="card" style="background:#7b1f1f;margin:0;padding:0.7rem;">
+        <strong style="font-size:0.88rem;">⚠️ 꼭 기억</strong>
+        <p style="margin-top:0.3rem;font-size:0.75rem;line-height:1.42;">AI가 코드를 돌려도<br/>분석 적합성·해석 책임은<br/><strong>연구자 본인</strong>에게 있다.</p>
+      </div>
+    </div>
+    <div class="card" style="background:var(--teal);margin-top:0.45rem;padding:0.55rem 0.75rem;"><strong>🎓 행정학 연구자에게</strong><p style="font-size:0.78rem;">Python·R 비전공자도 회귀·SEM·텍스트 분석의 진입장벽을 낮출 수 있다. (Cursor · Claude Code · Copilot · AI Studio)</p></div>
   </div>
   <span class="slide-num">21 / 30</span>
   <div class="footer-bar">행정학 연구를 위한 AI LLM &amp; AI Agent 활용 | Promptology</div>
