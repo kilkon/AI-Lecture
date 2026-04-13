@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM 활용 인과추론 분석 파이프라인 - HTML 발표자료</title>
+  <style>
+    :root {
+      --bg: #0b1120;
+      --panel: #11182d;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --line: #24314f;
+      --accent: #3b82f6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Segoe UI", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at top, #16233f, #0b1120 50%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(8, 14, 28, 0.9);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .title {
+      font-weight: 700;
+      font-size: 13px;
+      margin-right: auto;
+    }
+    button, select {
+      height: 34px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button.primary {
+      border: none;
+      background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+      color: #fff;
+      font-weight: 700;
+    }
+    .meta { color: var(--muted); font-size: 12px; }
+    .viewer-wrap {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      overflow: auto;
+    }
+    .viewer {
+      width: min(96vw, 1280px);
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+      background: #000;
+    }
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #000;
+    }
+    .hint {
+      color: var(--muted);
+      text-align: center;
+      font-size: 11px;
+      padding: 8px;
+      border-top: 1px solid var(--line);
+      background: rgba(8, 14, 28, 0.75);
+    }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="title">LLM 활용 인과추론 분석 파이프라인 - HTML 발표자료</div>
+    <button id="prevBtn">이전</button>
+    <button id="nextBtn" class="primary">다음</button>
+    <select id="slideSelect" aria-label="슬라이드 선택"></select>
+    <button id="fullBtn">전체화면</button>
+    <div class="meta" id="metaText"></div>
+  </div>
+
+  <div class="viewer-wrap">
+    <div class="viewer" id="viewer">
+      <iframe id="slideFrame" title="slides"></iframe>
+    </div>
+  </div>
+
+  <div class="hint">키보드: ←/→, Space, Home/End, F(전체화면)</div>
+
+  <script>
+    const slideNumbers = [
+      1, 2, 3, 4, 5, 6, 7, 8,
+      47, 48, 49, 50,
+      9, 10, 11, 51, 12,
+      ...Array.from({ length: 30 }, (_, i) => i + 13)
+    ];
+    const frame = document.getElementById("slideFrame");
+    const select = document.getElementById("slideSelect");
+    const metaText = document.getElementById("metaText");
+    const viewer = document.getElementById("viewer");
+    let idx = 0;
+
+    function fileFor(n) {
+      return `./LLM 활용 인과추론 분석 파이프라인 슬라이드 덱_slides/slide_${String(n).padStart(3, "0")}.html`;
+    }
+
+    function renderOptions() {
+      select.innerHTML = "";
+      slideNumbers.forEach((n, i) => {
+        const opt = document.createElement("option");
+        opt.value = String(i);
+        opt.textContent = `Slide ${i + 1}`;
+        select.appendChild(opt);
+      });
+    }
+
+    function setSlide(newIdx) {
+      if (newIdx < 0 || newIdx >= slideNumbers.length) return;
+      idx = newIdx;
+      const n = slideNumbers[idx];
+      frame.src = fileFor(n);
+      select.value = String(idx);
+      metaText.textContent = `${idx + 1} / ${slideNumbers.length}`;
+      history.replaceState(null, "", `#slide=${n}`);
+      document.title = `Slide ${n} - LLM 인과추론 발표자료`;
+    }
+
+    function next() { setSlide(Math.min(idx + 1, slideNumbers.length - 1)); }
+    function prev() { setSlide(Math.max(idx - 1, 0)); }
+
+    document.getElementById("nextBtn").addEventListener("click", next);
+    document.getElementById("prevBtn").addEventListener("click", prev);
+    select.addEventListener("change", (e) => setSlide(Number(e.target.value)));
+    document.getElementById("fullBtn").addEventListener("click", () => {
+      if (!document.fullscreenElement) viewer.requestFullscreen?.();
+      else document.exitFullscreen?.();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); next(); }
+      if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+      if (e.key === "Home") { e.preventDefault(); setSlide(0); }
+      if (e.key === "End") { e.preventDefault(); setSlide(slideNumbers.length - 1); }
+      if (e.key.toLowerCase() === "f") {
+        if (!document.fullscreenElement) viewer.requestFullscreen?.();
+        else document.exitFullscreen?.();
+      }
+    });
+
+    function initFromHash() {
+      const m = location.hash.match(/slide=(\d+)/);
+      if (!m) return 0;
+      const n = Number(m[1]);
+      const found = slideNumbers.indexOf(n);
+      return found >= 0 ? found : 0;
+    }
+
+    renderOptions();
+    setSlide(initFromHash());
+  </script>
+</body>
+</html>

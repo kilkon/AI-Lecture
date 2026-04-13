@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<title>웹 구조 이해와 API 탐색</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; background: #0b1120; display: flex; align-items: center; justify-content: center; }
+  .slide { width: 1280px; height: 720px; background: #fff; padding: 40px 52px; box-sizing: border-box; position: relative; }
+  h2 { margin: 0 0 14px 0; font-size: 40px; color: #0f172a; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { border: 1px solid #cbd5e1; border-radius: 10px; background: #f8fafc; padding: 12px 14px; }
+  .card h3 { margin: 0 0 8px 0; color: #0369a1; font-size: 24px; }
+  .card li { margin: 7px 0; color: #334155; font-size: 18px; line-height: 1.4; }
+  .code { margin-top: 12px; background: #1e293b; color: #e2e8f0; border-radius: 10px; padding: 12px 14px; font-family: Consolas, "Courier New", monospace; font-size: 15px; line-height: 1.45; }
+  .num { position: absolute; right: 52px; bottom: 24px; color: #94a3b8; font-size: 28px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <h2>웹 구조를 알아야 API를 찾을 수 있다</h2>
+    <div class="row">
+      <div class="card">
+        <h3>탐색 체크리스트</h3>
+        <ul>
+          <li>브라우저 개발자도구(Network)에서 XHR/Fetch 요청 확인</li>
+          <li>응답이 JSON인지, HTML 조각인지 먼저 구분</li>
+          <li>쿼리 파라미터(기간, 지역, 코드)와 헤더(인증) 기록</li>
+          <li>DOM에 없는 데이터는 JS 호출(API)로 받아오는 경우가 많음</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>실무 결정 규칙</h3>
+        <ul>
+          <li>동일 데이터가 API와 화면 모두에 있으면 API 사용</li>
+          <li>API가 없고 정적 HTML이면 selector 기반 스크래핑</li>
+          <li>동적 렌더링/클릭 기반이면 Selenium 자동화</li>
+          <li>robots.txt, 이용약관, 호출 빈도 제한을 항상 준수</li>
+        </ul>
+      </div>
+    </div>
+    <div class="code">Example workflow:
+Open DevTools → Network(XHR) → find endpoint → reproduce in Python requests →
+validate JSON schema → save raw + cleaned data with timestamp</div>
+    <div class="num">11</div>
+  </div>
+</body>
+</html>

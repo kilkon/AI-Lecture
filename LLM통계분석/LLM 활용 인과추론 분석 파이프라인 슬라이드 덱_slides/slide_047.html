@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<title>API 기반 자료수집 개념</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; background: #0b1120; display: flex; align-items: center; justify-content: center; }
+  .slide { width: 1280px; height: 720px; background: #fff; padding: 42px 54px; box-sizing: border-box; position: relative; }
+  h2 { margin: 0 0 14px 0; font-size: 42px; color: #0f172a; }
+  .sub { margin: 0 0 18px 0; color: #0369a1; font-size: 24px; font-weight: 700; }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .box { background: #f8fafc; border: 1px solid #cbd5e1; border-left: 8px solid #0284c7; border-radius: 10px; padding: 14px 16px; }
+  .box h3 { margin: 0 0 8px 0; font-size: 24px; color: #0f172a; }
+  .box li, .box p { margin: 7px 0; color: #334155; font-size: 19px; line-height: 1.42; }
+  .num { position: absolute; right: 54px; bottom: 24px; color: #94a3b8; font-size: 28px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <h2>API 기반 자료수집: 왜 중요한가?</h2>
+    <p class="sub">재현 가능하고 안정적인 인과분석 데이터 파이프라인의 출발점</p>
+    <div class="cols">
+      <div class="box">
+        <h3>API의 핵심 개념</h3>
+        <ul>
+          <li><b>API</b>는 “서버가 정한 규칙으로 데이터를 제공”하는 공식 인터페이스</li>
+          <li>URL + 파라미터 + 인증키로 원하는 통계를 기계적으로 조회</li>
+          <li>결과가 JSON/CSV 구조라서 정제·병합 자동화가 쉽다</li>
+          <li>동일 요청을 반복하면 같은 결과를 재현하기 좋다</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>연구 관점의 장점</h3>
+        <ul>
+          <li>수집 코드와 분석 코드를 분리해 유지보수성을 높임</li>
+          <li>표 ID, 기간, 단위를 바꿔도 파이프라인 재사용 가능</li>
+          <li>수동 복사/붙여넣기 오류를 줄여 데이터 신뢰성 확보</li>
+          <li>버전관리(Git)와 결합하면 수집 이력 추적이 가능</li>
+        </ul>
+      </div>
+    </div>
+    <div class="num">09</div>
+  </div>
+</body>
+</html>

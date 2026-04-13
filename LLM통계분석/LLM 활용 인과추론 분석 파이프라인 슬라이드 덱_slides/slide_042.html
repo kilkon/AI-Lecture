@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<title>최종 산출물 및 발표 포인트</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; background: #0b1120; display: flex; align-items: center; justify-content: center; }
+  .slide { width: 1280px; height: 720px; background: #fff; padding: 40px 52px; box-sizing: border-box; position: relative; }
+  h2 { margin: 0 0 14px 0; font-size: 42px; color: #0f172a; }
+  .cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; }
+  .box { border: 1px solid #cbd5e1; border-radius: 10px; padding: 14px 16px; background: #f8fafc; }
+  .box h3 { margin: 0 0 8px 0; color: #0369a1; font-size: 24px; }
+  .box li { font-size: 19px; color: #334155; margin: 7px 0; line-height: 1.4; }
+  .path { margin-top: 14px; padding: 12px; border-radius: 8px; background: #1e293b; color: #e2e8f0; font-family: Consolas, "Courier New", monospace; font-size: 16px; }
+  .num { position: absolute; right: 52px; bottom: 24px; color: #94a3b8; font-size: 28px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <h2>최종 산출물과 발표 메시지</h2>
+    <div class="cols">
+      <div class="box">
+        <h3>산출물</h3>
+        <ul>
+          <li>시도-연도 최종 패널: 17개 시도 × 2011~2025</li>
+          <li>독립/종속/통제 변수 + treatment 자동 생성</li>
+          <li>지역명 표준화 및 KOSIS 표 ID 기반 재현성 확보</li>
+          <li>프롬프트 수정만으로 변수/기간/단위 확장 가능</li>
+        </ul>
+      </div>
+      <div class="box">
+        <h3>발표 핵심 포인트</h3>
+        <ul>
+          <li>LLM은 “코드 대체”가 아니라 “분석 워크플로우 가속기”</li>
+          <li>프롬프트 표준화가 재현 가능한 인과분석을 만든다</li>
+          <li>데이터셋 구축 시간을 단축하고 연구자 판단에 집중</li>
+          <li>다음 단계: DID / Event Study / HTE(Causal Forest)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="path">Final CSV: C:\Users\owner\AI Lecture\LLM통계분석\output_dataset\minimum_wage_restaurant_panel_sido_final.csv</div>
+    <div class="num">42</div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<title>프롬프트 기반 데이터 구축 절차</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; background: #0b1120; display: flex; align-items: center; justify-content: center; }
+  .slide { width: 1280px; height: 720px; background: #fff; padding: 36px 50px; box-sizing: border-box; position: relative; }
+  h2 { margin: 0 0 14px 0; font-size: 40px; color: #0f172a; }
+  .flow { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 8px; }
+  .step { background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; min-height: 260px; }
+  .step .n { font-size: 18px; font-weight: 700; color: #0369a1; margin-bottom: 6px; }
+  .step h3 { margin: 0 0 8px 0; font-size: 24px; color: #0f172a; }
+  .step p { margin: 0; font-size: 17px; color: #334155; line-height: 1.4; }
+  .prompt { margin-top: 14px; background: #1e293b; color: #e2e8f0; border-radius: 10px; padding: 14px; font-family: Consolas, "Courier New", monospace; font-size: 15px; line-height: 1.45; }
+  .num { position: absolute; right: 50px; bottom: 22px; color: #94a3b8; font-size: 28px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <h2>데이터셋 생성 프롬프트 실행 절차</h2>
+    <div class="flow">
+      <div class="step"><div class="n">STEP 1</div><h3>질문 정의</h3><p>“최저임금 인상이 요식업 고용에 미치는 인과효과”를 시도-연도 단위로 분석한다고 명시.</p></div>
+      <div class="step"><div class="n">STEP 2</div><h3>변수 매핑</h3><p>KOSIS 표 ID를 확정하고 변수 역할(독립/종속/통제) 및 추출 라벨을 지정.</p></div>
+      <div class="step"><div class="n">STEP 3</div><h3>수집/정제</h3><p>API 수집 후 시도명 표준화, 산업 라벨 필터링, 연도형 변환, 결측 확인.</p></div>
+      <div class="step"><div class="n">STEP 4</div><h3>병합/파생</h3><p><b>region-year</b> 병합 및 treatment 생성, 최종 패널 CSV 자동 저장.</p></div>
+    </div>
+    <div class="prompt">Prompt example:
+“분석 단위를 시도-연도로 설정하고, 최저임금은 전국 공통값으로 매칭해줘.
+KOSIS 표에서 숙박·음식점업 취업자, 시도별 실업률/소비자물가/저임금 비중을 수집한 뒤
+treatment_rt = mw_level_t × low_wage_share_pre_rt 로 생성해 최종 패널을 저장해줘.”</div>
+    <div class="num">41</div>
+  </div>
+</body>
+</html>

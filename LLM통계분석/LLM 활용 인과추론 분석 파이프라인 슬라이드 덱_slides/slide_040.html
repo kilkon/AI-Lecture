@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<title>수집 변수 및 테이블 매핑</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; background: #0b1120; display: flex; align-items: center; justify-content: center; }
+  .slide { width: 1280px; height: 720px; background: #fff; padding: 40px 52px; box-sizing: border-box; position: relative; }
+  h2 { margin: 0 0 18px 0; font-size: 40px; color: #0f172a; }
+  table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  th, td { border: 1px solid #cbd5e1; padding: 10px 12px; vertical-align: top; }
+  th { background: #e0f2fe; color: #0f172a; font-size: 21px; }
+  td { font-size: 18px; color: #334155; line-height: 1.35; }
+  .note { margin-top: 14px; font-size: 18px; color: #475569; }
+  .num { position: absolute; right: 52px; bottom: 24px; color: #94a3b8; font-size: 28px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <h2>시도 단위 변수 매핑 (최종)</h2>
+    <table>
+      <thead>
+        <tr><th style="width:18%;">역할</th><th style="width:24%;">변수</th><th style="width:22%;">KOSIS 표 ID</th><th>설명</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>독립</td><td>mw_level_t, mw_growth_t</td><td>외부자료</td><td>연도별 법정 최저임금(전국 공통) 및 인상률</td></tr>
+        <tr><td>노출강도</td><td>mw_impact_rate_rt</td><td>DT_11840_N011A</td><td>최저임금 영향률(전국, 연도별 시도에 공통 매핑)</td></tr>
+        <tr><td>노출강도</td><td>low_wage_share_rt</td><td>DT_1ES3B06S</td><td>시도별 저임금 비중</td></tr>
+        <tr><td>종속</td><td>employment_rt</td><td>DT_1DA7E33S_NEW</td><td>시도/산업별 취업자 중 숙박·음식점업 추출</td></tr>
+        <tr><td>통제</td><td>cpi_rt</td><td>DT_1J22003</td><td>시도별 소비자물가지수</td></tr>
+        <tr><td>통제</td><td>unemployment_rt</td><td>DT_1DA7104S</td><td>시도별 실업률</td></tr>
+      </tbody>
+    </table>
+    <p class="note">핵심 파생변수: <b>treatment_rt = mw_level_t × low_wage_share_pre_rt</b> (t-1 노출도 반영)</p>
+    <div class="num">40</div>
+  </div>
+</body>
+</html>

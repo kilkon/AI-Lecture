@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<title>데이터셋 생성 프롬프트 체계</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+  body { font-family: "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif; background: #0b1120; display: flex; align-items: center; justify-content: center; }
+  .slide { width: 1280px; height: 720px; background: #fff; padding: 44px 56px; box-sizing: border-box; position: relative; }
+  h1 { margin: 0 0 12px 0; font-size: 46px; color: #0f172a; }
+  .sub { margin: 0 0 24px 0; font-size: 24px; color: #0369a1; font-weight: 700; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .card { border: 1px solid #cbd5e1; border-left: 8px solid #0284c7; border-radius: 10px; background: #f8fafc; padding: 14px 16px; }
+  .card h3 { margin: 0 0 8px 0; font-size: 23px; color: #0f172a; }
+  .card p { margin: 0; font-size: 19px; line-height: 1.45; color: #334155; }
+  .footer { position: absolute; left: 56px; bottom: 26px; color: #64748b; font-size: 20px; }
+  .num { position: absolute; right: 56px; bottom: 24px; color: #94a3b8; font-size: 28px; font-weight: 700; }
+</style>
+</head>
+<body>
+  <div class="slide">
+    <h1>KOSIS 기반 패널 구축 프롬프트</h1>
+    <p class="sub">최저임금 인상 → 요식업 고용 인과효과 분석용 데이터 설계</p>
+    <div class="grid">
+      <div class="card">
+        <h3>연구질문 프롬프트</h3>
+        <p>분석단위를 <b>시도-연도</b>로 고정하고, 최저임금은 전국 공통 정책변수로 둔다.</p>
+      </div>
+      <div class="card">
+        <h3>변수설계 프롬프트</h3>
+        <p>독립/종속/통제변수와 각 변수의 KOSIS 통계표 ID를 사전에 매핑한다.</p>
+      </div>
+      <div class="card">
+        <h3>수집 프롬프트</h3>
+        <p>KOSIS API 호출 시 기간·주기·산업 필터를 명시하고, 실패 시 키/파라미터를 재시도한다.</p>
+      </div>
+      <div class="card">
+        <h3>정제/병합 프롬프트</h3>
+        <p>지역명 표준화 후 <b>region, year</b> 키로 병합하고 treatment 변수를 생성한다.</p>
+      </div>
+    </div>
+    <div class="footer">LLM통계분석 · 데이터셋 자동생성 워크플로우</div>
+    <div class="num">39</div>
+  </div>
+</body>
+</html>

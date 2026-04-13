@@ -1,0 +1,142 @@
+<!doctype html><html lang='ko'><head>
+<meta charset="utf-8"/>
+<title>LLM을 활용한 통계분석 파이프라인: DID와 Causal Forest</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: #0b1120;
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif;
+    color: #1e293b;
+    margin: 0 auto;
+    padding: 80px 20px;
+    position: relative;
+  }
+  .deck { display: flex; flex-direction: column; align-items: center; margin-top: 40px; }
+  .slide {
+    width: 90vw;
+    max-width: 1400px;
+    aspect-ratio: 16/9;
+    background-color: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    padding: 4% 5%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    text-align: left;
+  }
+  h2 {
+    font-size: 2.2rem;
+    color: #0284c7;
+    margin-bottom: 0.8rem;
+    border-bottom: 3px solid #e0f2fe;
+    padding-bottom: 0.4rem;
+    display: inline-block;
+  }
+  h3 { font-size: 1.12rem; color: #334155; margin-bottom: 0.35rem; margin-top: 0; }
+  p, li { font-size: 1rem; line-height: 1.35; color: #334155; }
+  ul { margin-left: 1.2rem; }
+  .slide-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: flex-start; }
+  .col-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; align-items: start; }
+  .info-card {
+    background-color: #f0fdf4;
+    border-left: 6px solid #22c55e;
+    padding: 0.8rem;
+    border-radius: 8px;
+  }
+  .prompt-card {
+    background-color: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-left: 6px solid #0284c7;
+    padding: 0.8rem;
+    border-radius: 8px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+    font-size: 0.84rem;
+    line-height: 1.35;
+  }
+  .prompt-title {
+    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', Arial, sans-serif;
+    font-size: 0.84rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.35rem;
+    font-weight: 700;
+  }
+  .alert-card {
+    background-color: #fef2f2;
+    border-left: 6px solid #ef4444;
+    padding: 0.8rem;
+    border-radius: 8px;
+  }
+  .alert-card h4 { color: #b91c1c; font-size: 1.1rem; margin-bottom: 0.35rem; }
+  .page-num {
+    position: absolute;
+    bottom: 4%;
+    right: 5%;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #94a3b8;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', monospace;
+  }
+  html, body { margin: 0; padding: 0; width: 1280px; height: 720px; overflow: hidden; background: #0b1120; }
+  body { display: flex; align-items: center; justify-content: center; }
+  .deck { margin: 0 !important; display: block !important; }
+  .slide {
+    width: 1280px !important;
+    max-width: 1280px !important;
+    height: 720px !important;
+    min-height: 720px !important;
+    aspect-ratio: auto !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+</style>
+</head><body><div class='deck'><div class="slide" id="s12_1">
+<div class="slide-content">
+<h2>Agent 기반 통계 자료 수집·검증·시각화 운영 절차</h2>
+<p>웹에서 지표를 찾고 신뢰성 있게 시각화하기 위해, Agent는 아래 4단계 규칙으로 작업을 표준화합니다.</p>
+<div class="col-2" style="margin-top: 0.6rem;">
+  <div class="info-card">
+    <h3>1) 자료 찾기 알고리듬</h3>
+    <ul>
+      <li>질문을 지표/단위/범위/기간/빈도/비교방식으로 분해</li>
+      <li>KOSIS 우선, 국제 비교는 IMF/World Bank 보완</li>
+      <li>키워드 반복 탐색 후 후보 테이블 ID 소범위 점검</li>
+      <li>기간·주기·항목의미·코드명확성·결측으로 후보 점수화</li>
+    </ul>
+  </div>
+  <div class="info-card">
+    <h3>2) 자료 검증 알고리듬</h3>
+    <ul>
+      <li>스키마(PRD_DE/DT/ITM_ID/C1,C2/PRD_SE/UNIT_NM) 확인</li>
+      <li>시계열 기간, 중복키, 결측률 검증</li>
+      <li>코드 의미 교차확인 및 파생지표 계산식 명시</li>
+      <li>집계 합계 샘플 검증 + 차트 바인딩/범례/footnote 점검</li>
+    </ul>
+  </div>
+</div>
+<div class="col-2" style="margin-top: 0.6rem;">
+  <div class="prompt-card">
+    <div class="prompt-title">3) 실무 프롬프트 패턴</div>
+    P1 테이블 찾기: 후보 ID + 기간/주기/단위/ITM_ID 비교<br>
+    P2 최종 선정: 기간·주기·범위를 가장 충족하는 1개 선정 근거 제시<br>
+    P3 집계 검증: 코드집합 합산 시계열과 원자료 합계 검증 로그 출력<br>
+    P4 비교 차트: 연도범위 정렬 + 소스/항목코드 footnote 포함<br>
+    P5 품질 리포트: 기간·결측·중복·단위·코드 의미 체크리스트 출력
+  </div>
+  <div class="alert-card">
+    <h4>4) 재현 가능한 운영 규칙</h4>
+    <ul>
+      <li>한 파일 누적 원칙: 수집 + 검증 + 렌더 통합</li>
+      <li>테이블 ID/항목코드/지역코드 상수화</li>
+      <li>생성 직전 period min/max, rows, group count 출력 의무화</li>
+      <li>모든 차트에 캔버스 내부 footnote로 소스 명시</li>
+    </ul>
+  </div>
+</div>
+</div>
+<div class="page-num">12A</div>
+</div></div></body></html>
