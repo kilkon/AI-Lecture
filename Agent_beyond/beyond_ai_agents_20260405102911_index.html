@@ -155,6 +155,7 @@
     const BASE_H = 720;
     const prefix = "beyond_ai_agents_20260405102911_slide";
     const extension = ".html";
+    const assetVersion = "b525343";
     const slideNumbers = Array.from({ length: 34 }, (_, i) => i + 1);
 
     const frame = document.getElementById("slideFrame");
@@ -168,7 +169,7 @@
     let userZoom = isMobile ? 1.35 : 1.0; // 모바일 기본 가독성 강화
 
     function fileFor(n) {
-      return `${prefix}${n}${extension}`;
+      return `${prefix}${n}${extension}?v=${assetVersion}`;
     }
 
     function renderOptions() {
