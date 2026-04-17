@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>The Role of Governance</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow: hidden;
+    }
+    .slide-container {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      overflow: hidden;
+      padding: 0;
+      margin: 0;
+    }
+    .slide-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(0, 0, 0, 0.3);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+    }
+    .slide-title {
+      font-size: 36px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .slide-title i {
+      color: #00d4ff;
+    }
+    .slide-subtitle {
+      font-size: 14px;
+      color: #8892b0;
+      margin: 0;
+    }
+    .content-area {
+      position: absolute;
+      top: 100px;
+      left: 60px;
+      right: 60px;
+      bottom: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .governance-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+      height: 100%;
+    }
+    .governance-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .governance-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(0, 212, 255, 0.3);
+    }
+    .card-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(0, 212, 255, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    .card-icon i {
+      font-size: 24px;
+      color: #00d4ff;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin: 0 0 10px 0;
+    }
+    .card-desc {
+      font-size: 12px;
+      color: #8892b0;
+      line-height: 1.5;
+      margin: 0;
+    }
+    .outcome-box {
+      background: rgba(0, 212, 255, 0.1);
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .outcome-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .outcome-text i {
+      color: #00d4ff;
+    }
+    .outcome-detail {
+      font-size: 14px;
+      color: #8892b0;
+    }
+    .source-text {
+      position: absolute;
+      bottom: 20px;
+      right: 60px;
+      font-size: 12px;
+      color: #8892b0;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="slide-header">
+      <div>
+        <div class="slide-title">
+          <i class="fas fa-shield-alt"></i>
+          The Role of Governance
+        </div>
+        <div class="slide-subtitle">Building trustworthy AI systems through structured oversight</div>
+      </div>
+      <div class="slide-subtitle">Microsoft Framework</div>
+    </div>
+    <div class="content-area">
+      <div class="governance-grid">
+        <div class="governance-card">
+          <div class="card-icon">
+            <i class="fas fa-list-check"></i>
+          </div>
+          <div class="card-title">Risk Taxonomy</div>
+          <div class="card-desc">Categorize AI risks by severity, impact, and likelihood for systematic management</div>
+        </div>
+        <div class="governance-card">
+          <div class="card-icon">
+            <i class="fas fa-gavel"></i>
+          </div>
+          <div class="card-title">Policy Guardrails</div>
+          <div class="card-desc">Establish clear boundaries and rules for AI system behavior and usage</div>
+        </div>
+        <div class="governance-card">
+          <div class="card-icon">
+            <i class="fas fa-bug"></i>
+          </div>
+          <div class="card-title">Red-teaming</div>
+          <div class="card-desc">Proactively test AI systems for vulnerabilities and failure modes</div>
+        </div>
+        <div class="governance-card">
+          <div class="card-icon">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="card-title">Evaluation</div>
+          <div class="card-desc">Continuous monitoring and assessment of AI system performance</div>
+        </div>
+        <div class="governance-card">
+          <div class="card-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="card-title">Incident Response</div>
+          <div class="card-desc">Structured protocols for handling AI-related incidents</div>
+        </div>
+      </div>
+      <div class="outcome-box">
+        <div class="outcome-text">
+          <i class="fas fa-check-circle"></i>
+          <span>Trustworthy scale with accountability</span>
+        </div>
+        <div class="outcome-detail">
+          Combining technical safeguards with human oversight for responsible AI deployment
+        </div>
+      </div>
+    </div>
+    <div class="source-text">Source: Microsoft keynote</div>
+  </div>
+</body>
+</html>

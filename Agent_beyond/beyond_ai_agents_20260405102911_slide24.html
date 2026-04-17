@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Human and Organizational Limitations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .title-icon {
+        color: #f87171;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+    
+    .source-badge {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: #60a5fa;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 120px;
+        left: 40px;
+        right: 40px;
+        bottom: 80px;
+        display: flex;
+        gap: 32px;
+    }
+    
+    .left-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .right-section {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .limitation-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(248, 113, 113, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #f87171;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    
+    .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .card-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+    
+    .bullet-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .bullet-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    
+    .bullet-icon {
+        color: #f87171;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+    
+    .bullet-text {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+    
+    .roles-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+    
+    .role-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .role-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+    
+    .role-content {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .role-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .role-desc {
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    
+    .bottom-info {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #64748b;
+    }
+    
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        min-width: 0;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+    }
+    
+    .info-icon {
+        color: #60a5fa;
+        font-size: 12px;
+        flex-shrink: 0;
+    }
+    
+    .info-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .source-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div>
+<div class="title">
+<i class="fas fa-users-cog title-icon"></i>
+                Human and Organizational Limitations
+            </div>
+<div class="subtitle">Addressing the human factors in AI adoption and transformation</div>
+</div>
+<div class="source-badge">
+<i class="fas fa-exclamation-triangle"></i>
+<span>Microsoft Keynote</span>
+</div>
+</div>
+<div class="main-content">
+<div class="left-section">
+<div class="limitation-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-graduation-cap"></i>
+</div>
+<div class="card-title">Skills Gap and Process Redesign</div>
+</div>
+<div class="card-desc">
+                    Organizations face significant challenges in upskilling employees for AI collaboration and redesigning processes to integrate AI capabilities.
+                </div>
+<div class="bullet-list">
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">Technical skills gap: Only 35% of employees have basic AI literacy</div>
+</div>
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">Process redesign: 67% of workflows need re-engineering for AI integration</div>
+</div>
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">Change resistance: 42% of staff resist AI adoption</div>
+</div>
+</div>
+</div>
+<div class="limitation-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-sync-alt"></i>
+</div>
+<div class="card-title">Organizational Resistance to Change</div>
+</div>
+<div class="card-desc">
+                    Cultural and structural barriers prevent smooth AI adoption, requiring careful change management strategies.
+                </div>
+<div class="bullet-list">
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">Legacy systems: 78% of organizations use outdated infrastructure</div>
+</div>
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">Siloed departments: 56% lack cross-functional collaboration</div>
+</div>
+</div>
+</div>
+</div>
+<div class="right-section">
+<div class="limitation-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-chart-line"></i>
+</div>
+<div class="card-title">Incentives and ROI Trap</div>
+</div>
+<div class="card-desc">
+                    Misaligned incentives and unrealistic ROI expectations can derail AI initiatives and create change fatigue.
+                </div>
+<div class="bullet-list">
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">ROI expectations: 82% overestimate short-term benefits</div>
+</div>
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">Change fatigue: 3 major changes in 12 months</div>
+</div>
+<div class="bullet-item">
+<i class="fas fa-circle bullet-icon"></i>
+<div class="bullet-text">Incentive misalignment: 45% of teams have conflicting KPIs</div>
+</div>
+</div>
+</div>
+<div class="limitation-card">
+<div class="card-header">
+<div class="card-icon">
+<i class="fas fa-user-plus"></i>
+</div>
+<div class="card-title">New Roles Required</div>
+</div>
+<div class="card-desc">
+                    AI adoption requires new specialized roles to manage, evaluate, and govern AI systems.
+                </div>
+<div class="roles-grid">
+<div class="role-item">
+<div class="role-icon">
+<i class="fas fa-robot"></i>
+</div>
+<div class="role-content">
+<div class="role-name">AgentOps</div>
+<div class="role-desc">Manage AI agents</div>
+</div>
+</div>
+<div class="role-item">
+<div class="role-icon">
+<i class="fas fa-search"></i>
+</div>
+<div class="role-content">
+<div class="role-name">Evaluators</div>
+<div class="role-desc">Assess AI outputs</div>
+</div>
+</div>
+<div class="role-item">
+<div class="role-icon">
+<i class="fas fa-shield-alt"></i>
+</div>
+<div class="role-content">
+<div class="role-name">Risk Stewards</div>
+<div class="role-desc">Monitor AI risks</div>
+</div>
+</div>
+<div class="role-item">
+<div class="role-icon">
+<i class="fas fa-users"></i>
+</div>
+<div class="role-content">
+<div class="role-name">AI Trainers</div>
+<div class="role-desc">Train AI models</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-info">
+<div class="info-left">
+<div class="info-item">
+<i class="fas fa-info-circle info-icon"></i>
+<span>Source: Microsoft Keynote (https://www.genspark.ai/api/files/s/7uk2LuBj)</span>
+</div>
+</div>
+<div class="info-right">
+<div class="source-tag">Microsoft</div>
+<div class="source-tag">OpenAI</div>
+</div>
+</div>
+</div>
+</body>
+</html>

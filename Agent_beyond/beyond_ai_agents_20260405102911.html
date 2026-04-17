@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>beyond_ai_agents_20260405102911</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #111;
+      color: #fff;
+      font-family: "Malgun Gothic", "Noto Sans KR", Arial, sans-serif;
+      height: 100%;
+      overflow: hidden;
+    }
+    .stage {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: #111;
+    }
+    .slide {
+      max-width: 100vw;
+      max-height: 100vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 10px 35px rgba(0,0,0,.45);
+      user-select: none;
+    }
+    .toolbar {
+      position: fixed;
+      left: 50%;
+      bottom: 14px;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,.55);
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 999px;
+      padding: 8px 10px;
+      backdrop-filter: blur(6px);
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: #2d2d2d;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    button:hover { background: #3a3a3a; }
+    .index {
+      min-width: 86px;
+      text-align: center;
+      font-size: 13px;
+      opacity: 0.92;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage">
+    <img id="slide" class="slide" alt="slide" />
+  </div>
+  <div class="toolbar">
+    <button id="prev">◀ 이전</button>
+    <div id="index" class="index"></div>
+    <button id="next">다음 ▶</button>
+  </div>
+  <script>
+    const slides = ["beyond_ai_agents_20260405102911_assets/slide_001.png", "beyond_ai_agents_20260405102911_assets/slide_002.png", "beyond_ai_agents_20260405102911_assets/slide_003.png", "beyond_ai_agents_20260405102911_assets/slide_004.png", "beyond_ai_agents_20260405102911_assets/slide_005.png", "beyond_ai_agents_20260405102911_assets/slide_006.png", "beyond_ai_agents_20260405102911_assets/slide_007.png", "beyond_ai_agents_20260405102911_assets/slide_008.png", "beyond_ai_agents_20260405102911_assets/slide_009.png", "beyond_ai_agents_20260405102911_assets/slide_010.png", "beyond_ai_agents_20260405102911_assets/slide_011.png", "beyond_ai_agents_20260405102911_assets/slide_012.png", "beyond_ai_agents_20260405102911_assets/slide_013.png", "beyond_ai_agents_20260405102911_assets/slide_014.png", "beyond_ai_agents_20260405102911_assets/slide_015.png", "beyond_ai_agents_20260405102911_assets/slide_016.png", "beyond_ai_agents_20260405102911_assets/slide_017.png", "beyond_ai_agents_20260405102911_assets/slide_018.png", "beyond_ai_agents_20260405102911_assets/slide_019.png", "beyond_ai_agents_20260405102911_assets/slide_020.png", "beyond_ai_agents_20260405102911_assets/slide_021.png", "beyond_ai_agents_20260405102911_assets/slide_022.png", "beyond_ai_agents_20260405102911_assets/slide_023.png", "beyond_ai_agents_20260405102911_assets/slide_024.png", "beyond_ai_agents_20260405102911_assets/slide_025.png", "beyond_ai_agents_20260405102911_assets/slide_026.png", "beyond_ai_agents_20260405102911_assets/slide_027.png", "beyond_ai_agents_20260405102911_assets/slide_028.png", "beyond_ai_agents_20260405102911_assets/slide_029.png", "beyond_ai_agents_20260405102911_assets/slide_030.png", "beyond_ai_agents_20260405102911_assets/slide_031.png", "beyond_ai_agents_20260405102911_assets/slide_032.png", "beyond_ai_agents_20260405102911_assets/slide_033.png", "beyond_ai_agents_20260405102911_assets/slide_034.png"];
+    let i = 0;
+    const img = document.getElementById("slide");
+    const idx = document.getElementById("index");
+    function render() {
+      img.src = slides[i];
+      idx.textContent = `${i+1} / ${slides.length}`;
+    }
+    function next() { i = (i + 1) % slides.length; render(); }
+    function prev() { i = (i - 1 + slides.length) % slides.length; render(); }
+    document.getElementById("next").addEventListener("click", next);
+    document.getElementById("prev").addEventListener("click", prev);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") next();
+      if (e.key === "ArrowLeft" || e.key === "PageUp") prev();
+      if (e.key === "Home") { i = 0; render(); }
+      if (e.key === "End") { i = slides.length - 1; render(); }
+    });
+    render();
+  </script>
+</body>
+</html>

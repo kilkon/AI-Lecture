@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Beyond Today's Agents: What's Next</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .title-icon {
+        color: #60a5fa;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+    
+    .source-badge {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: #60a5fa;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 120px;
+        left: 40px;
+        right: 40px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .evolution-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        height: 100%;
+    }
+    
+    .evolution-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    
+    .evolution-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .evolution-subtitle {
+        font-size: 13px;
+        color: #94a3b8;
+    }
+    
+    .stages-row {
+        display: flex;
+        gap: 16px;
+        flex: 1;
+    }
+    
+    .stage-card {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        position: relative;
+        transition: all 0.3s ease;
+        min-width: 0;
+    }
+    
+    .stage-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .stage-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .stage-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 20px;
+        flex: 0 0 auto;
+    }
+    
+    .stage-info {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .stage-title {
+        font-size: 14px;
+        font-weight: 600;
+        color: #ffffff;
+        margin-bottom: 4px;
+    }
+    
+    .stage-subtitle {
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    
+    .stage-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+    }
+    
+    .stage-description {
+        font-size: 12px;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+    
+    .stage-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .feature-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+    }
+    
+    .stage-status {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+    
+    .status-active {
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-text {
+        font-size: 11px;
+        color: #94a3b8;
+    }
+    
+    .arrow-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 16px;
+        padding: 8px 0;
+    }
+    
+    .arrow-line {
+        flex: 1;
+        height: 2px;
+        background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+        border-radius: 1px;
+    }
+    
+    .arrow-icon {
+        color: #60a5fa;
+        font-size: 16px;
+    }
+    
+    .future-architecture {
+        display: flex;
+        gap: 16px;
+        margin-top: 16px;
+    }
+    
+    .architecture-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        min-width: 0;
+    }
+    
+    .architecture-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        min-width: 0;
+    }
+    
+    .architecture-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+    
+    .architecture-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(59, 130, 246, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #60a5fa;
+        font-size: 14px;
+        flex: 0 0 auto;
+    }
+    
+    .architecture-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #ffffff;
+    }
+    
+    .architecture-description {
+        font-size: 11px;
+        color: #94a3b8;
+        line-height: 1.4;
+    }
+    
+    .bottom-info {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #64748b;
+    }
+    
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        min-width: 0;
+    }
+    
+    .info-icon {
+        color: #60a5fa;
+        font-size: 12px;
+        flex: 0 0 auto;
+    }
+    
+    .info-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .source-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+    }
+    
+    .progress-bar {
+        width: 100%;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        margin-top: 8px;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        border-radius: 2px;
+        transition: width 0.3s ease;
+    }
+    
+    .maturity-indicator {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 8px;
+    }
+    
+    .maturity-label {
+        font-size: 10px;
+        color: #94a3b8;
+    }
+    
+    .maturity-value {
+        font-size: 11px;
+        color: #60a5fa;
+        font-weight: 500;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div>
+<div class="title">
+<i class="fas fa-rocket title-icon"></i>
+                Beyond Today's Agents: What's Next
+            </div>
+<div class="subtitle">Evolution from single-task agents to orchestrated, policy-aware multi-agent systems</div>
+</div>
+<div class="source-badge">
+<i class="fas fa-brain"></i>
+<span>OpenAI + Microsoft</span>
+</div>
+</div>
+<div class="main-content">
+<div class="evolution-container">
+<div class="evolution-header">
+<div>
+<div class="evolution-title">Evolution Path: From Single-Task to Multi-Agent Systems</div>
+<div class="evolution-subtitle">Three phases of agent transformation with human supervisory control</div>
+</div>
+<div class="maturity-indicator">
+<div class="maturity-label">Current Progress:</div>
+<div class="maturity-value">Phase 2 of 3</div>
+</div>
+</div>
+<div class="stages-row">
+<div class="stage-card">
+<div class="stage-header">
+<div class="stage-icon">
+<i class="fas fa-robot"></i>
+</div>
+<div class="stage-info">
+<div class="stage-title">Phase 1: Single-Task Agents</div>
+<div class="stage-subtitle">Current State</div>
+</div>
+</div>
+<div class="stage-content">
+<div class="stage-description">Basic agents performing isolated tasks with limited context awareness and tool usage</div>
+<div class="stage-features">
+<div class="feature-tag">Task-specific</div>
+<div class="feature-tag">Limited context</div>
+<div class="feature-tag">Basic tools</div>
+</div>
+<div class="stage-status">
+<div class="status-dot status-active"></div>
+<div class="status-text">Active</div>
+</div>
+</div>
+</div>
+<div class="stage-card">
+<div class="stage-header">
+<div class="stage-icon">
+<i class="fas fa-network-wired"></i>
+</div>
+<div class="stage-info">
+<div class="stage-title">Phase 2: Multi-Agent Teams</div>
+<div class="stage-subtitle">Current Development</div>
+</div>
+</div>
+<div class="stage-content">
+<div class="stage-description">Agents collaborating on complex workflows with shared context and orchestration</div>
+<div class="stage-features">
+<div class="feature-tag">Collaboration</div>
+<div class="feature-tag">Orchestration</div>
+<div class="feature-tag">Shared context</div>
+</div>
+<div class="stage-status">
+<div class="status-dot status-active"></div>
+<div class="status-text">In Progress</div>
+</div>
+</div>
+</div>
+<div class="stage-card">
+<div class="stage-header">
+<div class="stage-icon">
+<i class="fas fa-brain"></i>
+</div>
+<div class="stage-info">
+<div class="stage-title">Phase 3: Autonomous Systems</div>
+<div class="stage-subtitle">Target State</div>
+</div>
+</div>
+<div class="stage-content">
+<div class="stage-description">Policy-aware multi-agent systems with human supervisory control and automated evaluation</div>
+<div class="stage-features">
+<div class="feature-tag">Autonomous</div>
+<div class="feature-tag">Policy-aware</div>
+<div class="feature-tag">Self-evaluating</div>
+</div>
+<div class="stage-status">
+<div class="status-dot status-active"></div>
+<div class="status-text">Target 2025</div>
+</div>
+</div>
+</div>
+</div>
+<div class="arrow-container">
+<div class="arrow-line"></div>
+<i class="fas fa-arrow-right arrow-icon"></i>
+<div class="arrow-line"></div>
+</div>
+<div class="future-architecture">
+<div class="architecture-column">
+<div class="architecture-card">
+<div class="architecture-header">
+<div class="architecture-icon">
+<i class="fas fa-users"></i>
+</div>
+<div class="architecture-title">Human Supervisory Control</div>
+</div>
+<div class="architecture-description">Humans oversee agent operations, set policies, and intervene when necessary</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 75%;"></div>
+</div>
+</div>
+<div class="architecture-card">
+<div class="architecture-header">
+<div class="architecture-icon">
+<i class="fas fa-shield-alt"></i>
+</div>
+<div class="architecture-title">Policy &amp; Governance</div>
+</div>
+<div class="architecture-description">Automated policy enforcement and compliance monitoring</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 60%;"></div>
+</div>
+</div>
+</div>
+<div class="architecture-column">
+<div class="architecture-card">
+<div class="architecture-header">
+<div class="architecture-icon">
+<i class="fas fa-sync-alt"></i>
+</div>
+<div class="architecture-title">Automated Evaluation</div>
+</div>
+<div class="architecture-description">Continuous performance monitoring and quality assurance</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 45%;"></div>
+</div>
+</div>
+<div class="architecture-card">
+<div class="architecture-header">
+<div class="architecture-icon">
+<i class="fas fa-project-diagram"></i>
+</div>
+<div class="architecture-title">Multi-Agent Orchestration</div>
+</div>
+<div class="architecture-description">Coordinated agent workflows and task delegation</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 55%;"></div>
+</div>
+</div>
+</div>
+<div class="architecture-column">
+<div class="architecture-card">
+<div class="architecture-header">
+<div class="architecture-icon">
+<i class="fas fa-database"></i>
+</div>
+<div class="architecture-title">Knowledge Integration</div>
+</div>
+<div class="architecture-description">Unified knowledge base for agent learning</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 70%;"></div>
+</div>
+</div>
+<div class="architecture-card">
+<div class="architecture-header">
+<div class="architecture-icon">
+<i class="fas fa-chart-line"></i>
+</div>
+<div class="architecture-title">Performance Analytics</div>
+</div>
+<div class="architecture-description">Real-time monitoring and optimization</div>
+<div class="progress-bar">
+<div class="progress-fill" style="width: 65%;"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-info">
+<div class="info-left">
+<div class="info-item">
+<i class="fas fa-info-circle info-icon"></i>
+<span>Source: OpenAI Keynote (https://www.genspark.ai/api/files/s/pn9iQaLQ)</span>
+</div>
+</div>
+<div class="info-right">
+<div class="source-tag">OpenAI</div>
+<div class="source-tag">Microsoft</div>
+<div class="source-tag">SNU</div>
+</div>
+</div>
+</div>
+</body>
+</html>

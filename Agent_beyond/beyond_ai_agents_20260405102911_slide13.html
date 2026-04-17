@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Change Management that Works</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+      color: #ffffff;
+    }
+    
+    .header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .title-icon {
+      color: #60a5fa;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    
+    .source-badge {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .main-content {
+      position: absolute;
+      top: 120px;
+      left: 40px;
+      right: 40px;
+      bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .checklist-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      flex: 1;
+    }
+    
+    .checklist-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      transition: all 0.3s ease;
+      min-height: 130px;
+    }
+    
+    .checklist-item:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .checklist-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .check-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 14px;
+      flex: 0 0 auto;
+    }
+    
+    .checklist-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    
+    .checklist-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    
+    .checklist-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+    }
+    
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+    }
+    
+    .status-text {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .key-insights {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .insights-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 18px;
+      flex: 0 0 auto;
+    }
+    
+    .insights-content {
+      flex: 1;
+    }
+    
+    .insights-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    
+    .insights-text {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    
+    .bottom-info {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+    
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .info-icon {
+      color: #60a5fa;
+      font-size: 12px;
+    }
+    
+    .info-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .source-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <div>
+        <div class="title">
+          <i class="fas fa-check-circle title-icon"></i>
+          Change Management that Works
+        </div>
+        <div class="subtitle">Six proven practices for successful AI adoption in organizations</div>
+      </div>
+      <div class="source-badge">
+        <i class="fas fa-quote-left"></i>
+        <span>Microsoft Keynote</span>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="checklist-grid">
+        <div class="checklist-item">
+          <div class="checklist-header">
+            <div class="check-icon">
+              <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="checklist-title">1. Leadership by Example</div>
+          </div>
+          <div class="checklist-desc">Executives must model AI usage, remove blockers, and fund platforms to demonstrate commitment</div>
+          <div class="checklist-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">Critical for success</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-header">
+            <div class="check-icon">
+              <i class="fas fa-users-cog"></i>
+            </div>
+            <div class="checklist-title">2. Role-based Rollouts</div>
+          </div>
+          <div class="checklist-desc">Targeted training for specific roles rather than generic AI education</div>
+          <div class="checklist-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">High impact</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-header">
+            <div class="check-icon">
+              <i class="fas fa-network-wired"></i>
+            </div>
+            <div class="checklist-title">3. Champion Networks</div>
+          </div>
+          <div class="checklist-desc">Build internal champions who evangelize AI adoption across teams</div>
+          <div class="checklist-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">Essential for scale</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-header">
+            <div class="check-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="checklist-title">4. Behavioral Nudges</div>
+          </div>
+          <div class="checklist-desc">Use nudge strategies and best-practice hubs to drive adoption</div>
+          <div class="checklist-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">Effective for engagement</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-header">
+            <div class="check-icon">
+              <i class="fas fa-book"></i>
+            </div>
+            <div class="checklist-title">5. Best-practice Hubs</div>
+          </div>
+          <div class="checklist-desc">Create centralized resources for sharing AI success stories</div>
+          <div class="checklist-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">Key for knowledge sharing</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="checklist-header">
+            <div class="check-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="checklist-title">6. Measurement &amp; Iteration</div>
+          </div>
+          <div class="checklist-desc">Track metrics and continuously improve AI implementation</div>
+          <div class="checklist-status">
+            <div class="status-indicator"></div>
+            <div class="status-text">Critical for ROI</div>
+          </div>
+        </div>
+      </div>
+      <div class="key-insights">
+        <div class="insights-icon">
+          <i class="fas fa-lightbulb"></i>
+        </div>
+        <div class="insights-content">
+          <div class="insights-title">Key Insight</div>
+          <div class="insights-text">Successful AI adoption requires a combination of top-down leadership support and bottom-up champion networks, with role-specific training for maximum impact.</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-info">
+      <div class="info-left">
+        <div class="info-item">
+          <i class="fas fa-info-circle info-icon"></i>
+          <span>Source: Microsoft Keynote (https://www.genspark.ai/api/files/s/7uk2LuBj)</span>
+        </div>
+      </div>
+      <div class="info-right">
+        <div class="source-tag">Microsoft</div>
+        <div class="source-tag">OpenAI</div>
+        <div class="source-tag">SNU</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

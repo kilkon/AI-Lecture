@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>AI Transformation Maturity Model</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+      color: #ffffff;
+    }
+    
+    .header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .title-icon {
+      color: #60a5fa;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    
+    .source-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+    
+    .main-content {
+      position: absolute;
+      top: 120px;
+      left: 40px;
+      right: 40px;
+      bottom: 80px;
+      display: flex;
+      gap: 32px;
+    }
+    
+    .left-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .right-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .maturity-chart {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      height: 320px;
+    }
+    
+    .chart-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 240px;
+      width: 100%;
+    }
+    
+    .chart-axes {
+      position: absolute;
+      left: 60px;
+      right: 20px;
+      top: 20px;
+      bottom: 40px;
+      border-left: 2px solid rgba(255, 255, 255, 0.2);
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .axis-label {
+      position: absolute;
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .x-label {
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    
+    .y-label {
+      left: -50px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+    
+    .maturity-curve {
+      position: absolute;
+      left: 60px;
+      right: 20px;
+      top: 20px;
+      bottom: 40px;
+    }
+    
+    .curve-path {
+      stroke: url(#curveGradient);
+      stroke-width: 3;
+      fill: none;
+      stroke-linecap: round;
+    }
+    
+    .stage-points {
+      position: absolute;
+      left: 60px;
+      right: 20px;
+      top: 20px;
+      bottom: 40px;
+    }
+    
+    .stage-point {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #3b82f6;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .stage-point:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    }
+    
+    .stage-label {
+      position: absolute;
+      font-size: 10px;
+      color: #94a3b8;
+      text-align: center;
+    }
+    
+    .maturity-stages {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .stage-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: all 0.3s ease;
+      min-height: 128px;
+    }
+    
+    .stage-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .stage-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .stage-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 14px;
+      flex: 0 0 auto;
+    }
+    
+    .stage-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .stage-desc {
+      font-size: 10px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+    
+    .stage-status {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      margin-top: 8px;
+    }
+    
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+    
+    .status-active {
+      background: #22c55e;
+    }
+    
+    .status-pending {
+      background: #f59e0b;
+    }
+    
+    .status-text {
+      font-size: 9px;
+      color: #94a3b8;
+    }
+    
+    .value-drivers {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+    }
+    
+    .drivers-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .drivers-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    
+    .driver-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      min-height: 42px;
+    }
+    
+    .driver-icon {
+      width: 24px;
+      height: 24px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+    
+    .driver-text {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .driver-name {
+      font-size: 11px;
+      font-weight: 500;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+    
+    .driver-desc {
+      font-size: 9px;
+      color: #94a3b8;
+      line-height: 1.2;
+    }
+    
+    .bottom-info {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+    
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .info-icon {
+      color: #60a5fa;
+      font-size: 12px;
+    }
+    
+    .info-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .source-text {
+      font-size: 11px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <div>
+        <div class="title">
+          <i class="fas fa-chart-line title-icon"></i>
+          AI Transformation Maturity Model
+        </div>
+        <div class="subtitle">Progression from Laggards to Frontier firms in AI adoption</div>
+      </div>
+      <div class="source-tag">Microsoft Keynote 2024</div>
+    </div>
+    <div class="main-content">
+      <div class="left-section">
+        <div class="maturity-chart">
+          <div class="chart-title">
+            <i class="fas fa-chart-area"></i>
+            <span>Maturity Progression Curve</span>
+          </div>
+          <div class="chart-container">
+            <div class="chart-axes">
+              <div class="axis-label x-label">Business Value Realization →</div>
+              <div class="axis-label y-label">Governed Scale →</div>
+            </div>
+            <svg class="maturity-curve" viewBox="0 0 800 200">
+              <defs>
+                <linearGradient id="curveGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1"></stop>
+                  <stop offset="25%" style="stop-color:#f59e0b;stop-opacity:1"></stop>
+                  <stop offset="50%" style="stop-color:#3b82f6;stop-opacity:1"></stop>
+                  <stop offset="75%" style="stop-color:#8b5cf6;stop-opacity:1"></stop>
+                  <stop offset="100%" style="stop-color:#22c55e;stop-opacity:1"></stop>
+                </linearGradient>
+              </defs>
+              <path class="curve-path" d="M 50 180 Q 150 160 200 140 Q 250 120 350 100 Q 450 80 550 60 Q 650 40 750 20" fill="none" stroke="url(#curveGradient)" stroke-width="3"></path>
+            </svg>
+            <div class="stage-points">
+              <div class="stage-point" style="left: 10%; top: 80%;"></div>
+              <div class="stage-point" style="left: 30%; top: 65%;"></div>
+              <div class="stage-point" style="left: 55%; top: 45%;"></div>
+              <div class="stage-point" style="left: 80%; top: 25%;"></div>
+            </div>
+            <div class="stage-label" style="left: 10%; top: 90%;">Laggards</div>
+            <div class="stage-label" style="left: 30%; top: 75%;">Experimenters</div>
+            <div class="stage-label" style="left: 55%; top: 55%;">Integrators</div>
+            <div class="stage-label" style="left: 80%; top: 35%;">Frontier</div>
+          </div>
+        </div>
+        <div class="maturity-stages">
+          <div class="stage-card">
+            <div class="stage-header">
+              <div class="stage-icon">
+                <i class="fas fa-hourglass-start"></i>
+              </div>
+              <div class="stage-name">Laggards</div>
+            </div>
+            <div class="stage-desc">Limited AI adoption, fragmented pilots</div>
+            <div class="stage-status">
+              <div class="status-dot status-active"></div>
+              <div class="status-text">15% of orgs</div>
+            </div>
+          </div>
+          <div class="stage-card">
+            <div class="stage-header">
+              <div class="stage-icon">
+                <i class="fas fa-flask"></i>
+              </div>
+              <div class="stage-name">Experimenters</div>
+            </div>
+            <div class="stage-desc">Pilot projects, learning phase</div>
+            <div class="stage-status">
+              <div class="status-dot status-active"></div>
+              <div class="status-text">35% of orgs</div>
+            </div>
+          </div>
+          <div class="stage-card">
+            <div class="stage-header">
+              <div class="stage-icon">
+                <i class="fas fa-cogs"></i>
+              </div>
+              <div class="stage-name">Integrators</div>
+            </div>
+            <div class="stage-desc">Systematic AI integration</div>
+            <div class="stage-status">
+              <div class="status-dot status-active"></div>
+              <div class="status-text">35% of orgs</div>
+            </div>
+          </div>
+          <div class="stage-card">
+            <div class="stage-header">
+              <div class="stage-icon">
+                <i class="fas fa-rocket"></i>
+              </div>
+              <div class="stage-name">Frontier</div>
+            </div>
+            <div class="stage-desc">AI-native operations</div>
+            <div class="stage-status">
+              <div class="status-dot status-pending"></div>
+              <div class="status-text">15% of orgs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-section">
+        <div class="value-drivers">
+          <div class="drivers-title">
+            <i class="fas fa-bullseye"></i>
+            <span>5 Drivers of AI Value</span>
+          </div>
+          <div class="drivers-grid">
+            <div class="driver-item">
+              <div class="driver-icon">
+                <i class="fas fa-business-time"></i>
+              </div>
+              <div class="driver-text">
+                <div class="driver-name">Business Strategy</div>
+                <div class="driver-desc">AI alignment with business goals</div>
+              </div>
+            </div>
+            <div class="driver-item">
+              <div class="driver-icon">
+                <i class="fas fa-microchip"></i>
+              </div>
+              <div class="driver-text">
+                <div class="driver-name">Technology Strategy</div>
+                <div class="driver-desc">Infrastructure &amp; platform</div>
+              </div>
+            </div>
+            <div class="driver-item">
+              <div class="driver-icon">
+                <i class="fas fa-shield-alt"></i>
+              </div>
+              <div class="driver-text">
+                <div class="driver-name">AI Governance</div>
+                <div class="driver-desc">Risk &amp; compliance management</div>
+              </div>
+            </div>
+            <div class="driver-item">
+              <div class="driver-icon">
+                <i class="fas fa-brain"></i>
+              </div>
+              <div class="driver-text">
+                <div class="driver-name">Applied AI Experience</div>
+                <div class="driver-desc">Practical implementation</div>
+              </div>
+            </div>
+            <div class="driver-item">
+              <div class="driver-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="driver-text">
+                <div class="driver-name">Organization &amp; Culture</div>
+                <div class="driver-desc">Change management</div>
+              </div>
+            </div>
+            <div class="driver-item">
+              <div class="driver-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="driver-text">
+                <div class="driver-name">Performance Metrics</div>
+                <div class="driver-desc">ROI measurement</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-info">
+      <div class="info-left">
+        <div class="info-item">
+          <i class="fas fa-info-circle info-icon"></i>
+          <span>Source: Microsoft Keynote (https://www.genspark.ai/api/files/s/7uk2LuBj)</span>
+        </div>
+      </div>
+      <div class="info-right">
+        <div class="source-text">Data as of April 2026</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Technical Risks and Limitations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .title-icon {
+        color: #ef4444;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+    
+    .source-badge {
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 12px;
+        color: #ef4444;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 120px;
+        left: 40px;
+        right: 40px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .risk-matrix {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        height: 100%;
+    }
+    
+    .risk-category {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .category-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 8px;
+    }
+    
+    .category-icon {
+        width: 40px;
+        height: 40px;
+        background: rgba(239, 68, 68, 0.2);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ef4444;
+        font-size: 18px;
+        flex-shrink: 0;
+    }
+    
+    .category-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #ffffff;
+        line-height: 1.2;
+    }
+    
+    .risk-items {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        flex: 1;
+    }
+    
+    .risk-item {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .risk-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 4px;
+        flex-shrink: 0;
+    }
+    
+    .risk-high {
+        background: #ef4444;
+        box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+    }
+    
+    .risk-medium {
+        background: #f59e0b;
+        box-shadow: 0 0 8px rgba(245, 158, 11, 0.5);
+    }
+    
+    .risk-low {
+        background: #22c55e;
+        box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+    
+    .risk-content {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .risk-name {
+        font-size: 13px;
+        font-weight: 500;
+        color: #ffffff;
+        margin-bottom: 2px;
+    }
+    
+    .risk-desc {
+        font-size: 11px;
+        color: #94a3b8;
+        line-height: 1.4;
+    }
+    
+    .risk-level {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 4px;
+    }
+    
+    .level-text {
+        font-size: 10px;
+        color: #94a3b8;
+        white-space: nowrap;
+    }
+    
+    .impact-bar {
+        flex: 1;
+        min-width: 90px;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    
+    .impact-fill {
+        height: 100%;
+        border-radius: 2px;
+    }
+    
+    .impact-high {
+        background: linear-gradient(90deg, #ef4444, #f87171);
+        width: 80%;
+    }
+    
+    .impact-medium {
+        background: linear-gradient(90deg, #f59e0b, #fbbf24);
+        width: 60%;
+    }
+    
+    .impact-low {
+        background: linear-gradient(90deg, #22c55e, #4ade80);
+        width: 40%;
+    }
+    
+    .mitigation-strategies {
+        display: flex;
+        gap: 16px;
+        margin-top: 8px;
+        flex-wrap: wrap;
+    }
+    
+    .strategy-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+        white-space: nowrap;
+    }
+    
+    .bottom-info {
+        position: absolute;
+        bottom: 20px;
+        left: 40px;
+        right: 40px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        color: #64748b;
+    }
+    
+    .info-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .info-icon {
+        color: #ef4444;
+        font-size: 12px;
+    }
+    
+    .info-right {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .source-tag {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 4px;
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #60a5fa;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div>
+<div class="title">
+<i class="fas fa-exclamation-triangle title-icon"></i>
+                Technical Risks and Limitations
+            </div>
+<div class="subtitle">Critical challenges in AI deployment and system reliability</div>
+</div>
+<div class="source-badge">
+<i class="fas fa-shield-alt"></i>
+<span>Risk Assessment</span>
+</div>
+</div>
+<div class="main-content">
+<div class="risk-matrix">
+<div class="risk-category">
+<div class="category-header">
+<div class="category-icon">
+<i class="fas fa-brain"></i>
+</div>
+<div class="category-title">Hallucinations &amp; Eval Gaps</div>
+</div>
+<div class="risk-items">
+<div class="risk-item">
+<div class="risk-indicator risk-high"></div>
+<div class="risk-content">
+<div class="risk-name">Model Hallucination</div>
+<div class="risk-desc">AI generating false or misleading information with high confidence</div>
+<div class="risk-level">
+<span class="level-text">Impact:</span>
+<div class="impact-bar">
+<div class="impact-fill impact-high"></div>
+</div>
+<span class="level-text">High</span>
+</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-indicator risk-medium"></div>
+<div class="risk-content">
+<div class="risk-name">Evaluation Gaps</div>
+<div class="risk-desc">Inadequate testing frameworks for real-world scenarios</div>
+<div class="risk-level">
+<span class="level-text">Impact:</span>
+<div class="impact-bar">
+<div class="impact-fill impact-medium"></div>
+</div>
+<span class="level-text">Medium</span>
+</div>
+</div>
+</div>
+<div class="mitigation-strategies">
+<div class="strategy-tag">Red-teaming</div>
+<div class="strategy-tag">Fact-checking</div>
+</div>
+</div>
+</div>
+<div class="risk-category">
+<div class="category-header">
+<div class="category-icon">
+<i class="fas fa-tools"></i>
+</div>
+<div class="category-title">Tool Reliability &amp; Context</div>
+</div>
+<div class="risk-items">
+<div class="risk-item">
+<div class="risk-indicator risk-high"></div>
+<div class="risk-content">
+<div class="risk-name">Context Window Limits</div>
+<div class="risk-desc">Memory constraints affecting long-form content processing</div>
+<div class="risk-level">
+<span class="level-text">Impact:</span>
+<div class="impact-bar">
+<div class="impact-fill impact-high"></div>
+</div>
+<span class="level-text">High</span>
+</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-indicator risk-medium"></div>
+<div class="risk-content">
+<div class="risk-name">Tool Integration Failures</div>
+<div class="risk-desc">API reliability issues and compatibility challenges</div>
+<div class="risk-level">
+<span class="level-text">Impact:</span>
+<div class="impact-bar">
+<div class="impact-fill impact-medium"></div>
+</div>
+<span class="level-text">Medium</span>
+</div>
+</div>
+</div>
+<div class="mitigation-strategies">
+<div class="strategy-tag">Fallback systems</div>
+<div class="strategy-tag">Monitoring</div>
+</div>
+</div>
+</div>
+<div class="risk-category">
+<div class="category-header">
+<div class="category-icon">
+<i class="fas fa-lock"></i>
+</div>
+<div class="category-title">Security &amp; Privacy</div>
+</div>
+<div class="risk-items">
+<div class="risk-item">
+<div class="risk-indicator risk-high"></div>
+<div class="risk-content">
+<div class="risk-name">Data Privacy Risks</div>
+<div class="risk-desc">Sensitive information exposure in AI interactions</div>
+<div class="risk-level">
+<span class="level-text">Impact:</span>
+<div class="impact-bar">
+<div class="impact-fill impact-high"></div>
+</div>
+<span class="level-text">High</span>
+</div>
+</div>
+</div>
+<div class="risk-item">
+<div class="risk-indicator risk-medium"></div>
+<div class="risk-content">
+<div class="risk-name">Security Vulnerabilities</div>
+<div class="risk-desc">Potential for prompt injection and data breaches</div>
+<div class="risk-level">
+<span class="level-text">Impact:</span>
+<div class="impact-bar">
+<div class="impact-fill impact-medium"></div>
+</div>
+<span class="level-text">Medium</span>
+</div>
+</div>
+</div>
+<div class="mitigation-strategies">
+<div class="strategy-tag">Encryption</div>
+<div class="strategy-tag">Access control</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="bottom-info">
+<div class="info-left">
+<div class="info-item">
+<i class="fas fa-info-circle info-icon"></i>
+<span>Source: OpenAI, Microsoft, SNU keynotes</span>
+</div>
+</div>
+<div class="info-right">
+<div class="source-tag">Security</div>
+<div class="source-tag">Reliability</div>
+<div class="source-tag">Privacy</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

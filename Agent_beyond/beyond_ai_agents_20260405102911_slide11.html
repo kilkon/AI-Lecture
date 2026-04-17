@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Becoming a Frontier Firm / AI-Ready Organization</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+      color: #ffffff;
+    }
+    
+    .header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .title-icon {
+      color: #60a5fa;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    
+    .source-badge {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .main-content {
+      position: absolute;
+      top: 120px;
+      left: 40px;
+      right: 40px;
+      bottom: 80px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .framework-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .framework-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .framework-desc {
+      font-size: 13px;
+      color: #94a3b8;
+    }
+    
+    .pillars-container {
+      display: flex;
+      gap: 16px;
+      justify-content: space-between;
+    }
+    
+    .pillar {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pillar:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.3);
+      transform: translateY(-2px);
+    }
+    
+    .pillar::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+      border-radius: 4px 4px 0 0;
+    }
+    
+    .pillar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .pillar-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+    
+    .pillar-info {
+      flex: 1;
+      min-width: 0;
+    }
+    
+    .pillar-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    
+    .pillar-subtitle {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .pillar-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    
+    .pillar-description {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    
+    .pillar-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    
+    .feature-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 10px;
+      color: #60a5fa;
+    }
+    
+    .pillar-status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    
+    .status-active {
+      background: #22c55e;
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
+    }
+    
+    .status-text {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .value-metrics {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+    }
+    
+    .metric-item {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .metric-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .metric-icon {
+      width: 32px;
+      height: 32px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 14px;
+    }
+    
+    .metric-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .metric-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #60a5fa;
+    }
+    
+    .metric-label {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .bottom-info {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+    
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .info-icon {
+      color: #60a5fa;
+      font-size: 12px;
+    }
+    
+    .info-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .source-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <div>
+        <div class="title">
+          <i class="fas fa-rocket title-icon"></i>
+          Becoming a Frontier Firm / AI-Ready Organization
+        </div>
+        <div class="subtitle">Five drivers of AI value for organizational transformation</div>
+      </div>
+      <div class="source-badge">
+        <i class="fas fa-quote-left"></i>
+        <span>Microsoft Keynote</span>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="framework-header">
+        <div class="framework-title">
+          <i class="fas fa-bullseye"></i>
+          <span>5 Drivers of AI Value Framework</span>
+        </div>
+        <div class="framework-desc">Comprehensive approach to AI readiness and transformation</div>
+      </div>
+      <div class="pillars-container">
+        <div class="pillar">
+          <div class="pillar-header">
+            <div class="pillar-icon">
+              <i class="fas fa-business-time"></i>
+            </div>
+            <div class="pillar-info">
+              <div class="pillar-name">Business Strategy</div>
+              <div class="pillar-subtitle">Strategic alignment</div>
+            </div>
+          </div>
+          <div class="pillar-content">
+            <div class="pillar-description">AI initiatives aligned with business goals and measurable outcomes</div>
+            <div class="pillar-features">
+              <div class="feature-tag">Goal alignment</div>
+              <div class="feature-tag">ROI focus</div>
+            </div>
+          </div>
+          <div class="pillar-status">
+            <div class="status-indicator status-active"></div>
+            <div class="status-text">Critical for success</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-header">
+            <div class="pillar-icon">
+              <i class="fas fa-microchip"></i>
+            </div>
+            <div class="pillar-info">
+              <div class="pillar-name">Technology Strategy</div>
+              <div class="pillar-subtitle">Infrastructure &amp; platforms</div>
+            </div>
+          </div>
+          <div class="pillar-content">
+            <div class="pillar-description">Robust AI infrastructure, cloud platforms, and tool integration</div>
+            <div class="pillar-features">
+              <div class="feature-tag">Cloud native</div>
+              <div class="feature-tag">Scalable</div>
+            </div>
+          </div>
+          <div class="pillar-status">
+            <div class="status-indicator status-active"></div>
+            <div class="status-text">Foundation layer</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-header">
+            <div class="pillar-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <div class="pillar-info">
+              <div class="pillar-name">AI Governance</div>
+              <div class="pillar-subtitle">Risk management</div>
+            </div>
+          </div>
+          <div class="pillar-content">
+            <div class="pillar-description">Comprehensive governance framework for AI deployment</div>
+            <div class="pillar-features">
+              <div class="feature-tag">Compliance</div>
+              <div class="feature-tag">Security</div>
+            </div>
+          </div>
+          <div class="pillar-status">
+            <div class="status-indicator status-active"></div>
+            <div class="status-text">Risk mitigation</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-header">
+            <div class="pillar-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <div class="pillar-info">
+              <div class="pillar-name">Applied AI Experience</div>
+              <div class="pillar-subtitle">Practical implementation</div>
+            </div>
+          </div>
+          <div class="pillar-content">
+            <div class="pillar-description">Hands-on experience with AI tools and applications</div>
+            <div class="pillar-features">
+              <div class="feature-tag">Training</div>
+              <div class="feature-tag">Use cases</div>
+            </div>
+          </div>
+          <div class="pillar-status">
+            <div class="status-indicator status-active"></div>
+            <div class="status-text">Skill development</div>
+          </div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-header">
+            <div class="pillar-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="pillar-info">
+              <div class="pillar-name">Organization &amp; Culture</div>
+              <div class="pillar-subtitle">Change management</div>
+            </div>
+          </div>
+          <div class="pillar-content">
+            <div class="pillar-description">Organizational readiness and cultural transformation</div>
+            <div class="pillar-features">
+              <div class="feature-tag">Leadership</div>
+              <div class="feature-tag">Culture</div>
+            </div>
+          </div>
+          <div class="pillar-status">
+            <div class="status-indicator status-active"></div>
+            <div class="status-text">Change readiness</div>
+          </div>
+        </div>
+      </div>
+      <div class="value-metrics">
+        <div class="metric-item">
+          <div class="metric-header">
+            <div class="metric-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="metric-title">Business Impact</div>
+          </div>
+          <div class="metric-value">85%</div>
+          <div class="metric-label">AI value realization</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-header">
+            <div class="metric-icon">
+              <i class="fas fa-cogs"></i>
+            </div>
+            <div class="metric-title">Tech Readiness</div>
+          </div>
+          <div class="metric-value">92%</div>
+          <div class="metric-label">Infrastructure readiness</div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-header">
+            <div class="metric-icon">
+              <i class="fas fa-users-cog"></i>
+            </div>
+            <div class="metric-title">Adoption Rate</div>
+          </div>
+          <div class="metric-value">78%</div>
+          <div class="metric-label">Employee engagement</div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-info">
+      <div class="info-left">
+        <div class="info-item">
+          <i class="fas fa-info-circle info-icon"></i>
+          <span>Source: Microsoft Keynote (https://www.genspark.ai/api/files/s/7uk2LuBj)</span>
+        </div>
+      </div>
+      <div class="info-right">
+        <div class="source-tag">Microsoft</div>
+        <div class="source-tag">OpenAI</div>
+        <div class="source-tag">SNU</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

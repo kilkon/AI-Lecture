@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <style>
+    html, body {
+      margin: 0;
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      background: #1a1a2e;
+    }
+    .slide-container {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .slide-title {
+      position: absolute;
+      left: 60px;
+      top: 40px;
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+    .slide-subtitle {
+      position: absolute;
+      left: 60px;
+      top: 85px;
+      font-size: 16px;
+      color: #94a3b8;
+      font-weight: 400;
+    }
+    .vision-card {
+      position: absolute;
+      left: 60px;
+      top: 130px;
+      width: 1160px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+    .vision-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 16px;
+      font-size: 24px;
+      color: white;
+      flex: 0 0 auto;
+    }
+    .vision-text {
+      flex: 1;
+      min-width: 0;
+    }
+    .vision-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .vision-desc {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+    .pillars-grid {
+      position: absolute;
+      left: 60px;
+      top: 230px;
+      width: 1160px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .pillar-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      height: 220px;
+      box-sizing: border-box;
+    }
+    .pillar-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .pillar-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+      font-size: 18px;
+      color: #3b82f6;
+      flex: 0 0 auto;
+    }
+    .pillar-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .pillar-content {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .pillar-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      color: #e2e8f0;
+      line-height: 1.4;
+      min-height: 96px;
+      box-sizing: border-box;
+    }
+    .pillar-item-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 12px;
+      color: #3b82f6;
+    }
+    .source-citation {
+      position: absolute;
+      right: 60px;
+      bottom: 30px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="slide-title">Institutional Transformation: SNU 'AI-Native Campus'</div>
+    <div class="slide-subtitle">SHINE AI: Empowering Human-centered Global Transformation</div>
+    <div class="vision-card">
+      <div class="vision-icon">🌟</div>
+      <div class="vision-text">
+        <div class="vision-title">SHINE AI Vision</div>
+        <div class="vision-desc">Empowering Human-centered Global Transformation - From change to innovation, toward a better future</div>
+      </div>
+    </div>
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <div class="pillar-header">
+          <div class="pillar-icon">📚</div>
+          <div class="pillar-title">Education</div>
+        </div>
+        <div class="pillar-content">
+          <div class="pillar-item">
+            <div class="pillar-item-title">AI Literacy</div>
+            <div>AI education modules for all students</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">PDB</div>
+            <div>Problem Definition Bank for critical thinking</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">AI Assistants</div>
+            <div>Learning assistants at scale</div>
+          </div>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-header">
+          <div class="pillar-icon">🔬</div>
+          <div class="pillar-title">Research</div>
+        </div>
+        <div class="pillar-content">
+          <div class="pillar-item">
+            <div class="pillar-item-title">K-Humanoid</div>
+            <div>Robot foundation models</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">NPU</div>
+            <div>Neural processing units</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">Hyperscale</div>
+            <div>AI computing center</div>
+          </div>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-header">
+          <div class="pillar-icon">🏛️</div>
+          <div class="pillar-title">Administration</div>
+        </div>
+        <div class="pillar-content">
+          <div class="pillar-item">
+            <div class="pillar-item-title">AI-Native</div>
+            <div>Administrative services</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">Secure Platform</div>
+            <div>Hybrid AI infrastructure</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">Barrier-free</div>
+            <div>Campus accessibility</div>
+          </div>
+        </div>
+      </div>
+      <div class="pillar-card">
+        <div class="pillar-header">
+          <div class="pillar-icon">⚖️</div>
+          <div class="pillar-title">Governance</div>
+        </div>
+        <div class="pillar-content">
+          <div class="pillar-item">
+            <div class="pillar-item-title">Data Governance</div>
+            <div>AI council &amp; policies</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">AI Council</div>
+            <div>Strategic oversight</div>
+          </div>
+          <div class="pillar-item">
+            <div class="pillar-item-title">Reward Systems</div>
+            <div>Incentive structures</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="source-citation">Source: SNU SHINE AI Keynote</div>
+  </div>
+</body>
+</html>

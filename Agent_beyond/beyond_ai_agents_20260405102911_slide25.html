@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Governance and Trust Limitations</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #0a0a0f;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+        width: 1280px;
+        height: 720px;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+        color: #ffffff;
+    }
+    
+    .header {
+        position: absolute;
+        top: 40px;
+        left: 60px;
+        right: 60px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+        height: 80px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .title-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .title {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+    
+    .title-icon {
+        color: #ef4444;
+        font-size: 28px;
+    }
+    
+    .subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-left: 44px;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 140px;
+        left: 60px;
+        right: 60px;
+        bottom: 80px;
+        display: flex;
+        gap: 30px;
+    }
+    
+    .left-panel {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .right-panel {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+    
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        height: 100%;
+    }
+    
+    .trust-card {
+        background: rgba(30, 41, 59, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: all 0.3s ease;
+    }
+    
+    .trust-card:hover {
+        background: rgba(30, 41, 59, 0.6);
+        border-color: rgba(239, 68, 68, 0.3);
+        transform: translateY(-2px);
+    }
+    
+    .card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .card-icon-box {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background: rgba(239, 68, 68, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ef4444;
+        font-size: 18px;
+    }
+    
+    .card-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #e2e8f0;
+    }
+    
+    .card-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+    
+    .risk-level {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 12px;
+        color: #ef4444;
+        font-weight: 500;
+    }
+    
+    .risk-bar {
+        flex: 1;
+        height: 4px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    
+    .risk-fill {
+        height: 100%;
+        background: #ef4444;
+        border-radius: 2px;
+    }
+    
+    .framework-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+    
+    .framework-step {
+        display: flex;
+        gap: 16px;
+        position: relative;
+    }
+    
+    .step-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.3);
+        color: #60a5fa;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        flex-shrink: 0;
+        z-index: 2;
+    }
+    
+    .step-line {
+        position: absolute;
+        top: 32px;
+        left: 16px;
+        bottom: -24px;
+        width: 2px;
+        background: rgba(59, 130, 246, 0.2);
+        z-index: 1;
+    }
+    
+    .framework-step:last-child .step-line {
+        display: none;
+    }
+    
+    .step-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+    
+    .step-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #e2e8f0;
+    }
+    
+    .step-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+    
+    .guardrail-box {
+        margin-top: auto;
+        background: rgba(34, 197, 94, 0.1);
+        border: 1px dashed rgba(34, 197, 94, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+    }
+    
+    .guardrail-icon {
+        color: #22c55e;
+        font-size: 24px;
+        margin-top: 2px;
+    }
+    
+    .guardrail-content h4 {
+        color: #22c55e;
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+    
+    .guardrail-content p {
+        color: #cbd5e1;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+    
+    .footer {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: rgba(255, 255, 255, 0.02);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 60px;
+    }
+    
+    .source-text {
+        color: #64748b;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .tag-container {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .tag {
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 12px;
+        background: rgba(255, 255, 255, 0.05);
+        color: #94a3b8;
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header">
+<div class="title-group">
+<div class="title">
+<i class="fas fa-shield-alt title-icon"></i>
+                Governance and Trust Limitations
+            </div>
+<div class="subtitle">Critical challenges in scaling autonomous agent systems</div>
+</div>
+</div>
+<div class="main-content">
+<div class="left-panel">
+<div class="grid-container">
+<div class="trust-card">
+<div class="card-header">
+<div class="card-icon-box">
+<i class="fas fa-balance-scale"></i>
+</div>
+<div class="card-title">Bias &amp; Fairness</div>
+</div>
+<div class="card-desc">
+                        Models may amplify societal biases or produce unfair outcomes in decision-making processes without proper calibration.
+                    </div>
+<div class="risk-level">
+<span>Risk Level: High</span>
+<div class="risk-bar"><div class="risk-fill" style="width: 85%"></div></div>
+</div>
+</div>
+<div class="trust-card">
+<div class="card-header">
+<div class="card-icon-box">
+<i class="fas fa-lock"></i>
+</div>
+<div class="card-title">Safety &amp; Security</div>
+</div>
+<div class="card-desc">
+                        Vulnerability to prompt injection, jailbreaks, and unintended harmful actions by autonomous agents.
+                    </div>
+<div class="risk-level">
+<span>Risk Level: Critical</span>
+<div class="risk-bar"><div class="risk-fill" style="width: 95%"></div></div>
+</div>
+</div>
+<div class="trust-card">
+<div class="card-header">
+<div class="card-icon-box">
+<i class="fas fa-history"></i>
+</div>
+<div class="card-title">Provenance &amp; Audit</div>
+</div>
+<div class="card-desc">
+                        Difficulty in tracing the chain of thought and data sources used by agents to reach specific conclusions.
+                    </div>
+<div class="risk-level">
+<span>Risk Level: Medium</span>
+<div class="risk-bar"><div class="risk-fill" style="width: 65%"></div></div>
+</div>
+</div>
+<div class="trust-card">
+<div class="card-header">
+<div class="card-icon-box">
+<i class="fas fa-file-contract"></i>
+</div>
+<div class="card-title">Compliance</div>
+</div>
+<div class="card-desc">
+                        Aligning probabilistic AI outputs with deterministic regulatory requirements (GDPR, EU AI Act).
+                    </div>
+<div class="risk-level">
+<span>Risk Level: High</span>
+<div class="risk-bar"><div class="risk-fill" style="width: 80%"></div></div>
+</div>
+</div>
+</div>
+</div>
+<div class="right-panel">
+<div class="framework-title">
+<i class="fas fa-check-circle" style="color: #60a5fa;"></i>
+                Trust Framework Requirements
+            </div>
+<div class="framework-step">
+<div class="step-number">1</div>
+<div class="step-line"></div>
+<div class="step-content">
+<div class="step-title">Continuous Evaluation</div>
+<div class="step-desc">Automated red-teaming and benchmarking against safety datasets before and after deployment.</div>
+</div>
+</div>
+<div class="framework-step">
+<div class="step-number">2</div>
+<div class="step-line"></div>
+<div class="step-content">
+<div class="step-title">Human-in-the-loop</div>
+<div class="step-desc">Mandatory human oversight for high-stakes decisions and exception handling.</div>
+</div>
+</div>
+<div class="framework-step">
+<div class="step-number">3</div>
+<div class="step-content">
+<div class="step-title">Explainability Layer</div>
+<div class="step-desc">Tools to interpret model reasoning and visualize decision pathways for auditors.</div>
+</div>
+</div>
+<div class="guardrail-box">
+<i class="fas fa-shield-virus guardrail-icon"></i>
+<div class="guardrail-content">
+<h4>Active Guardrails Needed</h4>
+<p>Implement real-time input/output filtering and policy enforcement layers separate from the core model to ensure operational safety.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="footer">
+<div class="source-text">
+<i class="fas fa-info-circle"></i>
+            Source: Microsoft Keynote &amp; OpenAI Safety Guidelines
+        </div>
+<div class="tag-container">
+<div class="tag">AI Ethics</div>
+<div class="tag">Risk Management</div>
+<div class="tag">Governance</div>
+</div>
+</div>
+</div>
+</body>
+</html>

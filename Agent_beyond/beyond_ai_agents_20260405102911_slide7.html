@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Why Agents Matter Now</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .slide-container {
+      width: 1280px;
+      height: 720px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
+      color: #ffffff;
+    }
+    
+    .header {
+      position: absolute;
+      top: 40px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+    
+    .title {
+      font-size: 32px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .title-icon {
+      color: #60a5fa;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    
+    .source-badge {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 12px;
+      color: #60a5fa;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .main-content {
+      position: absolute;
+      top: 120px;
+      left: 40px;
+      right: 40px;
+      bottom: 80px;
+      display: flex;
+      gap: 32px;
+    }
+    
+    .left-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .right-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    
+    .benefit-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      transition: all 0.3s ease;
+      min-height: 122px;
+    }
+    
+    .benefit-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(59, 130, 246, 0.3);
+    }
+    
+    .benefit-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+    
+    .benefit-content {
+      flex: 1;
+    }
+    
+    .benefit-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+    
+    .benefit-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    
+    .formula-box {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    
+    .formula-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    .formula-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(59, 130, 246, 0.2);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #60a5fa;
+      font-size: 18px;
+    }
+    
+    .formula-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    
+    .formula {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 18px;
+      color: #60a5fa;
+    }
+    
+    .formula-components {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 8px;
+    }
+    
+    .component {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .component-label {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    
+    .component-value {
+      font-size: 14px;
+      color: #60a5fa;
+      font-weight: 600;
+    }
+    
+    .impact-section {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    
+    .impact-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    
+    .impact-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    
+    .impact-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #60a5fa;
+      margin-bottom: 4px;
+    }
+    
+    .impact-label {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    
+    .bottom-info {
+      position: absolute;
+      bottom: 20px;
+      left: 40px;
+      right: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #64748b;
+    }
+    
+    .info-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .info-icon {
+      color: #60a5fa;
+      font-size: 12px;
+    }
+    
+    .info-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .source-tag {
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 4px;
+      padding: 4px 8px;
+      font-size: 11px;
+      color: #60a5fa;
+    }
+  </style>
+</head>
+<body>
+  <div class="slide-container">
+    <div class="header">
+      <div>
+        <div class="title">
+          <i class="fas fa-robot title-icon"></i>
+          Why Agents Matter Now
+        </div>
+        <div class="subtitle">The shift from assistance to delegation in AI transformation</div>
+      </div>
+      <div class="source-badge">
+        <i class="fas fa-quote-left"></i>
+        <span>OpenAI Keynote</span>
+      </div>
+    </div>
+    <div class="main-content">
+      <div class="left-section">
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="benefit-content">
+              <div class="benefit-title">Automate Routine Tasks</div>
+              <div class="benefit-desc">AI agents can handle repetitive tasks, freeing humans for strategic work</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="benefit-content">
+              <div class="benefit-title">24/7 Operations</div>
+              <div class="benefit-desc">Consistent performance without breaks, increasing throughput</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="fas fa-cogs"></i>
+            </div>
+            <div class="benefit-content">
+              <div class="benefit-title">Tool/API Integration</div>
+              <div class="benefit-desc">Seamless connection with existing systems and workflows</div>
+            </div>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">
+              <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="benefit-content">
+              <div class="benefit-title">Scalable Processing</div>
+              <div class="benefit-desc">Handle multiple tasks simultaneously without degradation</div>
+            </div>
+          </div>
+        </div>
+        <div class="formula-box">
+          <div class="formula-header">
+            <div class="formula-icon">
+              <i class="fas fa-calculator"></i>
+            </div>
+            <div class="formula-title">Leverage Formula</div>
+          </div>
+          <div class="formula">
+            Leverage = Judgment × Tools × Process
+          </div>
+          <div class="formula-components">
+            <div class="component">
+              <div class="component-label">Judgment</div>
+              <div class="component-value">Decision-making</div>
+            </div>
+            <div class="component">
+              <div class="component-label">Tools</div>
+              <div class="component-value">AI capabilities</div>
+            </div>
+            <div class="component">
+              <div class="component-label">Process</div>
+              <div class="component-value">Workflow design</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="right-section">
+        <div class="impact-section">
+          <div class="impact-title">
+            <i class="fas fa-chart-bar"></i>
+            <span>Impact Metrics</span>
+          </div>
+          <div class="impact-grid">
+            <div class="impact-item">
+              <div class="impact-value">85%</div>
+              <div class="impact-label">Task Automation</div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-value">3x</div>
+              <div class="impact-label">Throughput</div>
+            </div>
+            <div class="impact-item">
+              <div class="impact-value">24/7</div>
+              <div class="impact-label">Availability</div>
+            </div>
+          </div>
+        </div>
+        <div class="impact-section">
+          <div class="impact-title">
+            <i class="fas fa-lightbulb"></i>
+            <span>Key Insights</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8;">
+              <i class="fas fa-check" style="color: #60a5fa;"></i>
+              <span>Agents can handle complex multi-step workflows</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8;">
+              <i class="fas fa-check" style="color: #60a5fa;"></i>
+              <span>Integration with existing tools and APIs</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #94a3b8;">
+              <i class="fas fa-check" style="color: #60a5fa;"></i>
+              <span>Scalable processing without human intervention</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-info">
+      <div class="info-left">
+        <div class="info-item">
+          <i class="fas fa-info-circle info-icon"></i>
+          <span>Source: OpenAI Keynote (https://www.genspark.ai/api/files/s/pn9iQaLQ)</span>
+        </div>
+      </div>
+      <div class="info-right">
+        <div class="source-tag">OpenAI</div>
+        <div class="source-tag">Microsoft</div>
+        <div class="source-tag">SNU</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
