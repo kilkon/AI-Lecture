@@ -67,10 +67,10 @@
       top: 100px;
       left: 60px;
       width: 1160px;
-      height: 570px;
+      height: 552px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 16px;
     }
     
     .main-grid {
@@ -84,7 +84,7 @@
     .right-column {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
       min-height: 0;
     }
     
@@ -92,18 +92,27 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 12px;
-      padding: 20px;
+      padding: 18px;
       flex: 1;
       display: flex;
       flex-direction: column;
       min-height: 0;
+    }
+
+    .primary-card {
+      flex: 1.35;
+    }
+
+    .compact-card {
+      flex: 0.65;
+      padding: 16px 18px;
     }
     
     .card-header {
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     
     .card-icon {
@@ -121,7 +130,7 @@
     
     .card-title {
       color: #ffffff;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 600;
     }
     
@@ -135,8 +144,8 @@
       display: flex;
       align-items: flex-start;
       gap: 10px;
-      margin-bottom: 10px;
-      padding: 8px 12px;
+      margin-bottom: 8px;
+      padding: 7px 10px;
       background: rgba(255,255,255,0.03);
       border-radius: 8px;
       border-left: 3px solid #3b82f6;
@@ -155,8 +164,8 @@
     
     .bullet-text {
       color: #e2e8f0;
-      font-size: 14px;
-      line-height: 1.45;
+      font-size: 13px;
+      line-height: 1.38;
     }
     
     .highlight {
@@ -168,20 +177,20 @@
       background: rgba(59,130,246,0.1);
       border: 1px solid rgba(59,130,246,0.3);
       border-radius: 8px;
-      padding: 16px;
-      margin-top: 8px;
+      padding: 12px;
+      margin-top: 6px;
     }
     
     .implication-text {
       color: #e2e8f0;
-      font-size: 13px;
-      line-height: 1.5;
+      font-size: 12px;
+      line-height: 1.4;
     }
     
     .stats-row {
       display: flex;
-      gap: 16px;
-      margin-top: 8px;
+      gap: 12px;
+      margin-top: 6px;
     }
     
     .stat-item {
@@ -194,7 +203,7 @@
     
     .stat-value {
       color: #3b82f6;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       margin-bottom: 4px;
     }
@@ -209,7 +218,7 @@
       bottom: 0;
       left: 0;
       width: 1280px;
-      height: 50px;
+      height: 46px;
       background: rgba(255,255,255,0.05);
       border-top: 1px solid rgba(255,255,255,0.1);
       display: flex;
@@ -220,12 +229,12 @@
     
     .source-text {
       color: #94a3b8;
-      font-size: 13px;
+      font-size: 12px;
     }
     
     .source-link {
       color: #3b82f6;
-      font-size: 13px;
+      font-size: 12px;
       text-decoration: none;
     }
     
@@ -258,7 +267,7 @@
     <div class="content-area">
       <div class="main-grid">
         <div class="left-column">
-          <div class="section-card">
+          <div class="section-card primary-card">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-bullseye"></i>
@@ -298,7 +307,7 @@
               </div>
             </div>
           </div>
-          <div class="section-card">
+          <div class="section-card compact-card">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-chart-line"></i>
@@ -325,7 +334,7 @@
           </div>
         </div>
         <div class="right-column">
-          <div class="section-card">
+          <div class="section-card primary-card">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-university"></i>
@@ -365,7 +374,7 @@
               </div>
             </div>
           </div>
-          <div class="section-card">
+          <div class="section-card compact-card">
             <div class="card-header">
               <div class="card-icon">
                 <i class="fas fa-calendar-alt"></i>
