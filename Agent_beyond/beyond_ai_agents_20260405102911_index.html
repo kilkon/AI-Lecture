@@ -97,14 +97,6 @@
       display: block;
       background: #000;
     }
-    .hint {
-      padding: 6px 12px 10px;
-      color: var(--muted);
-      font-size: 11px;
-      text-align: center;
-      border-top: 1px solid rgba(34, 48, 79, 0.5);
-      background: rgba(10, 15, 30, 0.65);
-    }
     @media (max-width: 900px) {
       .topbar {
         grid-template-columns: 1fr;
@@ -119,10 +111,6 @@
       button, select {
         height: 36px;
         font-size: 13px;
-      }
-      .hint {
-        font-size: 10px;
-        line-height: 1.45;
       }
     }
   </style>
@@ -148,14 +136,12 @@
     </div>
   </div>
 
-  <div class="hint">키보드: ←/→, Space(다음), Home/End, +/- (글자 확대/축소), 0(맞춤), F(전체화면)</div>
-
   <script>
     const BASE_W = 1280;
     const BASE_H = 720;
     const prefix = "beyond_ai_agents_20260405102911_slide";
     const extension = ".html";
-    const assetVersion = "20260418d";
+    const assetVersion = "20260418e";
     const slideNumbers = Array.from({ length: 34 }, (_, i) => i + 1);
 
     const frame = document.getElementById("slideFrame");
