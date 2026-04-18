@@ -34,20 +34,20 @@
       font-size: 48px;
       font-weight: 700;
       color: #ffffff;
-      margin-bottom: 20px;
+      margin-bottom: 12px;
       letter-spacing: -0.02em;
     }
     .slide-subtitle {
       font-size: 18px;
       color: #94a3b8;
-      margin-bottom: 50px;
+      margin-bottom: 28px;
       font-weight: 400;
     }
     .bullet-container {
       display: flex;
       flex-direction: column;
-      gap: 30px;
-      margin-top: 40px;
+      gap: 16px;
+      margin-top: 18px;
     }
     .bullet-item {
       display: flex;
@@ -55,7 +55,7 @@
       gap: 20px;
       background: rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-      padding: 24px 30px;
+      padding: 18px 24px;
       border-left: 4px solid #3b82f6;
       transition: all 0.3s ease;
     }
@@ -78,21 +78,83 @@
       flex: 1;
     }
     .bullet-title {
-      font-size: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+    .bullet-desc {
+      font-size: 14px;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+    .comparison-section {
+      margin-top: 22px;
+      padding: 18px 22px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(96, 165, 250, 0.18);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+    }
+    .comparison-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .comparison-title i {
+      color: #60a5fa;
+    }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+    .comparison-card {
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .comparison-card.llm {
+      border-top: 3px solid #38bdf8;
+    }
+    .comparison-card.agent {
+      border-top: 3px solid #a78bfa;
+    }
+    .comparison-card-title {
+      font-size: 15px;
       font-weight: 600;
       color: #ffffff;
       margin-bottom: 8px;
     }
-    .bullet-desc {
-      font-size: 15px;
-      color: #94a3b8;
-      line-height: 1.6;
+    .comparison-line {
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 6px;
+    }
+    .comparison-line strong {
+      color: #ffffff;
+      font-weight: 600;
+    }
+    .comparison-note {
+      font-size: 13px;
+      color: #dbeafe;
+      background: rgba(59, 130, 246, 0.12);
+      border-radius: 10px;
+      padding: 10px 12px;
+      line-height: 1.45;
     }
     .source-text {
       position: absolute;
-      bottom: 40px;
+      bottom: 24px;
       right: 80px;
-      font-size: 13px;
+      font-size: 12px;
       color: #64748b;
       font-style: italic;
     }
@@ -131,6 +193,27 @@
             <div class="bullet-desc">Organizations need to redesign their processes, governance, and culture to effectively integrate AI agents while maintaining human oversight and control</div>
           </div>
         </div>
+      </div>
+      <div class="comparison-section">
+        <div class="comparison-title">
+          <i class="fas fa-compass"></i>
+          Quick distinction: LLM/Copilot vs Agent AI
+        </div>
+        <div class="comparison-grid">
+          <div class="comparison-card llm">
+            <div class="comparison-card-title">Typical LLM / Copilot</div>
+            <div class="comparison-line"><strong>Role:</strong> responds to a prompt and generates text, code, or analysis</div>
+            <div class="comparison-line"><strong>Workflow:</strong> usually waits for the human to decide the next step</div>
+            <div class="comparison-line"><strong>Control pattern:</strong> strong for drafting and advising, weaker for executing multi-step work</div>
+          </div>
+          <div class="comparison-card agent">
+            <div class="comparison-card-title">Agent AI</div>
+            <div class="comparison-line"><strong>Role:</strong> pursues a goal across multiple steps, not just one answer</div>
+            <div class="comparison-line"><strong>Workflow:</strong> plans, uses tools/APIs, checks results, and adapts when something fails</div>
+            <div class="comparison-line"><strong>Control pattern:</strong> suitable for delegated tasks inside rules, budgets, and human oversight</div>
+          </div>
+        </div>
+        <div class="comparison-note">Simple rule: if the AI mainly answers your question, it behaves like an LLM assistant. If it can plan, act, and verify across steps, it behaves like an agent system.</div>
       </div>
       <div class="source-text">Sources: OpenAI keynote, Microsoft keynote, SNU SHINE AI</div>
     </div>
