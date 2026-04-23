@@ -1,0 +1,2075 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공공 분야 AI 전환에 발맞춘 서울대의 도전</title>
+  <style>
+    :root {
+      --bg: #ebe4d8;
+      --bg-glow: #d8e2ea;
+      --panel: #fffdf8;
+      --panel-2: #f6f1e8;
+      --navy: #23344d;
+      --blue: #456b8c;
+      --cyan: #6e9db5;
+      --teal: #5f8f86;
+      --violet: #857aa6;
+      --gold: #c9923d;
+      --coral: #c97c5d;
+      --text: #273142;
+      --muted: #667389;
+      --ok: #4f7d5b;
+      --warn: #9e6a24;
+      --danger: #a84f46;
+      --line: rgba(65, 86, 112, 0.16);
+      --paper-shadow: 0 20px 50px rgba(70, 64, 53, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      font-family: "Pretendard Variable", "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.7), transparent 26%),
+        radial-gradient(circle at 82% 14%, rgba(157, 181, 196, 0.35), transparent 24%),
+        linear-gradient(180deg, #ede7dc 0%, #e5ddd0 54%, #d9e2e6 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 24px 86px;
+    }
+
+    .slide {
+      width: 1280px;
+      height: 720px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.92) 0%, var(--panel) 45%, var(--panel-2) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 22px;
+      overflow: hidden;
+      display: none;
+      position: relative;
+      box-shadow: var(--paper-shadow);
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.44), transparent 28%),
+        radial-gradient(circle at 100% 0%, rgba(143, 167, 186, 0.12), transparent 36%),
+        repeating-linear-gradient(0deg, rgba(35, 52, 77, 0.012) 0, rgba(35, 52, 77, 0.012) 1px, transparent 1px, transparent 18px);
+    }
+
+    .slide > * { position: relative; z-index: 1; }
+
+    .slide.active { display: block; }
+
+    .header {
+      background: linear-gradient(90deg, #f4ecdf 0%, #efe5d6 58%, #e8eef1 100%);
+      color: var(--navy);
+      padding: 18px 28px 15px;
+      border-bottom: 1px solid rgba(78, 106, 133, 0.24);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 36px;
+      line-height: 1.25;
+      letter-spacing: -0.4px;
+    }
+
+    .header p {
+      margin: 8px 0 0;
+      color: var(--blue);
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .content {
+      padding: 20px 26px 70px;
+      height: calc(100% - 102px);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 31px;
+      color: var(--navy);
+      letter-spacing: -0.3px;
+    }
+
+    .lead {
+      margin: 0 0 14px;
+      font-size: 22px;
+      color: var(--blue);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    ul {
+      margin: 10px 0 0 22px;
+      padding: 0;
+      font-size: 24px;
+      line-height: 1.5;
+    }
+
+    li { margin-bottom: 6px; }
+
+    .small-list { font-size: 20px; }
+    .tiny-list { font-size: 18px; line-height: 1.45; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 8px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .card {
+      border-radius: 18px;
+      padding: 14px 14px;
+      background: rgba(255, 252, 247, 0.94);
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--cyan);
+      box-shadow: 0 8px 20px rgba(81, 73, 57, 0.06);
+    }
+
+    .card.accent-teal { border-left-color: var(--teal); }
+    .card.accent-violet { border-left-color: var(--violet); }
+    .card.accent-coral { border-left-color: var(--coral); }
+
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 23px;
+      color: var(--navy);
+    }
+
+    .card p {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.45;
+      color: #243149;
+    }
+
+    .highlight {
+      border-left: 5px solid var(--gold);
+      background: linear-gradient(90deg, #fff4df 0%, #fffaf1 100%);
+      padding: 12px 14px;
+      margin-top: 12px;
+      font-size: 19px;
+      line-height: 1.45;
+      border-radius: 0 14px 14px 0;
+    }
+
+    .subhead {
+      margin: 0 0 10px;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0 12px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 700;
+      background: rgba(28, 99, 199, 0.1);
+      color: #1e4a8a;
+      border: 1px solid rgba(28, 99, 199, 0.2);
+    }
+
+    .pill.danger-pill {
+      background: rgba(185, 28, 28, 0.1);
+      color: #991b1b;
+      border-color: rgba(185, 28, 28, 0.25);
+    }
+
+    .slide-scenario-1 .content { padding-top: 14px; }
+    .slide-scenario-1 .card { padding: 10px 12px; }
+    .slide-scenario-1 .card h3 { font-size: 19px; margin-bottom: 4px; }
+    .slide-scenario-1 .grid-2 { gap: 10px; }
+    .slide-scenario-1 .highlight { margin-top: 8px; padding: 10px 12px; font-size: 17px; }
+
+    .badge {
+      position: absolute;
+      right: 18px;
+      top: 16px;
+      background: var(--gold);
+      color: #fff;
+      font-weight: 700;
+      font-size: 16px;
+      border-radius: 20px;
+      padding: 4px 12px;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, rgba(244, 236, 223, 0.94) 0%, rgba(233, 238, 241, 0.94) 100%);
+      color: #556a7f;
+      font-size: 15px;
+      padding: 8px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(78, 106, 133, 0.18);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 15px;
+      font-size: 15px;
+      font-weight: 700;
+      margin-right: 6px;
+      margin-bottom: 5px;
+      color: #fff;
+    }
+
+    .ok { background: var(--ok); }
+    .warn { background: var(--warn); }
+    .danger { background: var(--danger); }
+
+    .timeline {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 19px;
+    }
+
+    .timeline th, .timeline td {
+      border: 1px solid #c8d7f2;
+      padding: 8px 10px;
+      text-align: left;
+    }
+
+    .timeline th {
+      background: #e8f1ff;
+      color: var(--navy);
+      font-size: 18px;
+    }
+
+    .note {
+      margin-top: 10px;
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    .nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(247, 243, 236, 0.94);
+      backdrop-filter: blur(8px);
+      border-top: 1px solid rgba(78, 106, 133, 0.22);
+      padding: 10px 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      z-index: 20;
+      color: var(--navy);
+      font-size: 14px;
+    }
+
+    .nav button {
+      border: 0;
+      border-radius: 999px;
+      background: #6c8aa3;
+      color: #fff;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+
+    .nav button:disabled { opacity: 0.4; cursor: not-allowed; }
+    .nav select {
+      max-width: 430px;
+      border-radius: 6px;
+      border: 1px solid rgba(78, 106, 133, 0.28);
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, 0.9);
+      font-family: inherit;
+    }
+
+    .cover-slide {
+      background:
+        radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.38), transparent 22%),
+        linear-gradient(135deg, #dacdbb 0%, #e9dfd1 34%, #dce6ea 100%);
+      border-color: rgba(113, 131, 150, 0.24);
+      color: var(--navy);
+    }
+
+    .cover-inner {
+      height: 100%;
+      padding: 54px 56px 86px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .cover-kicker {
+      display: inline-block;
+      width: fit-content;
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(78, 106, 133, 0.22);
+      color: var(--blue);
+      font-size: 17px;
+      font-weight: 700;
+      padding: 7px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.2px;
+    }
+
+    .cover-title {
+      margin: 22px 0 10px;
+      font-size: 62px;
+      font-weight: 800;
+      line-height: 1.16;
+      letter-spacing: -1px;
+      color: #24344a;
+    }
+
+    .cover-subtitle {
+      margin: 0;
+      font-size: 24px;
+      color: #556a7f;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+    }
+
+    .cover-meta {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      max-width: 920px;
+    }
+
+    .cover-meta .meta-card {
+      background: rgba(255, 255, 255, 0.58);
+      border: 1px solid rgba(78, 106, 133, 0.16);
+      border-radius: 16px;
+      padding: 14px 16px;
+      backdrop-filter: blur(4px);
+    }
+
+    .cover-meta .meta-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      color: #597a92;
+    }
+
+    .cover-meta .meta-card p {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.4;
+      color: #23344d;
+    }
+
+    .cover-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      font-size: 16px;
+      color: #5f7288;
+      border-top: 1px solid rgba(78, 106, 133, 0.18);
+      padding-top: 14px;
+    }
+
+    .tech-map {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .tech-card {
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      background: rgba(255, 252, 247, 0.95);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 20px rgba(81, 73, 57, 0.05);
+    }
+
+    .tech-card h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      color: var(--navy);
+    }
+
+    .tech-card p {
+      margin: 0 0 10px;
+      font-size: 17px;
+      line-height: 1.45;
+      color: #344055;
+    }
+
+    .tech-card ul {
+      margin: 0 0 0 18px;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .task-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .task-box {
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.76);
+      border: 1px solid var(--line);
+    }
+
+    .task-box h3 {
+      margin: 0 0 8px;
+      font-size: 20px;
+      color: var(--navy);
+    }
+
+    .task-box p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.45;
+      color: #3d485c;
+    }
+
+    .demo-layout {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      margin-top: 8px;
+    }
+
+    .demo-panel {
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255, 252, 247, 0.92);
+      border: 1px solid var(--line);
+      box-shadow: 0 8px 20px rgba(81, 73, 57, 0.06);
+    }
+
+    .demo-panel h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      color: var(--navy);
+    }
+
+    .demo-panel p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.5;
+      color: #344055;
+    }
+
+    .demo-checks {
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .demo-checks li {
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .demo-checks li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--teal);
+      font-weight: 800;
+    }
+
+    .demo-button {
+      margin-top: 16px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #5f8f86 0%, #6c8aa3 100%);
+      color: #fff;
+      font-family: inherit;
+      font-size: 17px;
+      font-weight: 700;
+      padding: 12px 20px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(95, 143, 134, 0.2);
+    }
+
+    .demo-button.secondary {
+      background: #dbe4e8;
+      color: var(--navy);
+      box-shadow: none;
+    }
+
+    .agent-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(34, 43, 57, 0.42);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+      padding: 28px;
+    }
+
+    .agent-modal.open {
+      display: flex;
+    }
+
+    .agent-window {
+      width: min(1180px, 96vw);
+      height: min(680px, 90vh);
+      background: linear-gradient(180deg, #fffdfa 0%, #f4efe7 100%);
+      border-radius: 24px;
+      border: 1px solid rgba(78, 106, 133, 0.18);
+      box-shadow: 0 28px 60px rgba(35, 52, 77, 0.25);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    .agent-topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 22px;
+      background: linear-gradient(90deg, #f1e8d9 0%, #e5ecef 100%);
+      border-bottom: 1px solid rgba(78, 106, 133, 0.18);
+    }
+
+    .agent-topbar h3 {
+      margin: 0;
+      font-size: 24px;
+      color: var(--navy);
+    }
+
+    .agent-topbar p {
+      margin: 4px 0 0;
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .agent-close {
+      border: 0;
+      background: transparent;
+      color: var(--navy);
+      font-size: 30px;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .agent-body {
+      display: grid;
+      grid-template-columns: 0.84fr 1.16fr;
+      min-height: 0;
+    }
+
+    .agent-log {
+      padding: 20px 18px;
+      border-right: 1px solid rgba(78, 106, 133, 0.14);
+      background: rgba(255, 255, 255, 0.56);
+      overflow: auto;
+    }
+
+    .agent-log-entry {
+      margin-bottom: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid rgba(78, 106, 133, 0.12);
+      font-size: 15px;
+      line-height: 1.45;
+      color: #324055;
+    }
+
+    .agent-log-entry strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--navy);
+      font-size: 15px;
+    }
+
+    .agent-doc {
+      padding: 22px 24px;
+      overflow: auto;
+    }
+
+    .agent-doc-sheet {
+      min-height: 100%;
+      background: #fff;
+      border-radius: 18px;
+      border: 1px solid rgba(78, 106, 133, 0.14);
+      padding: 22px 24px;
+      box-shadow: 0 10px 24px rgba(65, 86, 112, 0.08);
+    }
+
+    .agent-doc-sheet h4 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      color: var(--navy);
+    }
+
+    .agent-doc-meta {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 16px 0 18px;
+    }
+
+    .agent-doc-meta div {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #f6f8fa;
+      font-size: 14px;
+      line-height: 1.4;
+      color: #415066;
+    }
+
+    .agent-doc-meta strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--navy);
+    }
+
+    .agent-doc-section {
+      margin-bottom: 16px;
+    }
+
+    .agent-doc-section h5 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      color: var(--navy);
+    }
+
+    .agent-doc-section p,
+    .agent-doc-section li {
+      font-size: 15px;
+      line-height: 1.5;
+      color: #334055;
+    }
+
+    .agent-doc-section ul {
+      margin: 0 0 0 18px;
+      font-size: 15px;
+    }
+
+    .agent-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 22px;
+      border-top: 1px solid rgba(78, 106, 133, 0.18);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .agent-status {
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .demo-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 12px;
+      margin-top: 14px;
+    }
+
+    .demo-form label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .demo-form label:last-child,
+    .demo-form label:nth-last-child(2) {
+      grid-column: 1 / -1;
+    }
+
+    .demo-form input,
+    .demo-form textarea {
+      width: 100%;
+      margin-top: 6px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(78, 106, 133, 0.22);
+      background: rgba(255, 255, 255, 0.94);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .demo-form textarea {
+      min-height: 92px;
+      resize: vertical;
+      line-height: 1.45;
+    }
+
+    .demo-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+
+    <section class="slide active cover-slide">
+      <div class="cover-inner">
+        <div>
+          <div class="cover-kicker">서울대학교 행정직원 대상 특강</div>
+          <h1 class="cover-title">서울대 공공 분야<br>AI 전환</h1>
+          <p class="cover-subtitle">공공가치와 행정혁신을 함께 달성하는 AX 전략</p>
+          <div class="cover-meta">
+            <div class="meta-card">
+              <h3>발표 주제</h3>
+              <p>공공 분야 AI 전환에<br>발맞춘 서울대의 도전</p>
+            </div>
+            <div class="meta-card">
+              <h3>발표자</h3>
+              <p>서울대 정보화본부 본부장<br><strong>고길곤</strong></p>
+            </div>
+          </div>
+        </div>
+        <div></div>
+        <div class="cover-bottom">
+          <span>SHINE AI | 행정 DX | AI-ready document</span>
+          <span>Seoul National University</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="header">
+        <h1>최근 한국정부의 공공분야 AI 전환 정책</h1>
+        <p>행정 AX 추진에 직접 영향을 주는 국가 정책 동향 (2025~2026)</p>
+      </div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>대한민국 인공지능 행동계획 (2026.02 보고)</h3>
+            <ul class="tiny-list">
+              <li>국가 AI 경쟁력 강화와 범정부 AI 대전환 추진</li>
+              <li>공공서비스 AI 전환, AI 통합민원플랫폼, 공통 기반 구축 강조</li>
+              <li>실행과제 중심의 정책 이행 체계(범부처 연계)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>공공부문 초거대AI 도입·활용 가이드라인 2.0 (2025.04)</h3>
+            <ul class="tiny-list">
+              <li>공공기관의 안전한 도입, 성과관리, 책임 운영 기준 제시</li>
+              <li>RAG 등 최신 기술 적용과 데이터/보안 기준 구체화</li>
+              <li>대국민 서비스 혁신 + 내부 일하는 방식 혁신 동시 지향</li>
+            </ul>
+          </div>
+        </div>
+        <ul class="small-list">
+          <li><strong>서울대 행정 시사점 1:</strong> 단일 부서 실험보다 범대학 공통 표준(문서/데이터/보안) 선행 필요</li>
+          <li><strong>서울대 행정 시사점 2:</strong> 챗봇·민원·결재 자동화는 도입보다 운영 품질(KPI/감사로그)이 핵심</li>
+          <li><strong>서울대 행정 시사점 3:</strong> AI-ready document가 정책 이행의 최소 단위</li>
+        </ul>
+        <div class="highlight">
+          정책 방향은 이미 명확합니다. 지금 필요한 것은 "도입 여부"가 아니라 "조직 실행력"입니다.
+        </div>
+        <p class="note">출처: 국가인공지능전략위원회 발표자료, 디지털플랫폼정부위원회 공공부문 가이드라인(2025~2026)</p>
+      </div>
+      <div class="footer"><span>서울대학교 행정 AX 특강</span><span>1 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>왜 지금 공공 분야 AI 전환인가</h1></div>
+      <div class="content">
+        <div class="grid-3">
+          <div class="card"><h3>정책 압력</h3><p>정부는 AI 3대 강국 도약을 위해 공공 영역 디지털 전환과 AI 내재화를 핵심 과제로 추진 중</p></div>
+          <div class="card"><h3>기술 압력</h3><p>Agentic AI 확산으로 문서 생성, 분석, 민원 응대, 의사결정 보조가 실시간화</p></div>
+          <div class="card"><h3>시민 기대</h3><p>빠르고 정확하며 설명 가능한 행정 서비스에 대한 기대 수준 급상승</p></div>
+        </div>
+        <ul class="small-list">
+          <li>공공기관 경쟁력은 "예산 규모"보다 "데이터-문서-프로세스 품질"에서 결정</li>
+          <li>대학은 교육/연구기관이자 거대한 공공행정 시스템</li>
+        </ul>
+      </div>
+      <div class="footer"><span>대외 환경 인식</span><span>3 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>서울대 내부의 변화 신호</h1></div>
+      <div class="content">
+        <p class="lead">내부 조사 핵심 수치가 이미 "AI 전환의 불가역성"을 보여줍니다.</p>
+        <div class="grid-2">
+          <div class="card">
+            <h3>학생·교수 인식</h3>
+            <ul class="tiny-list">
+              <li>생성형 AI 사용 경험 학생 비율 99.7%</li>
+              <li>학습 효과 체감 학생 96%</li>
+              <li>교육 AI 도입 필요 인식 교수 90%</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>직원 인식</h3>
+            <ul class="tiny-list">
+              <li>업무에 AI 사용 의향 직원 90%</li>
+              <li>핵심 과제: "사용 의향"을 "업무 성과"로 연결</li>
+              <li>개인 실험 단계를 넘어 조직 표준 단계로 전환 필요</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">이제 필요한 것은 도구 도입이 아니라, 부서 운영 체계 자체의 AX입니다.</div>
+      </div>
+      <div class="footer"><span>내부 수용성 진단</span><span>4 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>서울대 AI 비전(안)의 핵심</h1></div>
+      <div class="content">
+        <h2>인간 중심의 세계 대전환을 이끄는 빛, SHINE AI</h2>
+        <div class="grid-2">
+          <div class="card"><h3>핵심 가치 1-2</h3><p>인간 중심(Human-centered), 사유하는 질문자(Reflective Questioner)</p></div>
+          <div class="card"><h3>핵심 가치 3-4</h3><p>모두를 위한 변화(Change for All), 긍정적 영향력(Positive Impact)</p></div>
+        </div>
+        <ul class="small-list">
+          <li>AI는 목적이 아니라 수단: 행정은 더 인간적인 서비스로 진화해야 함</li>
+          <li>최종 책임의 주체는 사람: 공공 행정의 신뢰를 유지하는 기본 원칙</li>
+          <li>기술 도입과 함께 조직문화·평가·역할 재정의가 동반되어야 함</li>
+        </ul>
+      </div>
+      <div class="footer"><span>비전 해석</span><span>5 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>4대 혁신영역 중 행정에 주는 메시지</h1></div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>교육/연구가 요구하는 행정</h3>
+            <p>실험, 협업, 속도, 데이터 연계를 지원하는 유연한 백오피스가 대학 경쟁력을 좌우</p>
+          </div>
+          <div class="card">
+            <h3>거버넌스가 요구하는 행정</h3>
+            <p>윤리·보안·데이터 표준·책임 체계를 행정이 운영 가능한 수준으로 구체화</p>
+          </div>
+        </div>
+        <div class="highlight">
+          행정의 역할 변화: <strong>"지원부서"</strong>에서 <strong>"전환 설계자"</strong>로.
+        </div>
+        <ul class="small-list">
+          <li>업무 자동화 + 판단 품질 고도화 + 대민/대내 서비스 경험 개선</li>
+          <li>반복 업무 시간을 줄여 정책기획, 조정, 소통, 문제정의 역량에 재투자</li>
+        </ul>
+      </div>
+      <div class="footer"><span>행정의 전략적 위치</span><span>6 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>행정 통합 챗봇 구축 전략 (3.1 대표과제)</h1></div>
+      <div class="content">
+        <p class="lead">목표: 흩어진 부서별 챗봇/FAQ를 하나의 신뢰 가능한 행정 응대 체계로 통합</p>
+        <div class="grid-3">
+          <div class="card">
+            <h3>1단계: 준비 (데이터)</h3>
+            <p>규정, 공지, 매뉴얼, 민원답변을 수집하고 최신성 책임자와 보안등급을 지정한다.</p>
+          </div>
+          <div class="card">
+            <h3>2단계: 구축 (서비스)</h3>
+            <p>질의 분류, 근거 문서 검색, 답변 생성, 사람 승인 흐름(HITL)을 표준 프로세스로 설계한다.</p>
+          </div>
+          <div class="card">
+            <h3>3단계: 운영 (개선)</h3>
+            <p>오답/재문의 로그를 주간 점검하고 FAQ 자동 갱신과 프롬프트 개선으로 품질을 높인다.</p>
+          </div>
+        </div>
+        <ul class="tiny-list">
+          <li><strong>핵심 기능:</strong> 단일 창구 응대, 다국어 지원, 민감질의 자동 에스컬레이션, 근거 출처 제시</li>
+          <li><strong>성공 조건:</strong> 공통 데이터·문서 표준, 부서별 예외처리 룰, 보안/감사 로그 내장</li>
+          <li><strong>KPI:</strong> 1차 응답시간, 정답률, 재문의율, 상담직원 업무시간 절감률</li>
+        </ul>
+        <div class="highlight">
+          통합 챗봇은 "AI 도구"가 아니라 "행정지식 운영체계"다. 도입보다 업데이트 체계가 성패를 가른다.
+        </div>
+      </div>
+      <div class="footer"><span>행정 전략 정렬</span><span>7 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>행정직원이 체감하는 현재 Pain Point</h1></div>
+      <div class="content">
+        <div class="grid-3">
+          <div class="card"><h3>문서 비표준</h3><p>부서마다 제목/형식/용어가 달라 AI 재활용이 어려움</p></div>
+          <div class="card"><h3>지식 단절</h3><p>담당자 교체 시 맥락 유실, 반복 질의/반복 작성 발생</p></div>
+          <div class="card"><h3>검토 부담</h3><p>초안은 빨라졌지만 사실 확인과 책임 검토는 더 어려워짐</p></div>
+        </div>
+        <ul class="small-list">
+          <li>문제의 본질은 "AI 성능"이 아니라 "업무 입력물 품질"</li>
+          <li>행정 DX는 시스템 도입 프로젝트가 아니라 문서-프로세스 혁신 프로젝트</li>
+        </ul>
+      </div>
+      <div class="footer"><span>현장 문제 정의</span><span>8 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>핵심 전환: AI-ready document</h1></div>
+      <div class="content">
+        <p class="lead">AI-ready document = 사람이 읽기 쉬우면서 AI가 처리하기 쉬운 문서</p>
+        <ul>
+          <li>문서마다 목적, 대상, 책임자, 근거, 버전, 보안등급이 명시됨</li>
+          <li>비정형 서술을 줄이고 구조화된 섹션과 메타데이터를 포함</li>
+          <li>추론 가능한 근거 링크와 의사결정 로그를 함께 보존</li>
+        </ul>
+        <div class="highlight">
+          AI-ready가 되면 "한 번 작성한 문서"가 보고서, FAQ, 챗봇 답변, 브리핑으로 재활용된다.
+        </div>
+      </div>
+      <div class="footer"><span>업무 방식 전환 1</span><span>9 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>기존 방식 vs AI-ready 방식</h1></div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>기존</h3>
+            <ul class="tiny-list">
+              <li>담당자 개인 노하우 중심</li>
+              <li>파일명/버전/최종본 관리 혼재</li>
+              <li>검토 기준이 문서마다 다름</li>
+              <li>민원/감사 대응 시 자료 재수집</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>AI-ready</h3>
+            <ul class="tiny-list">
+              <li>조직 공통 템플릿과 필수 메타데이터</li>
+              <li>단일 지식저장소 + 버전 이력</li>
+              <li>근거-판단-결정 분리 기록</li>
+              <li>감사/보고 대응자료 자동 재구성</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">업무 속도 향상보다 중요한 성과: 재현성, 설명가능성, 인수인계 품질.</div>
+      </div>
+      <div class="footer"><span>업무 방식 전환 2</span><span>10 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>AI-ready 문서의 6대 표준 항목</h1></div>
+      <div class="content">
+        <div class="grid-3">
+          <div class="card"><h3>1. 목적</h3><p>문서가 해결하려는 문제와 사용 장면</p></div>
+          <div class="card"><h3>2. 독자</h3><p>결재자/실무자/민원인 등 대상 명확화</p></div>
+          <div class="card"><h3>3. 근거</h3><p>법령, 규정, 통계, 원문 링크 연결</p></div>
+          <div class="card"><h3>4. 판단</h3><p>대안 비교와 선택 기준 기록</p></div>
+          <div class="card"><h3>5. 결정</h3><p>누가 언제 무엇을 확정했는지 명시</p></div>
+          <div class="card"><h3>6. 추적</h3><p>버전, 보안등급, 담당자 이력 관리</p></div>
+        </div>
+      </div>
+      <div class="footer"><span>문서 표준화</span><span>11 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>행정 문서 템플릿 체계 (예시)</h1></div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>공통 템플릿</h3>
+            <ul class="tiny-list">
+              <li>정책 검토서</li>
+              <li>결재문 초안</li>
+              <li>회의록/상담기록</li>
+              <li>민원 답변서</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>업무별 템플릿</h3>
+            <ul class="tiny-list">
+              <li>입학: 전형 민원 응대 시나리오</li>
+              <li>인사: 경력경로 추천 리포트</li>
+              <li>예산: 자연어 질의 분석 보고서</li>
+              <li>학사: 졸업 시뮬레이션 결과서</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">
+          템플릿은 문서 모양이 아니라 "업무 사고방식의 프레임"이다.
+        </div>
+      </div>
+      <div class="footer"><span>문서 설계</span><span>12 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>프롬프트도 문서처럼 표준화해야 한다</h1></div>
+      <div class="content">
+        <p class="lead">좋은 결과는 좋은 질문에서 시작됩니다.</p>
+        <ul class="small-list">
+          <li><strong>질문 구조:</strong> 목적 - 맥락 - 제약 - 출력형식 - 검증기준</li>
+          <li><strong>예시:</strong> "교무팀 결재문 초안, 규정 위반 가능성 3개를 체크리스트로"</li>
+          <li><strong>공유:</strong> 부서별 Prompt Library를 구축해 우수 프롬프트 재사용</li>
+          <li><strong>검증:</strong> 프롬프트 결과물도 근거 검토를 통과해야 결재 반영</li>
+        </ul>
+        <div class="highlight">
+          개인의 프롬프트 실력 격차를 조직의 표준 자산으로 전환해야 한다.
+        </div>
+      </div>
+      <div class="footer"><span>질문 역량 내재화</span><span>13 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>회의·상담·의사결정 로그의 AI-ready 전환</h1></div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>회의 로그 필수 필드</h3>
+            <p>핵심 이슈, 결정사항, 보류사유, 후속조치, 책임자, 완료기한</p>
+          </div>
+          <div class="card">
+            <h3>상담 기록 필수 필드</h3>
+            <p>상담 유형, 규정 근거, 예외 판단 근거, 재문의 대응 스크립트</p>
+          </div>
+        </div>
+        <ul class="small-list">
+          <li>음성 요약 도입 시에도 최종 확정은 담당자가 승인</li>
+          <li>결정과정이 남아야 감사/분쟁/민원 대응이 가능</li>
+        </ul>
+        <div class="highlight">"기록의 품질"이 곧 "기관의 책임성"입니다.</div>
+      </div>
+      <div class="footer"><span>로그 체계</span><span>14 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>지식저장소 구축 원칙: 찾을 수 있어야 자산이다</h1></div>
+      <div class="content">
+        <div class="grid-3">
+          <div class="card"><h3>표준 분류</h3><p>업무코드, 문서유형, 보안등급, 주기 태그</p></div>
+          <div class="card"><h3>품질 관리</h3><p>오래된 문서 폐기/갱신, 책임부서 지정</p></div>
+          <div class="card"><h3>접근 통제</h3><p>민감정보 마스킹, 권한별 조회/생성 제한</p></div>
+        </div>
+        <ul class="small-list">
+          <li>문서는 저장보다 검색과 재사용을 기준으로 설계</li>
+          <li>AI 데이터 공유 활용체계와 연동 시 부서 협업 속도 급증</li>
+        </ul>
+      </div>
+      <div class="footer"><span>지식 인프라</span><span>15 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>행정직원 역량모델: AI 시대의 역할 재정의</h1></div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>반복업무 중심 역할 (감소)</h3>
+            <p>단순 정리, 형식 점검, 동일 민원 반복 답변</p>
+          </div>
+          <div class="card">
+            <h3>고부가 역할 (확대)</h3>
+            <p>문제정의, 예외판단, 부서 조정, 대안 설계, 공공가치 검토</p>
+          </div>
+        </div>
+        <ul class="small-list">
+          <li>필수 역량: 질문설계, 데이터 해석, 리스크 감별, 설명가능한 커뮤니케이션</li>
+          <li>개인 역량이 아닌 팀 역량으로 재설계해야 지속 가능</li>
+        </ul>
+      </div>
+      <div class="footer"><span>인력 관점 전환</span><span>16 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header">
+        <h1>공공 행정에서 특히 중요한 리스크</h1>
+        <p>고영향 AI(High-impact) 관점: 권리·안전·복지에 직접 영향을 주는 자동화를 별도로 관리한다</p>
+      </div>
+      <div class="content">
+        <p class="subhead">일반 리스크(모든 생성형 AI 공통)</p>
+        <div class="pill-row">
+          <span class="pill danger-pill">허위정보·환각</span>
+          <span class="pill danger-pill">개인정보·보안</span>
+          <span class="pill danger-pill">편향·차별</span>
+          <span class="pill danger-pill">설명책임·감사추적 부족</span>
+        </div>
+        <div class="grid-2" style="margin-top: 6px;">
+          <div class="card accent-teal">
+            <h3>고영향에 가까운 행정 영역(예시)</h3>
+            <ul class="tiny-list">
+              <li>민원·자격 심사·지원 결정의 자동화(점수화·우선순위)</li>
+              <li>채용·입학·장학·징계 등 공정성이 핵심인 판단 보조</li>
+              <li>복지·재난·안전 등 취약계층에 대한 위험도 평가·분류</li>
+              <li>대규모 모니터링·프로파일링(행동추적·이상탐지)</li>
+            </ul>
+          </div>
+          <div class="card accent-violet">
+            <h3>공공부문에서의 통제 원칙</h3>
+            <ul class="tiny-list">
+              <li><strong>용도·위험도 분류:</strong> 고위험 업무는 별도 승인·로그·재현성 요건</li>
+              <li><strong>필수 인간 판단:</strong> 권리·의무에 영향이 큰 단계는 HITL(사람 개입) 의무화</li>
+              <li><strong>근거·출처:</strong> 규정·통계·내부 문서 링크와 버전을 함께 남김</li>
+              <li><strong>영향평가:</strong> 도입 전 개인정보·차별·오탐/미탐 비용 점검</li>
+            </ul>
+          </div>
+        </div>
+        <ul class="small-list" style="margin-top: 8px;">
+          <li>AI 결과물은 초안일 뿐, 최종 책임은 사람과 조직에 있음</li>
+          <li>민감업무는 승인 흔적·감사로그·이의제기 경로를 시스템에 내장</li>
+        </ul>
+        <div class="highlight">안전장치 없는 자동화는 혁신이 아니라 리스크 증폭입니다. 고영향 영역일수록 “빠름”보다 “설명 가능한 통제”가 우선입니다.</div>
+      </div>
+      <div class="footer"><span>책임과 신뢰</span><span>17 / 28</span></div>
+    </section>
+
+    <section class="slide slide-scenario-1">
+      <div class="header">
+        <h1>부서 적용 시나리오 1: 입학·학사 민원</h1>
+        <p>AX는 “도입”이 아니라 조직 진단과 역량 구축 — 아래 5축을 동시에 점검하며 설계한다</p>
+      </div>
+      <div class="content">
+        <div class="grid-2" style="margin-bottom: 10px;">
+          <div class="card"><h3>① 전략·리더십</h3><p style="margin:0; font-size:16px; line-height:1.4;">미션·공공가치와 연결된 로드맵, KPI, 최고위 지원</p></div>
+          <div class="card accent-teal"><h3>② 데이터 거버넌스</h3><p style="margin:0; font-size:16px; line-height:1.4;">품질·표준·상호운용·출처 추적·편향·보안</p></div>
+          <div class="card accent-violet"><h3>③ 인적 역량</h3><p style="margin:0; font-size:16px; line-height:1.4;">AI 리터러시, 데이터 해석, 정책·법·윤리 융합</p></div>
+          <div class="card accent-coral"><h3>④ 조직·문화</h3><p style="margin:0; font-size:16px; line-height:1.4;">사일로 완화, 파일럿·실패학습, 부서 간 협업</p></div>
+        </div>
+        <div class="card" style="margin-bottom: 8px; border-left-color: var(--gold); padding: 8px 12px;">
+          <h3>⑤ 법제·윤리</h3>
+          <p style="margin:0; font-size:16px; line-height:1.4;">고위험 영역 검증, 책임 규율, 조달·외부 검토 — <em>데이터와 미래예측</em> index 10쪽 조직진단 틀과 동일 축으로 점검</p>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <h3>적용 내용</h3>
+            <p>공식 자료 기반 챗봇 + 상담기록 자동요약 + FAQ 자동갱신</p>
+            <ul class="tiny-list" style="margin-top:8px;">
+              <li>5축 관점: 규정·공지 <strong>데이터 표준</strong>, 민감질의 <strong>윤리·보안</strong>, 담당자 교체 시에도 이어지는 <strong>지식 운영</strong></li>
+            </ul>
+          </div>
+          <div class="card accent-teal">
+            <h3>효과 · KPI</h3>
+            <p>답변 일관성 향상, 민원 대기시간 단축, 신규 직원 온보딩 단축</p>
+            <ul class="tiny-list" style="margin-top:8px;">
+              <li>핵심 성공요인: 자료 최신성 책임자, 예외 케이스 <strong>수동승인(HITL)</strong></li>
+              <li>성과지표: 1차 응답시간, 재문의율, 정정 공지 건수, 근거 제시율</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">기술이 조직역량을 대신하지 않습니다. 입학·학사와 같이 고영향 질의가 섞이는 영역일수록 5축 점검이 파일럿의 성패를 가릅니다.</div>
+      </div>
+      <div class="footer"><span>현장 사례</span><span>18 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>부서 적용 시나리오 2: 인사·재무·기획</h1></div>
+      <div class="content">
+        <div class="grid-3">
+          <div class="card"><h3>인사</h3><p>경력경로 추천, 직무역량 기반 인재 매칭, 교육 이수 추천</p></div>
+          <div class="card"><h3>재무</h3><p>자연어 기반 통계 질의, 예산 집행 패턴 분석, 리스크 경보</p></div>
+          <div class="card"><h3>기획</h3><p>이슈 모니터링, 시나리오 시뮬레이션, 보고서 초안 자동 생성</p></div>
+        </div>
+        <div class="highlight">
+          세 부서 공통 과제: 동일한 데이터 정의, 문서 포맷, 용어 사전을 공유해야 함.
+        </div>
+        <div class="card" style="margin-top:10px;">
+          <h3>AI Fact Chat 프롬프트 개선 사례 (ChatGPT 활용)</h3>
+          <ul class="tiny-list">
+            <li><strong>개선 전:</strong> "입학 규정 알려줘"처럼 포괄 질문 중심으로 답변 일관성과 근거 표기가 약함</li>
+            <li><strong>개선 후:</strong> 역할(행정 Fact Chat) + 근거문서 우선순위 + 출력형식(요약/근거/주의사항) + 불확실성 응답 규칙을 포함한 구조화 프롬프트 적용</li>
+            <li><strong>효과:</strong> 근거 제시율 향상, 답변 톤 일관화, 담당자 검토시간 단축, 재문의율 감소</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer"><span>현장 사례</span><span>19 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>100일 실행계획: 작게 시작하고 빠르게 확산</h1></div>
+      <div class="content">
+        <table class="timeline">
+          <tr><th>기간</th><th>핵심 액션</th><th>산출물</th></tr>
+          <tr><td>1-30일</td><td>업무 진단, 우선과제 선정, 리스크 맵 작성</td><td>부서별 AX 과제 1개</td></tr>
+          <tr><td>31-60일</td><td>AI-ready 템플릿/프롬프트 표준 초안 운영</td><td>문서 표준 v1, Prompt Library v1</td></tr>
+          <tr><td>61-100일</td><td>시범운영, KPI 측정, 보안·윤리 보완</td><td>확산 여부 결정 보고서</td></tr>
+        </table>
+        <div class="note">원칙: 거창한 플랫폼보다, 당장 반복되는 고빈도 업무 1개부터.</div>
+      </div>
+      <div class="footer"><span>실행 로드맵</span><span>20 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>KPI 설계: 효율 + 품질 + 신뢰를 함께 본다</h1></div>
+      <div class="content">
+        <div class="grid-3">
+          <div class="card"><h3>효율 지표</h3><p>처리시간, 대기시간, 문서작성 소요시간, 반복 질의 감소율</p></div>
+          <div class="card"><h3>품질 지표</h3><p>오답률, 재작업률, 규정 위반률, 결재 반려율</p></div>
+          <div class="card"><h3>신뢰 지표</h3><p>민원 만족도, 설명 가능성 점검 통과율, 감사 대응 리드타임</p></div>
+        </div>
+        <ul class="small-list">
+          <li>사실 기반 행정을 위해서는 문서 표준화와 함께 <strong>통계자료의 공개·공유·재활용</strong> 체계가 필수</li>
+          <li>지표 정의, 산식, 기준 시점이 공개되어야 부서 간 동일한 근거로 판단 가능</li>
+          <li>AI는 통계를 자동 생성하는 도구가 아니라, 검증 가능한 통계자산을 빠르게 활용하게 하는 도구</li>
+        </ul>
+        <div class="highlight">
+          AI 성과평가는 생산성만으로 불충분하다. 공공기관은 "신뢰 비용"을 측정하고, 통계자산을 투명하게 운영해야 한다.
+        </div>
+      </div>
+      <div class="footer"><span>성과관리</span><span>21 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>조직 운영체계: 누가 무엇을 맡을 것인가</h1></div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card">
+            <h3>중앙(전사) 역할</h3>
+            <ul class="tiny-list">
+              <li>AI 가이드라인, 보안·데이터 표준, 공통 플랫폼</li>
+              <li>성과관리 프레임, 우수사례 확산</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>부서(현장) 역할</h3>
+            <ul class="tiny-list">
+              <li>업무별 시나리오 설계, 문서 표준 실행</li>
+              <li>리스크 모니터링, 사용자 피드백 반영</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">전사 표준과 부서 자율성의 균형이 AX 지속성의 핵심입니다.</div>
+      </div>
+      <div class="footer"><span>거버넌스 운영</span><span>22 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>교육·변화관리: 도입보다 정착이 어렵다</h1></div>
+      <div class="content">
+        <ul>
+          <li>리터러시 진단 후 수준별 교육: 기초/실무/고급 트랙 분리</li>
+          <li>직무 연계 실습 중심 교육: "툴 설명"보다 "업무 문제 해결" 중심</li>
+          <li>부서별 AI Vanguard 육성: 현장 코치 역할 부여</li>
+          <li>성과 보상: AI 활용 지표를 평가·인센티브와 연결</li>
+        </ul>
+        <div class="highlight">
+          변화관리의 핵심은 "잘 쓰는 소수"를 만드는 것이 아니라 "함께 쓰는 다수"를 만드는 것.
+        </div>
+      </div>
+      <div class="footer"><span>내재화 전략</span><span>23 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>2026-2028 단계별 확산 시나리오</h1></div>
+      <div class="content">
+        <table class="timeline">
+          <tr><th>단계</th><th>초점</th><th>핵심 결과</th></tr>
+          <tr><td>2026</td><td>기반 구축</td><td>문서 표준, 공통 템플릿, 시범 서비스</td></tr>
+          <tr><td>2027</td><td>내재화</td><td>부서별 정례 업무에 AI 적용, KPI 운영</td></tr>
+          <tr><td>2028~</td><td>확산/고도화</td><td>대학 간 공유 모델, 공공가치 중심 확산</td></tr>
+        </table>
+        <div class="note">서울대형 행정 AI 서비스 모델은 타 대학·공공기관으로 확산 가능한 레퍼런스가 될 수 있습니다.</div>
+      </div>
+      <div class="footer"><span>중장기 로드맵</span><span>24 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>강의 핵심 정리</h1></div>
+      <div class="content">
+        <div class="grid-2">
+          <div class="card"><h3>전략 메시지</h3><p>서울대 AI 비전의 성패는 행정 영역의 실행력에 달려 있다.</p></div>
+          <div class="card"><h3>실행 메시지</h3><p>AI-ready document가 업무 전환의 출발점이자 확산의 최소 단위다.</p></div>
+        </div>
+        <ul class="small-list">
+          <li>도구 중심 사고에서 문서-프로세스 중심 사고로 전환</li>
+          <li>효율 중심 성과에서 신뢰·품질·책임을 포함한 성과로 전환</li>
+          <li>개인 실험에서 조직 학습으로 전환</li>
+        </ul>
+      </div>
+      <div class="footer"><span>요약</span><span>26 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>Q&amp;A 가이드 질문</h1></div>
+      <div class="content">
+        <ul class="small-list">
+          <li>우리 부서에서 당장 AI-ready로 바꿀 수 있는 문서는 무엇인가?</li>
+          <li>자동화 가능한 단계와 사람이 최종판단해야 하는 단계는 어디인가?</li>
+          <li>성과를 보여줄 KPI 3개를 어떻게 정의할 것인가?</li>
+          <li>보안/윤리 리스크를 어떤 절차로 통제할 것인가?</li>
+        </ul>
+        <div class="highlight">
+          질문이 선명할수록 AI 도입은 빨라지고, 조직의 학습은 깊어집니다.
+        </div>
+      </div>
+      <div class="footer"><span>질의응답</span><span>27 / 28</span></div>
+    </section>
+
+    <section class="slide">
+      <div class="header"><h1>마무리</h1></div>
+      <div class="content">
+        <p class="lead">공공 분야 AI 전환의 본질은 기술 교체가 아니라 일하는 방식의 혁신입니다.</p>
+        <ul>
+          <li>서울대 행정은 AI로 더 빨라지는 조직이 아니라, 더 신뢰받는 조직이 되어야 합니다.</li>
+          <li>그 시작은 거대한 시스템이 아니라 AI-ready document라는 작은 표준입니다.</li>
+          <li>작은 표준이 쌓이면 큰 전환이 됩니다.</li>
+        </ul>
+        <div class="highlight">
+          다음 액션: 오늘 중 각 부서가 "100일 과제" 1개를 확정하고 책임자를 지정한다.
+        </div>
+      </div>
+      <div class="footer"><span>감사합니다</span><span>28 / 28</span></div>
+    </section>
+
+    <section class="slide" data-slide-id="ai-tech-map">
+      <div class="header"><h1>대학 업무에서 많이 쓰는 AI 기술 지도</h1><p>생성형 AI를 넘어, 실제 행정 업무를 바꾸는 핵심 기술 묶음</p></div>
+      <div class="content">
+        <p class="lead">대학 현장에서는 "모델 하나"보다 문서, 지식, 회의, 민원, 데이터 흐름을 연결하는 조합형 AI가 더 중요합니다.</p>
+        <div class="tech-map">
+          <div class="tech-card">
+            <h3>문서 생성·요약 AI</h3>
+            <p>기안문, 보고서 초안, 회의록 정리, 정책 비교표 작성처럼 텍스트 생산성이 큰 업무에 가장 먼저 쓰입니다.</p>
+            <ul>
+              <li>초안 작성과 문체 정리</li>
+              <li>회의록 요약과 액션 아이템 추출</li>
+              <li>공문·공지 초안 다듬기</li>
+            </ul>
+          </div>
+          <div class="tech-card">
+            <h3>RAG 기반 지식검색</h3>
+            <p>규정집, 예산지침, 학사행정 FAQ, 과거 사례를 연결해 "근거 있는 답변"을 주는 기술입니다.</p>
+            <ul>
+              <li>규정·지침 질의응답</li>
+              <li>유사 민원 사례 검색</li>
+              <li>답변 근거문서 링크 제시</li>
+            </ul>
+          </div>
+          <div class="tech-card">
+            <h3>워크플로우 자동화 AI</h3>
+            <p>단순 챗봇을 넘어 메일, 결재, 문서저장, 알림, 데이터 입력까지 여러 시스템을 이어주는 방식입니다.</p>
+            <ul>
+              <li>반복 민원 응대 자동화</li>
+              <li>결재 전 체크리스트 검토</li>
+              <li>부서 간 전달 업무 축소</li>
+            </ul>
+          </div>
+        </div>
+        <div class="highlight">대학 업무에서 체감 효과가 큰 영역은 "말을 잘하는 AI"보다 "근거를 찾고, 초안을 만들고, 다음 단계를 연결하는 AI"입니다.</div>
+      </div>
+      <div class="footer"><span>업무용 AI 기술</span><span>29 / 30</span></div>
+    </section>
+
+    <section class="slide" data-slide-id="ai-use-cases">
+      <div class="header"><h1>대학 행정에서 AI가 자주 쓰이는 업무 장면</h1><p>업무 단위로 보면 어떤 기술이 필요한지 더 선명해집니다</p></div>
+      <div class="content">
+        <h2>기술은 업무 문맥 안에서 도입될 때 가장 빠르게 정착합니다</h2>
+        <div class="task-strip">
+          <div class="task-box">
+            <h3>학사·학생지원</h3>
+            <p>민원 분류, FAQ 자동응답, 학사 규정 안내, 상담기록 요약에 생성형 AI와 RAG가 결합됩니다.</p>
+          </div>
+          <div class="task-box">
+            <h3>연구·산학행정</h3>
+            <p>연구비 지침 확인, 공고문 비교, 제출서류 점검, 협약서 초안 검토에 문서 분석 AI가 쓰입니다.</p>
+          </div>
+          <div class="task-box">
+            <h3>인사·재무·기획</h3>
+            <p>기준 대비 누락 점검, 보고서 요약, 회의자료 작성, 예산 설명자료 정리에 보조형 AI가 효과적입니다.</p>
+          </div>
+          <div class="task-box">
+            <h3>총무·대외협력</h3>
+            <p>행사 운영 체크리스트, 방문응대 스크립트, 보도자료 초안, 다국어 안내문 작성에서 활용도가 높습니다.</p>
+          </div>
+        </div>
+        <ul class="small-list">
+          <li>대학에서 특히 중요한 기술은 멀티모달 문서 인식, 음성 회의록 정리, 개인정보 마스킹, 근거 제시형 답변입니다.</li>
+          <li>도입 우선순위는 "가장 자주 반복되고, 규정 확인이 많고, 초안 작성 부담이 큰 업무"부터 잡는 것이 좋습니다.</li>
+        </ul>
+        <div class="highlight">즉, 대학 업무 AI는 거창한 미래 기술보다 "회의, 민원, 규정, 보고서"를 더 빠르고 정확하게 다루게 해주는 실무형 기술에서 출발합니다.</div>
+      </div>
+      <div class="footer"><span>업무 적용 장면</span><span>30 / 30</span></div>
+    </section>
+
+    <section class="slide" data-slide-id="approval-agent-demo">
+      <div class="header"><h1>시현: 결재문서 작성 에이전트</h1><p>클릭 한 번으로 요청 해석, 규정 체크, 초안 작성까지 보여주는 데모</p></div>
+      <div class="content">
+        <div class="demo-layout">
+          <div class="demo-panel">
+            <h3>시현 시나리오</h3>
+            <p>교무처 담당자가 "신임교원 AI 행정 활용 워크숍" 예산 집행을 위한 내부 결재문 초안을 작성해야 하는 상황을 가정합니다.</p>
+            <ul class="demo-checks">
+              <li>요청 문장을 분석해 문서 목적과 결재 포인트를 정리합니다.</li>
+              <li>예산, 일정, 대상, 기대효과, 검토 항목을 자동으로 구조화합니다.</li>
+              <li>결재문 초안과 검토 체크리스트를 함께 제시합니다.</li>
+            </ul>
+          </div>
+          <div class="demo-panel">
+            <h3>발표 포인트</h3>
+            <p>이 장에서는 "AI가 문장을 잘 쓰는가"보다 "대학 행정 문서 구조에 맞게 초안을 안전하게 만드는가"를 보여주면 좋습니다.</p>
+            <ul class="demo-checks">
+              <li>근거가 비어 있는 곳은 비워두고 담당자 확인이 필요함을 표시</li>
+              <li>결재권자가 궁금해할 예산, 일정, 리스크를 먼저 제시</li>
+              <li>초안 작성 후 사람 검토가 남아 있다는 점을 명확히 표시</li>
+            </ul>
+            <button class="demo-button" type="button" data-open-demo>결재문서 작성 에이전트 실행</button>
+          </div>
+        </div>
+        <div class="highlight">발표 때는 버튼을 눌러 "요청 해석 → 규정 체크 → 결재문 초안 작성" 흐름을 30초 안에 보여주면 메시지가 가장 선명해집니다.</div>
+      </div>
+      <div class="footer"><span>에이전트 시현</span><span>31 / 31</span></div>
+    </section>
+
+  </div>
+
+  <div class="agent-modal" id="agentModal" aria-hidden="true">
+    <div class="agent-window">
+      <div class="agent-topbar">
+        <div>
+          <h3>결재문서 작성 에이전트</h3>
+          <p>요청 해석 → 규정 체크 → 결재문 초안 작성</p>
+        </div>
+        <button class="agent-close" type="button" id="agentClose" aria-label="닫기">×</button>
+      </div>
+      <div class="agent-body">
+        <div class="agent-log" id="agentLog"></div>
+        <div class="agent-doc">
+          <div class="agent-doc-sheet">
+            <h4>내부결재문 초안</h4>
+            <p id="agentDocIntro">버튼을 누르면 에이전트가 요청을 분석하고 결재문 초안을 작성합니다.</p>
+            <div class="agent-doc-meta">
+              <div><strong>문서유형</strong><span id="docType">내부결재</span></div>
+              <div><strong>담당부서</strong><span id="docDept">교무처</span></div>
+              <div><strong>상태</strong><span id="docStatus">대기</span></div>
+            </div>
+            <div class="agent-doc-section">
+              <h5>1. 제목</h5>
+              <p id="docTitle">시현을 시작하면 제목이 자동 작성됩니다.</p>
+            </div>
+            <div class="agent-doc-section">
+              <h5>2. 추진 배경</h5>
+              <p id="docBackground">요청 해석 단계 전입니다.</p>
+            </div>
+            <div class="agent-doc-section">
+              <h5>3. 주요 내용</h5>
+              <ul id="docBullets">
+                <li>행사 개요, 대상, 일정, 예산을 구조화합니다.</li>
+              </ul>
+            </div>
+            <div class="agent-doc-section">
+              <h5>4. 검토 체크리스트</h5>
+              <ul id="docChecks">
+                <li>예산 기준, 장소 확정, 결재선 검토가 이 영역에 표시됩니다.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="agent-footer">
+        <div class="agent-status" id="agentStatus">시현 대기 중</div>
+        <button class="demo-button secondary" type="button" id="agentReset">다시 실행</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn">이전</button>
+    <span id="position">1 / 28</span>
+    <button id="nextBtn">다음</button>
+    <select id="slidePicker"></select>
+    <span>키보드: ← → / Home End</span>
+  </div>
+
+  <script src="./hwpx_template_data.js"></script>
+  <script>
+    (function () {
+      const deck = document.querySelector(".deck");
+      const anchorSlide = deck.querySelectorAll(".slide")[13];
+      const movableSlides = [
+        deck.querySelector('[data-slide-id="ai-tech-map"]'),
+        deck.querySelector('[data-slide-id="ai-use-cases"]'),
+        deck.querySelector('[data-slide-id="approval-agent-demo"]')
+      ].filter(Boolean);
+
+      if (anchorSlide) {
+        movableSlides.slice().reverse().forEach((slide) => {
+          anchorSlide.insertAdjacentElement("afterend", slide);
+        });
+      }
+
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const position = document.getElementById("position");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const picker = document.getElementById("slidePicker");
+      const modal = document.getElementById("agentModal");
+      const openDemoButtons = Array.from(document.querySelectorAll("[data-open-demo]"));
+      const closeDemoBtn = document.getElementById("agentClose");
+      const resetDemoBtn = document.getElementById("agentReset");
+      const agentLog = document.getElementById("agentLog");
+      const agentStatus = document.getElementById("agentStatus");
+      const agentDocIntro = document.getElementById("agentDocIntro");
+      const docStatus = document.getElementById("docStatus");
+      const docTitle = document.getElementById("docTitle");
+      const docBackground = document.getElementById("docBackground");
+      const docBullets = document.getElementById("docBullets");
+      const docChecks = document.getElementById("docChecks");
+      let idx = 0;
+      let demoTimerIds = [];
+      let latestHwpxBlob = null;
+      let latestHwpxName = "";
+
+      slides.forEach((slide, i) => {
+        const title = slide.querySelector(".header h1") ? slide.querySelector(".header h1").textContent.trim() : "슬라이드";
+        const opt = document.createElement("option");
+        opt.value = String(i);
+        opt.textContent = (i + 1) + ". " + title;
+        picker.appendChild(opt);
+      });
+
+      function render() {
+        slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+        slides.forEach((s, i) => {
+          const num = s.querySelector(".footer span:last-child");
+          if (num) num.textContent = (i + 1) + " / " + slides.length;
+        });
+        position.textContent = (idx + 1) + " / " + slides.length;
+        picker.value = String(idx);
+        prevBtn.disabled = idx === 0;
+        nextBtn.disabled = idx === slides.length - 1;
+      }
+
+      function escapeXml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/\"/g, "&quot;")
+          .replace(/'/g, "&apos;");
+      }
+
+      function sanitizeFileName(value) {
+        return String(value).replace(/[\\/:*?"<>|]/g, "_").trim() || "approval_draft";
+      }
+
+      function getDemoValues() {
+        return {
+          dept: document.getElementById("inputDept")?.value.trim() || "교무처 교수지원과",
+          drafter: document.getElementById("inputDrafter")?.value.trim() || "김OO",
+          email: document.getElementById("inputEmail")?.value.trim() || "prof-support@snu.ac.kr",
+          program: document.getElementById("inputProgram")?.value.trim() || "신임교원 대상 생성형 AI 행정 활용 워크숍",
+          schedule: document.getElementById("inputSchedule")?.value.trim() || "2026.05.14.(목) 14:00~16:00",
+          venue: document.getElementById("inputVenue")?.value.trim() || "행정관 대회의실",
+          audience: document.getElementById("inputAudience")?.value.trim() || "2026학년도 신규 임용 교원 40명 내외",
+          budgetItems: document.getElementById("inputBudgetItems")?.value.trim() || "강사료, 다과비, 교육자료 제작비",
+          budgetTotal: document.getElementById("inputBudgetTotal")?.value.trim() || "1,800,000원",
+          request: document.getElementById("inputRequest")?.value.trim() || "행사 운영을 위한 내부결재를 요청함."
+        };
+      }
+
+      function hydrateDemoContent() {
+        const demoSlide = deck.querySelector('[data-slide-id="approval-agent-demo"]');
+        if (demoSlide) {
+          demoSlide.querySelector(".header h1").textContent = "시현: 서울대 결재문서 작성 에이전트";
+          const headerP = demoSlide.querySelector(".header p");
+          if (headerP) headerP.textContent = "실제 부서명, 결재 문체, 예산 항목 표현에 가깝게 조정한 입력형 데모";
+          demoSlide.querySelector(".content").innerHTML = `
+            <div class="demo-layout">
+              <div class="demo-panel">
+                <h3>시현 입력값</h3>
+                <p>발표 중에 아래 항목만 바꾸면 서울대 결재문 톤에 가까운 초안이 다시 작성됩니다.</p>
+                <div class="demo-form">
+                  <label>담당 부서<input id="inputDept" type="text" value="교무처 교수지원과"></label>
+                  <label>기안자<input id="inputDrafter" type="text" value="김OO"></label>
+                  <label>수신 메일<input id="inputEmail" type="email" value="prof-support@snu.ac.kr"></label>
+                  <label>행사/사업명<input id="inputProgram" type="text" value="신임교원 대상 생성형 AI 행정 활용 워크숍"></label>
+                  <label>일정<input id="inputSchedule" type="text" value="2026.05.14.(목) 14:00~16:00"></label>
+                  <label>장소<input id="inputVenue" type="text" value="행정관 대회의실"></label>
+                  <label>대상<input id="inputAudience" type="text" value="2026학년도 신규 임용 교원 40명 내외"></label>
+                  <label>예산 항목<input id="inputBudgetItems" type="text" value="강사료, 다과비, 교육자료 제작비"></label>
+                  <label>총 예산<input id="inputBudgetTotal" type="text" value="1,800,000원"></label>
+                  <label>요청 요지<textarea id="inputRequest">신임교원의 대학 행정 AI 도구 활용 이해도를 높이기 위해 워크숍을 운영하고자 하며, 행사 운영을 위한 내부결재를 요청드리고자 함.</textarea></label>
+                </div>
+              </div>
+              <div class="demo-panel">
+                <h3>시현 포인트</h3>
+                <p>이 데모는 서울대 결재문에서 자주 보이는 표현인 "운영 계획(안)", "내부결재를 요청드림", "소요예산", "검토사항" 구조를 중심으로 초안을 만듭니다.</p>
+                <ul class="demo-checks">
+                  <li>결재권자가 먼저 보는 제목, 배경, 예산, 검토사항 순서로 정리</li>
+                  <li>비어 있는 근거는 자동 확정하지 않고 담당자 확인이 필요하다고 표기</li>
+                  <li>문서 초안 생성 후 HWPX 파일과 메일 초안 열기까지 연결</li>
+                </ul>
+                <button class="demo-button" type="button" data-open-demo>결재문서 작성 에이전트 실행</button>
+              </div>
+            </div>
+            <div class="highlight">브라우저만으로는 메일에 파일을 자동 첨부해 즉시 발송하기 어렵습니다. 대신 HWPX 생성과 메일 초안 열기까지 바로 이어지도록 구성했습니다.</div>
+          `;
+        }
+
+        const topTitle = modal.querySelector(".agent-topbar h3");
+        const topDesc = modal.querySelector(".agent-topbar p");
+        if (topTitle) topTitle.textContent = "서울대 결재문서 작성 에이전트";
+        if (topDesc) topDesc.textContent = "요청 해석 → 검토사항 정리 → 결재문 초안 생성 → HWPX 다운로드";
+        const footer = modal.querySelector(".agent-footer");
+        if (footer && !document.getElementById("downloadHwpx")) {
+          const existingReset = document.getElementById("agentReset");
+          if (existingReset) existingReset.remove();
+          const actions = document.createElement("div");
+          actions.className = "demo-actions";
+          actions.innerHTML = `
+            <button class="demo-button secondary" type="button" id="agentReset">다시 실행</button>
+            <button class="demo-button secondary" type="button" id="downloadHwpx">HWPX 파일 만들기</button>
+            <button class="demo-button secondary" type="button" id="emailHwpx">이메일 보내기</button>
+          `;
+          footer.appendChild(actions);
+        }
+      }
+
+      function makeCrcTable() {
+        const table = new Uint32Array(256);
+        for (let n = 0; n < 256; n += 1) {
+          let c = n;
+          for (let k = 0; k < 8; k += 1) {
+            c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+          }
+          table[n] = c >>> 0;
+        }
+        return table;
+      }
+
+      const crcTable = makeCrcTable();
+
+      function crc32(bytes) {
+        let crc = 0xFFFFFFFF;
+        for (let i = 0; i < bytes.length; i += 1) {
+          crc = crcTable[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
+        }
+        return (crc ^ 0xFFFFFFFF) >>> 0;
+      }
+
+      function createStoredZip(entries) {
+        const enc = new TextEncoder();
+        const localParts = [];
+        const centralParts = [];
+        let offset = 0;
+
+        entries.forEach((entry) => {
+          const nameBytes = enc.encode(entry.name);
+          const dataBytes = enc.encode(entry.data);
+          const crc = crc32(dataBytes);
+          const local = new Uint8Array(30 + nameBytes.length + dataBytes.length);
+          const localView = new DataView(local.buffer);
+          localView.setUint32(0, 0x04034b50, true);
+          localView.setUint16(4, 20, true);
+          localView.setUint16(6, 0, true);
+          localView.setUint16(8, 0, true);
+          localView.setUint16(10, 0, true);
+          localView.setUint16(12, 0, true);
+          localView.setUint32(14, crc, true);
+          localView.setUint32(18, dataBytes.length, true);
+          localView.setUint32(22, dataBytes.length, true);
+          localView.setUint16(26, nameBytes.length, true);
+          localView.setUint16(28, 0, true);
+          local.set(nameBytes, 30);
+          local.set(dataBytes, 30 + nameBytes.length);
+          localParts.push(local);
+
+          const central = new Uint8Array(46 + nameBytes.length);
+          const centralView = new DataView(central.buffer);
+          centralView.setUint32(0, 0x02014b50, true);
+          centralView.setUint16(4, 20, true);
+          centralView.setUint16(6, 20, true);
+          centralView.setUint16(8, 0, true);
+          centralView.setUint16(10, 0, true);
+          centralView.setUint16(12, 0, true);
+          centralView.setUint16(14, 0, true);
+          centralView.setUint32(16, crc, true);
+          centralView.setUint32(20, dataBytes.length, true);
+          centralView.setUint32(24, dataBytes.length, true);
+          centralView.setUint16(28, nameBytes.length, true);
+          centralView.setUint16(30, 0, true);
+          centralView.setUint16(32, 0, true);
+          centralView.setUint16(34, 0, true);
+          centralView.setUint16(36, 0, true);
+          centralView.setUint32(38, 0, true);
+          centralView.setUint32(42, offset, true);
+          central.set(nameBytes, 46);
+          centralParts.push(central);
+
+          offset += local.length;
+        });
+
+        const centralSize = centralParts.reduce((sum, part) => sum + part.length, 0);
+        const end = new Uint8Array(22);
+        const endView = new DataView(end.buffer);
+        endView.setUint32(0, 0x06054b50, true);
+        endView.setUint16(4, 0, true);
+        endView.setUint16(6, 0, true);
+        endView.setUint16(8, entries.length, true);
+        endView.setUint16(10, entries.length, true);
+        endView.setUint32(12, centralSize, true);
+        endView.setUint32(16, offset, true);
+        endView.setUint16(20, 0, true);
+
+        return new Blob([...localParts, ...centralParts, end], { type: "application/hwp+zip" });
+      }
+
+      function buildHwpxLegacy(values) {
+        const title = `${values.program} 운영 계획(안)`;
+        const docText = [
+          `제목: ${title}`,
+          ``,
+          `1. 기안 부서`,
+          `${values.dept}`,
+          ``,
+          `2. 기안 배경`,
+          `${values.request}`,
+          ``,
+          `3. 주요 내용`,
+          `- 일시: ${values.schedule}`,
+          `- 장소: ${values.venue}`,
+          `- 대상: ${values.audience}`,
+          `- 소요예산: ${values.budgetTotal} (${values.budgetItems})`,
+          ``,
+          `4. 검토사항`,
+          `- 행사 운영 관련 예산 세목 및 집행 기준 확인 필요`,
+          `- 장소 사용 가능 여부 및 기자재 지원 사항 확인 필요`,
+          `- 참석 대상 확정 후 세부 운영 계획 보완 필요`,
+          ``,
+          `5. 결재 요청`,
+          `상기와 같이 ${values.program} 운영 계획(안)에 대하여 내부결재를 요청드림.`,
+          ``,
+          `기안자: ${values.drafter}`
+        ].join("\n");
+
+        const escapedTitle = escapeXml(title);
+        const escapedText = escapeXml(docText);
+        const contentHpf = `<?xml version="1.0" encoding="UTF-8"?>
+<opf:package xmlns:opf="http://www.idpf.org/2007/opf" version="1.0" unique-identifier="uid">
+  <opf:metadata>
+    <opf:title>${escapedTitle}</opf:title>
+    <opf:language>ko-KR</opf:language>
+    <opf:creator>${escapeXml(values.drafter)}</opf:creator>
+  </opf:metadata>
+  <opf:manifest>
+    <opf:item id="header" href="Contents/header.xml" media-type="application/xml"/>
+    <opf:item id="section0" href="Contents/section0.xml" media-type="application/xml"/>
+    <opf:item id="settings" href="settings.xml" media-type="application/xml"/>
+  </opf:manifest>
+  <opf:spine>
+    <opf:itemref idref="section0"/>
+  </opf:spine>
+</opf:package>`;
+        const headerXml = `<?xml version="1.0" encoding="UTF-8"?>
+<hh:header xmlns:hh="http://www.hancom.co.kr/hwpml/2011/head">
+  <hh:beginNum page="1" footnote="1" endnote="1" pic="1" tbl="1" equation="1"/>
+</hh:header>`;
+        const sectionXml = `<?xml version="1.0" encoding="UTF-8"?>
+<hs:section xmlns:hs="http://www.hancom.co.kr/hwpml/2011/section">
+  <hs:p><hs:run>${escapedText.replace(/\n/g, "&#10;")}</hs:run></hs:p>
+</hs:section>`;
+        const settingsXml = `<?xml version="1.0" encoding="UTF-8"?><settings/>`;
+        const versionXml = `<?xml version="1.0" encoding="UTF-8"?><version app="Codex Demo" format="HWPX" version="1.0"/>`;
+        const containerXml = `<?xml version="1.0" encoding="UTF-8"?>
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="Contents/content.hpf" media-type="application/oebps-package+xml"/>
+  </rootfiles>
+</container>`;
+
+        const blob = createStoredZip([
+          { name: "mimetype", data: "application/hwp+zip" },
+          { name: "version.xml", data: versionXml },
+          { name: "settings.xml", data: settingsXml },
+          { name: "META-INF/container.xml", data: containerXml },
+          { name: "Contents/content.hpf", data: contentHpf },
+          { name: "Contents/header.xml", data: headerXml },
+          { name: "Contents/section0.xml", data: sectionXml }
+        ]);
+
+        latestHwpxBlob = blob;
+        latestHwpxName = `${sanitizeFileName(values.program)}_결재초안.hwpx`;
+        return { blob, fileName: latestHwpxName, title, docText };
+      }
+
+      function normalizeTemplateText(value) {
+        if (typeof value === "string") return value;
+        if (value && typeof value.value === "string") return value.value;
+        throw new Error("Invalid HWPX template entry");
+      }
+
+      function buildHwpx(values) {
+        const template = window.HWPX_TEMPLATE;
+        if (!template) throw new Error("HWPX template data not loaded");
+        const sectionBase = normalizeTemplateText(template.section0);
+        const headerXml = normalizeTemplateText(template.header);
+        const contentBase = normalizeTemplateText(template.contentHpf);
+        const versionXml = normalizeTemplateText(template.version);
+        const settingsXml = normalizeTemplateText(template.settings);
+        const containerXml = normalizeTemplateText(template.containerXml);
+        const manifestXml = normalizeTemplateText(template.manifestXml);
+        const containerRdf = normalizeTemplateText(template.containerRdf);
+
+        const title = `${values.program} 운영 계획(안)`;
+        const docText = [
+          `제목: ${title}`,
+          ``,
+          `1. 기안 부서`,
+          `${values.dept}`,
+          ``,
+          `2. 기안 배경`,
+          `${values.request}`,
+          ``,
+          `3. 주요 내용`,
+          `- 일시: ${values.schedule}`,
+          `- 장소: ${values.venue}`,
+          `- 대상: ${values.audience}`,
+          `- 소요예산: ${values.budgetTotal} (${values.budgetItems})`,
+          ``,
+          `4. 검토사항`,
+          `- 행사 운영 관련 예산 세목 및 집행 기준 확인 필요`,
+          `- 장소 사용 가능 여부 및 기자재 지원 사항 확인 필요`,
+          `- 참석 대상 확정 후 공람 문안 보완 필요`,
+          ``,
+          `5. 결재 요청`,
+          `위와 같이 ${title}에 대하여 내부결재를 요청드림.`,
+          ``,
+          `기안자: ${values.drafter}`
+        ].join("\n");
+
+        const escapedTitle = escapeXml(title);
+        const now = new Date().toISOString();
+        const paragraphs = [
+          { id: 1000000002, para: 0, text: title },
+          { id: 1000000003, para: 0, text: values.dept },
+          { id: 1000000004, para: 0, text: `기안자: ${values.drafter}` },
+          { id: 1000000005, para: 0, text: "1. 기안 배경" },
+          { id: 1000000006, para: 1, text: values.request },
+          { id: 1000000007, para: 0, text: "2. 주요 내용" },
+          { id: 1000000008, para: 1, text: `가. 일시: ${values.schedule}` },
+          { id: 1000000009, para: 1, text: `나. 장소: ${values.venue}` },
+          { id: 1000000010, para: 1, text: `다. 대상: ${values.audience}` },
+          { id: 1000000011, para: 1, text: `라. 소요예산: ${values.budgetTotal} (${values.budgetItems})` },
+          { id: 1000000012, para: 0, text: "3. 검토사항" },
+          { id: 1000000013, para: 1, text: "가. 행사 운영 관련 예산 세목 및 집행 기준 확인 필요" },
+          { id: 1000000014, para: 1, text: "나. 장소 사용 가능 여부 및 기자재 지원 사항 확인 필요" },
+          { id: 1000000015, para: 1, text: "다. 참석 대상 확정 후 공람 문안 보완 필요" },
+          { id: 1000000016, para: 0, text: `위와 같이 ${title}에 대하여 내부결재를 요청드림.` }
+        ];
+
+        const paraXml = paragraphs.map((p) => `  <hp:p id="${p.id}" paraPrIDRef="${p.para}" styleIDRef="0" pageBreak="0" columnBreak="0" merged="0">
+    <hp:run charPrIDRef="0"><hp:t>${escapeXml(p.text)}</hp:t></hp:run>
+  </hp:p>`).join("\n");
+
+        const sectionXml = sectionBase.replace(/\s*<\/hs:sec>\s*$/u, `\n${paraXml}\n</hs:sec>\n`);
+        const contentHpf = contentBase
+          .replace("<opf:title/>", `<opf:title>${escapedTitle}</opf:title>`)
+          .replace('name="creator" content="text"', `name="creator" content="${escapeXml(values.drafter)}"`)
+          .replace('name="subject" content="text"', `name="subject" content="${escapedTitle}"`)
+          .replace('name="description" content="text"', `name="description" content="${escapeXml(values.request)}"`)
+          .replace('name="lastsaveby" content="text"', `name="lastsaveby" content="${escapeXml(values.drafter)}"`)
+          .replace('name="CreatedDate" content="text"', `name="CreatedDate" content="${now}"`)
+          .replace('name="ModifiedDate" content="text"', `name="ModifiedDate" content="${now}"`)
+          .replace('name="date" content="text"', `name="date" content="${now}"`)
+          .replace('name="keyword" content="text"', `name="keyword" content="${escapeXml(values.program)}"`);
+
+        const blob = createStoredZip([
+          { name: "mimetype", data: "application/hwp+zip" },
+          { name: "version.xml", data: versionXml },
+          { name: "settings.xml", data: settingsXml },
+          { name: "META-INF/container.xml", data: containerXml },
+          { name: "META-INF/manifest.xml", data: manifestXml },
+          { name: "META-INF/container.rdf", data: containerRdf },
+          { name: "Preview/PrvText.txt", data: docText },
+          { name: "Contents/content.hpf", data: contentHpf },
+          { name: "Contents/header.xml", data: headerXml },
+          { name: "Contents/section0.xml", data: sectionXml }
+        ]);
+
+        latestHwpxBlob = blob;
+        latestHwpxName = `${sanitizeFileName(values.program)}_결재초안.hwpx`;
+        return { blob, fileName: latestHwpxName, title, docText };
+      }
+
+      function downloadBlob(blob, fileName) {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      function sendEmailDraft() {
+        const values = getDemoValues();
+        const built = buildHwpx(values);
+        downloadBlob(built.blob, built.fileName);
+        const subject = encodeURIComponent(`[서울대학교] ${built.title} 공람 요청`);
+        const body = encodeURIComponent(
+          `${values.dept} ${values.drafter}입니다.\n\n` +
+          `${built.title} 관련 HWPX 초안을 생성했습니다.\n` +
+          `브라우저 보안 제약으로 첨부는 자동 처리되지 않아 방금 내려받은 파일(${built.fileName})을 첨부해 주시면 됩니다.\n\n` +
+          `주요 내용:\n- 일정: ${values.schedule}\n- 장소: ${values.venue}\n- 대상: ${values.audience}\n- 소요예산: ${values.budgetTotal}\n\n검토 부탁드립니다.`
+        );
+        window.location.href = `mailto:${encodeURIComponent(values.email)}?subject=${subject}&body=${body}`;
+        agentStatus.textContent = "HWPX를 내려받고 메일 초안을 열었습니다";
+      }
+
+      function clearDemoTimers() {
+        demoTimerIds.forEach((id) => clearTimeout(id));
+        demoTimerIds = [];
+      }
+
+      function setList(el, items) {
+        el.innerHTML = "";
+        items.forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = item;
+          el.appendChild(li);
+        });
+      }
+
+      function addLog(title, body) {
+        const entry = document.createElement("div");
+        entry.className = "agent-log-entry";
+        entry.innerHTML = "<strong>" + title + "</strong>" + body;
+        agentLog.appendChild(entry);
+        agentLog.scrollTop = agentLog.scrollHeight;
+      }
+
+      function resetDemoContent() {
+        const values = getDemoValues();
+        clearDemoTimers();
+        agentLog.innerHTML = "";
+        agentStatus.textContent = "시현 대기 중";
+        agentDocIntro.textContent = "버튼을 누르면 에이전트가 요청을 분석하고 결재문 초안을 작성합니다.";
+        docStatus.textContent = "대기";
+        docTitle.textContent = "시현을 시작하면 제목이 자동 작성됩니다.";
+        docBackground.textContent = "요청 해석 단계 전입니다.";
+        document.getElementById("docDept").textContent = values.dept;
+        setList(docBullets, ["행사 개요, 대상, 일정, 소요예산이 이 영역에 정리됩니다."]);
+        setList(docChecks, ["예산 기준, 장소 사용, 결재선 검토 항목이 이 영역에 표시됩니다."]);
+      }
+
+      function runApprovalDemo() {
+        const values = getDemoValues();
+        resetDemoContent();
+        agentStatus.textContent = "요청 분석 중";
+        docStatus.textContent = "분석 중";
+        addLog("1단계. 요청 해석", `${values.dept} 기안 요청에서 행사명, 대상, 일정, 예산 집행 필요 여부를 추출합니다.`);
+
+        demoTimerIds.push(setTimeout(() => {
+          agentStatus.textContent = "규정 체크 중";
+          addLog("2단계. 검토사항 정리", `${values.budgetItems} 관련 집행 기준과 장소 사용, 참석 대상 확정 여부를 검토사항으로 정리합니다.`);
+          agentDocIntro.textContent = "에이전트가 요청 해석을 완료하고 결재문 구조를 세팅했습니다.";
+          docBackground.textContent = values.request;
+          setList(docChecks, [
+            `${values.budgetItems} 집행 기준 적정 여부 확인`,
+            `${values.venue} 사용 가능 여부 및 기자재 지원 필요 여부 점검`,
+            `${values.audience} 대상 확정 후 운영 안내 문안 재확인`
+          ]);
+        }, 900));
+
+        demoTimerIds.push(setTimeout(() => {
+          agentStatus.textContent = "초안 작성 중";
+          docStatus.textContent = "초안 생성";
+          addLog("3단계. 결재문 초안 작성", "서울대 내부결재문 톤에 맞게 제목, 기안 배경, 주요 내용, 소요예산, 검토사항을 문서 형식으로 작성합니다.");
+          docTitle.textContent = `${values.program} 운영 계획(안)`;
+          setList(docBullets, [
+            `주관부서: ${values.dept}`,
+            `일시: ${values.schedule}`,
+            `장소: ${values.venue}`,
+            `대상: ${values.audience}`,
+            `소요예산: ${values.budgetTotal} (${values.budgetItems})`
+          ]);
+        }, 1800));
+
+        demoTimerIds.push(setTimeout(() => {
+          agentStatus.textContent = "검토 포인트 정리 완료";
+          docStatus.textContent = "사람 검토 필요";
+          addLog("4단계. 사람 검토 요청", "비어 있는 근거와 확정 전 항목을 표시하고 담당자 확인이 필요한 포인트를 남깁니다.");
+          setList(docChecks, [
+            "예산 세목 코드 및 집행 가능 예산 재확인 필요",
+            "참석 대상 및 공문 발송 범위 최종 확정 필요",
+            "행사 운영 세부안 확정 후 내부 공람 문안 보완 필요"
+          ]);
+        }, 2700));
+      }
+
+      function openDemo() {
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        runApprovalDemo();
+      }
+
+      function closeDemo() {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+        clearDemoTimers();
+      }
+
+      hydrateDemoContent();
+
+      prevBtn.addEventListener("click", () => { if (idx > 0) { idx -= 1; render(); } });
+      nextBtn.addEventListener("click", () => { if (idx < slides.length - 1) { idx += 1; render(); } });
+      picker.addEventListener("change", () => { idx = Number(picker.value); render(); });
+      Array.from(document.querySelectorAll("[data-open-demo]")).forEach((button) => button.addEventListener("click", openDemo));
+      closeDemoBtn.addEventListener("click", closeDemo);
+      document.getElementById("agentReset").addEventListener("click", runApprovalDemo);
+      document.getElementById("downloadHwpx").addEventListener("click", () => {
+        const built = buildHwpx(getDemoValues());
+        downloadBlob(built.blob, built.fileName);
+        agentStatus.textContent = "HWPX 파일을 생성했습니다";
+      });
+      document.getElementById("emailHwpx").addEventListener("click", sendEmailDraft);
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeDemo();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("open")) {
+          closeDemo();
+          return;
+        }
+        if (e.key === "ArrowLeft") { if (idx > 0) { idx -= 1; render(); } }
+        if (e.key === "ArrowRight") { if (idx < slides.length - 1) { idx += 1; render(); } }
+        if (e.key === "Home") { idx = 0; render(); }
+        if (e.key === "End") { idx = slides.length - 1; render(); }
+      });
+
+      resetDemoContent();
+      render();
+    })();
+  </script>
+</body>
+</html>
