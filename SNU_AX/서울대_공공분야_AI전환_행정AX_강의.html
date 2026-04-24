@@ -2221,8 +2221,9 @@
     <button id="prevBtn">이전</button>
     <span id="position">1 / 28</span>
     <button id="nextBtn">다음</button>
+    <button id="fullscreenBtn" type="button">전체화면</button>
     <select id="slidePicker"></select>
-    <span>키보드: ← → / Home End</span>
+    <span>키보드: ← → / Home End / F</span>
   </div>
 
   <script src="./hwpx_template_data.js"></script>
@@ -2246,6 +2247,7 @@
       const position = document.getElementById("position");
       const prevBtn = document.getElementById("prevBtn");
       const nextBtn = document.getElementById("nextBtn");
+      const fullscreenBtn = document.getElementById("fullscreenBtn");
       const picker = document.getElementById("slidePicker");
       const modal = document.getElementById("agentModal");
       const openDemoButtons = Array.from(document.querySelectorAll("[data-open-demo]"));
@@ -2282,6 +2284,28 @@
         picker.value = String(idx);
         prevBtn.disabled = idx === 0;
         nextBtn.disabled = idx === slides.length - 1;
+      }
+
+      function isDeckFullscreen() {
+        return document.fullscreenElement === deck;
+      }
+
+      function updateFullscreenButton() {
+        if (!fullscreenBtn) return;
+        fullscreenBtn.textContent = isDeckFullscreen() ? "전체화면 종료" : "전체화면";
+      }
+
+      async function toggleFullscreen() {
+        if (!document.fullscreenEnabled) {
+          agentStatus.textContent = "이 브라우저에서는 전체화면을 지원하지 않습니다";
+          return;
+        }
+
+        if (isDeckFullscreen()) {
+          await document.exitFullscreen();
+        } else {
+          await deck.requestFullscreen();
+        }
       }
 
       function escapeXml(value) {
@@ -2759,6 +2783,11 @@
 
       prevBtn.addEventListener("click", () => { if (idx > 0) { idx -= 1; render(); } });
       nextBtn.addEventListener("click", () => { if (idx < slides.length - 1) { idx += 1; render(); } });
+      fullscreenBtn.addEventListener("click", () => {
+        toggleFullscreen().catch(() => {
+          agentStatus.textContent = "전체화면 전환 중 오류가 발생했습니다";
+        });
+      });
       picker.addEventListener("change", () => { idx = Number(picker.value); render(); });
       Array.from(document.querySelectorAll("[data-open-demo]")).forEach((button) => button.addEventListener("click", openDemo));
       closeDemoBtn.addEventListener("click", closeDemo);
@@ -2778,13 +2807,23 @@
           closeDemo();
           return;
         }
+        if ((e.key === "f" || e.key === "F") && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName)) {
+          e.preventDefault();
+          toggleFullscreen().catch(() => {
+            agentStatus.textContent = "전체화면 전환 중 오류가 발생했습니다";
+          });
+          return;
+        }
         if (e.key === "ArrowLeft") { if (idx > 0) { idx -= 1; render(); } }
         if (e.key === "ArrowRight") { if (idx < slides.length - 1) { idx += 1; render(); } }
         if (e.key === "Home") { idx = 0; render(); }
         if (e.key === "End") { idx = slides.length - 1; render(); }
       });
 
+      document.addEventListener("fullscreenchange", updateFullscreenButton);
+
       resetDemoContent();
+      updateFullscreenButton();
       render();
     })();
   </script>
