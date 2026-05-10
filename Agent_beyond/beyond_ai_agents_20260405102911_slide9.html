@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -28,7 +28,225 @@
     .stat-value { font-size: 24px; font-weight: 700; color: #3b82f6; line-height: 1.1; }
     .source { position: absolute; bottom: 18px; right: 64px; font-size: 12px; color: #94a3b8; }
     .highlight { color: #3b82f6; font-weight: 600; }
-  </style>
+    /* codex-light-override */
+    body {
+      background: #ffffff !important;
+      color: #172033 !important;
+    }
+
+    .slide-container {
+      background: linear-gradient(180deg, #fbfdff 0%, #eef4fb 58%, #e9f0fa 100%) !important;
+      color: #172033 !important;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .slide-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 12px;
+      background: linear-gradient(90deg, #1d4ed8 0%, #60a5fa 52%, #8ec5ff 100%);
+      z-index: 0;
+    }
+
+    .slide-container::after {
+      content: '';
+      position: absolute;
+      top: 28px;
+      right: 28px;
+      width: 320px;
+      height: 180px;
+      background: radial-gradient(circle, rgba(96, 165, 250, 0.14) 0%, rgba(96, 165, 250, 0.04) 48%, transparent 74%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .slide-container :is(div, span, p, li, label, strong, em, a, td, th, small) {
+      color: #172033 !important;
+    }
+
+    h1, h2, h3, h4, h5, h6,
+    .title, .main-title, .slide-title, .header-title, .timeline-title,
+    .phase-title, .card-title, .pillar-title, .vision-title,
+    .action-title, .presenter-name, .presenter-org,
+    .logo-text, .qr-label {
+      color: #11203d !important;
+      text-shadow: none !important;
+      -webkit-text-fill-color: currentColor !important;
+    }
+
+    .main-title {
+      letter-spacing: -2px !important;
+      line-height: 0.98 !important;
+    }
+
+    .subtitle, .slide-subtitle, .header-subtitle, .subtitle-main, .subtitle-desc,
+    .phase-subtitle, .phase-description, .card-subtitle, .card-desc,
+    .bullet-text, .item-text, .milestone-text, .stat-label,
+    .source, .source-text, .source-note, .source-citation, .footer-text,
+    .partner-desc, .vision-desc, .action-desc,
+    .logo-subtext, .qr-subtext, .checkbox-label,
+    .text-gray-300, .text-gray-400, .text-gray-500 {
+      color: #62748d !important;
+    }
+
+    .subtitle-highlight, .highlight, .bullet-highlight, .source-tag, .tag,
+    .title-icon, .item-icon, .bullet-icon, .bullet-dot, .milestone-icon,
+    .phase-icon, .pillar-icon, .vision-icon, .card-icon,
+    .date-badge, .source-badge, .audience-badge {
+      color: #2563eb !important;
+    }
+
+    .card,
+    .glass-panel,
+    .section-card,
+    .model-card,
+    .phase-card,
+    .action-item,
+    .pillar-card,
+    .vision-card,
+    .presenter-panel,
+    .subtitle-container,
+    .journey-card,
+    .stat-item,
+    .research-flow,
+    .flow-step,
+    .milestone-item,
+    .bullet-item,
+    .implication-box,
+    .partner-node,
+    .layer-card,
+    .benefit-card,
+    .checklist-item,
+    .roadmap-card,
+    .source-panel,
+    .highlight-panel,
+    .metric-card,
+    .capability-card,
+    .timeline-card,
+    .content-item,
+    .qr-panel,
+    .audience-badge,
+    .citation-note,
+    .date-badge,
+    .source-badge,
+    .urgency-badge,
+    .status-tag,
+    .partner-card,
+    .phase-box,
+    .info-card,
+    .feature-card {
+      background: rgba(255, 255, 255, 0.92) !important;
+      border: 1px solid rgba(191, 219, 254, 0.95) !important;
+      box-shadow: 0 14px 30px rgba(148, 163, 184, 0.16) !important;
+      color: #172033 !important;
+      backdrop-filter: none !important;
+    }
+
+    .card :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .glass-panel :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .section-card :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .model-card :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .phase-card :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .action-item :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .subtitle-container :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .presenter-panel :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .source-badge :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .date-badge :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .audience-badge :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .citation-note :is(div, span, p, li, label, strong, em, a, td, th, small),
+    .qr-panel :is(div, span, p, li, label, strong, em, a, td, th, small) {
+      color: #172033 !important;
+    }
+
+    .logo-icon,
+    .icon,
+    .icon-1,
+    .icon-2,
+    .icon-3,
+    .card-icon,
+    .phase-icon,
+    .pillar-icon,
+    .vision-icon {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%) !important;
+      color: #1d4ed8 !important;
+      box-shadow: none !important;
+    }
+
+    .date-badge,
+    .source-badge,
+    .audience-badge,
+    .citation-note,
+    .qr-panel {
+      border-radius: 16px !important;
+    }
+
+    .urgency-badge,
+    .urgency-badge * {
+      background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 100%) !important;
+      color: #be123c !important;
+      border-color: rgba(244, 114, 182, 0.35) !important;
+    }
+
+    .status-active,
+    .status-active * {
+      background: #ecfdf3 !important;
+      color: #16a34a !important;
+    }
+
+    .status-pending,
+    .status-pending * {
+      background: #fff7ed !important;
+      color: #ea580c !important;
+    }
+
+    .action-number {
+      background: #2563eb !important;
+      color: #ffffff !important;
+      box-shadow: none !important;
+    }
+
+    .status-dot.active {
+      background: #22c55e !important;
+    }
+
+    .status-dot.pending {
+      background: #f59e0b !important;
+    }
+
+    .journey-line, .connection-line, .grid-overlay, .horizon-layer, .horizon-glow, .geo-shape {
+      opacity: 0.12 !important;
+      border-color: rgba(37, 99, 235, 0.18) !important;
+    }
+
+    .progress-bar {
+      background: rgba(37, 99, 235, 0.10) !important;
+    }
+
+    .progress-fill,
+    .connection-line {
+      background: linear-gradient(90deg, #60a5fa 0%, #2563eb 100%) !important;
+    }
+
+    .footer-btn.secondary,
+    .footer-btn.primary {
+      border-radius: 999px !important;
+      box-shadow: none !important;
+    }
+
+    .footer-btn.secondary {
+      background: #eff6ff !important;
+      border: 1px solid #bfdbfe !important;
+      color: #1d4ed8 !important;
+    }
+
+    .footer-btn.primary {
+      background: linear-gradient(90deg, #2563eb 0%, #60a5fa 100%) !important;
+      color: #ffffff !important;
+    }</style>
 </head>
 <body>
   <div class="slide-container">
@@ -107,11 +325,11 @@
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 18px;">
             <div style="min-width: 0;">
               <div style="font-size: 16px; font-weight: 600; color: #1e293b; margin-bottom: 8px;">Key Challenges</div>
-              <div style="font-size: 14px; color: #64748b; line-height: 1.5;">Organizations struggle with fragmented adoption, creating a <span class="highlight">2.84x performance gap</span> between structured and unstructured AI implementations.</div>
+              <div style="font-size: 14px; color: #64748b; line-height: 1.5;">Organizations often adopt AI in fragmented ways. Firms with <span class="highlight">structured, organization-wide implementation</span> can realize up to a <span class="highlight">2.84x performance advantage</span> over scattered, uncoordinated adoption.</div>
             </div>
             <div style="text-align: right; flex: 0 0 auto;">
               <div style="font-size: 24px; font-weight: 700; color: #3b82f6; line-height: 1;">2.84x</div>
-              <div style="font-size: 12px; color: #64748b;">Performance gap</div>
+              <div style="font-size: 12px; color: #64748b;">Structured adoption advantage</div>
             </div>
           </div>
         </div>
@@ -122,8 +340,10 @@
           </div>
         </div>
       </div>
-      <div class="source">Source: Microsoft Keynote on AI-Ready Organizations, 2024</div>
     </div>
   </div>
 </body>
 </html>
+
+
+

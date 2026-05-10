@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Beyond AI Agents - Unified Deck</title>
+  <title>Beyond the Age of AI Agents - Restructured Deck</title>
   <style>
     :root {
       --bg: #f4f7fb;
@@ -134,60 +134,6 @@
       background: #ffffff;
     }
 
-    @media print {
-      html, body {
-        height: auto;
-        overflow: visible;
-        background: #ffffff;
-      }
-
-      body {
-        display: block;
-      }
-
-      .topbar {
-        display: block;
-        padding: 0 0 12px;
-        border-bottom: none;
-        background: #ffffff;
-        backdrop-filter: none;
-      }
-
-      .title {
-        padding: 0 0 10px;
-      }
-
-      .title-main {
-        font-size: 18px;
-      }
-
-      .title-sub,
-      .controls,
-      .meta {
-        display: none;
-      }
-
-      .viewer-wrap {
-        overflow: visible;
-        padding: 0;
-        display: block;
-      }
-
-      .canvas {
-        width: 1280px !important;
-        height: 720px !important;
-        margin: 0 auto;
-        border: none;
-        border-radius: 0;
-        box-shadow: none;
-        background: #ffffff;
-      }
-
-      iframe {
-        transform: none !important;
-      }
-    }
-
     @media (max-width: 900px) {
       .topbar {
         grid-template-columns: 1fr;
@@ -214,7 +160,7 @@
   <div class="topbar">
     <div class="title">
       <div class="title-main">Beyond the Age of AI Agents</div>
-      <div class="title-sub">Light presentation viewer optimized for screen sharing and print-friendly export</div>
+      <div class="title-sub">14-slide consolidated deck focused on organizational change, university AX, leadership, labor, and roadmap</div>
     </div>
     <div class="controls">
       <button id="prevBtn">Prev</button>
@@ -230,20 +176,27 @@
 
   <div class="viewer-wrap" id="viewerWrap">
     <div class="canvas" id="canvas">
-      <iframe id="slideFrame" title="Unified slides"></iframe>
+      <iframe id="slideFrame" title="Restructured slides"></iframe>
     </div>
   </div>
 
   <script>
     const BASE_W = 1280;
     const BASE_H = 720;
-    const prefix = "beyond_ai_agents_20260405102911_slide";
-    const extension = ".html";
-    const assetVersion = "20260501b";
-    const slideNumbers = [
-      1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17,
-      18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-      32, 33, 34
+    const slides = [
+      { label: "1. Cover", src: "../beyond_ai_agents_20260405102911_slide1.html?v=20260510a", origin: "original slide 1" },
+      { label: "2. Why This Shift Matters: From LLMs to Agent Systems", src: "../beyond_ai_agents_20260405102911_slide2.html?v=20260510a", origin: "original slide 2" },
+      { label: "3. Why Organizations Still Struggle to Use AI Well", src: "../beyond_ai_agents_20260405102911_slide9.html?v=20260510a", origin: "original slide 9" },
+      { label: "4. From AI Adoption to AI-Ready Organizations", src: "../beyond_ai_agents_20260405102911_slide11.html?v=20260510a", origin: "original slide 11" },
+      { label: "5. Human + Agent Teaming and Organizational Change", src: "../beyond_ai_agents_20260405102911_slide12.html?v=20260510a", origin: "original slide 12" },
+      { label: "6. Leadership, Governance, and AI Agents with Leadership", src: "leadership_agents.html?v=20260510a", origin: "new integrated slide" },
+      { label: "7. The AI-Native Campus Vision", src: "../beyond_ai_agents_20260405102911_slide17.html?v=20260510a", origin: "original slide 17" },
+      { label: "8. University AX in Practice", src: "university_ax_summary.html?v=20260510a", origin: "new integrated slide" },
+      { label: "9. Risks, Limits, and Trust", src: "risks_trust.html?v=20260510a", origin: "new integrated slide" },
+      { label: "10. What Comes After Today's Agents", src: "../beyond_ai_agents_20260405102911_slide26.html?v=20260510a", origin: "original slide 26" },
+      { label: "11. The Future of Work: Skills, Labor, and Managed Agent Systems", src: "future_work_leadership.html?v=20260510a", origin: "new integrated slide" },
+      { label: "12. Strategic Roadmap", src: "../beyond_ai_agents_20260405102911_slide31.html?v=20260510a", origin: "original slide 31" },
+      { label: "13. Call to Action", src: "../beyond_ai_agents_20260405102911_slide32.html?v=20260510a", origin: "original slide 32" }
     ];
 
     const frame = document.getElementById("slideFrame");
@@ -256,16 +209,12 @@
     let idx = 0;
     let userZoom = isMobile ? 1.35 : 1.0;
 
-    function fileFor(n) {
-      return `${prefix}${n}${extension}?v=${assetVersion}`;
-    }
-
     function renderOptions() {
       select.innerHTML = "";
-      slideNumbers.forEach((n, i) => {
+      slides.forEach((slide, i) => {
         const opt = document.createElement("option");
         opt.value = String(i);
-        opt.textContent = `Slide ${n}`;
+        opt.textContent = slide.label;
         select.appendChild(opt);
       });
     }
@@ -282,7 +231,6 @@
       const scale = fit * userZoom;
       canvas.style.width = `${BASE_W * scale}px`;
       canvas.style.height = `${BASE_H * scale}px`;
-      canvas.style.borderRadius = `${Math.max(6, 12 * Math.min(1, scale))}px`;
       frame.style.transformOrigin = "top left";
       frame.style.transform = `scale(${scale})`;
       frame.style.width = `${BASE_W}px`;
@@ -291,28 +239,23 @@
     }
 
     function updateMeta() {
-      const n = slideNumbers[idx];
-      metaText.textContent = `${idx + 1}/${slideNumbers.length} | original slide ${n} | zoom ${Math.round(userZoom * 100)}%`;
-      document.title = `Slide ${n} - Unified Deck`;
+      const slide = slides[idx];
+      metaText.textContent = `${idx + 1}/${slides.length} | ${slide.origin} | zoom ${Math.round(userZoom * 100)}%`;
+      document.title = `${slide.label} - Consolidated Deck`;
     }
 
     function setSlide(newIdx) {
-      if (newIdx < 0 || newIdx >= slideNumbers.length) return;
+      if (newIdx < 0 || newIdx >= slides.length) return;
       idx = newIdx;
-      const n = slideNumbers[idx];
-      frame.src = fileFor(n);
+      const slide = slides[idx];
+      frame.src = slide.src;
       select.value = String(idx);
       updateMeta();
-      history.replaceState(null, "", `#slide=${n}`);
+      history.replaceState(null, "", `#slide=${idx + 1}`);
     }
 
-    function next() {
-      setSlide(Math.min(idx + 1, slideNumbers.length - 1));
-    }
-
-    function prev() {
-      setSlide(Math.max(idx - 1, 0));
-    }
+    function next() { setSlide(Math.min(idx + 1, slides.length - 1)); }
+    function prev() { setSlide(Math.max(idx - 1, 0)); }
 
     function zoomIn() {
       userZoom = Math.min(2.4, +(userZoom + 0.1).toFixed(2));
@@ -329,65 +272,50 @@
       applyScale();
     }
 
-    document.getElementById("nextBtn").addEventListener("click", next);
+    async function toggleFullscreen() {
+      try {
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen();
+        } else {
+          await document.exitFullscreen();
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     document.getElementById("prevBtn").addEventListener("click", prev);
+    document.getElementById("nextBtn").addEventListener("click", next);
     document.getElementById("zoomInBtn").addEventListener("click", zoomIn);
     document.getElementById("zoomOutBtn").addEventListener("click", zoomOut);
     document.getElementById("fitBtn").addEventListener("click", zoomFit);
+    document.getElementById("fullscreenBtn").addEventListener("click", toggleFullscreen);
     select.addEventListener("change", (event) => setSlide(Number(event.target.value)));
-
-    document.getElementById("fullscreenBtn").addEventListener("click", () => {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
-      else document.exitFullscreen?.();
-    });
-
+    window.addEventListener("resize", applyScale);
     window.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowRight" || event.key === " ") {
+      if (["ArrowRight", "PageDown", " "].includes(event.key)) {
         event.preventDefault();
         next();
-      }
-      if (event.key === "ArrowLeft") {
+      } else if (["ArrowLeft", "PageUp"].includes(event.key)) {
         event.preventDefault();
         prev();
-      }
-      if (event.key === "Home") {
-        event.preventDefault();
+      } else if (event.key === "Home") {
         setSlide(0);
-      }
-      if (event.key === "End") {
-        event.preventDefault();
-        setSlide(slideNumbers.length - 1);
-      }
-      if (event.key.toLowerCase() === "f") {
-        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
-        else document.exitFullscreen?.();
-      }
-      if (event.key === "+" || event.key === "=") {
-        event.preventDefault();
+      } else if (event.key === "End") {
+        setSlide(slides.length - 1);
+      } else if (event.key === "+" || event.key === "=") {
         zoomIn();
-      }
-      if (event.key === "-" || event.key === "_") {
-        event.preventDefault();
+      } else if (event.key === "-") {
         zoomOut();
-      }
-      if (event.key === "0") {
-        event.preventDefault();
+      } else if (event.key === "0") {
         zoomFit();
+      } else if (event.key.toLowerCase() === "f") {
+        toggleFullscreen();
       }
     });
 
-    function initFromHash() {
-      const match = location.hash.match(/slide=(\d+)/);
-      if (!match) return 0;
-      const requested = Number(match[1]);
-      const found = slideNumbers.indexOf(requested);
-      return found >= 0 ? found : 0;
-    }
-
-    window.addEventListener("resize", applyScale);
-
     renderOptions();
-    setSlide(initFromHash());
+    setSlide(0);
     applyScale();
   </script>
 </body>

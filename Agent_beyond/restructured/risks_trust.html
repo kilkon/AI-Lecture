@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Risks, Limits, and Trust</title>
+  <link rel="stylesheet" href="restructured.css" />
+  <style>
+    .risks-slide {
+      padding-bottom: 42px;
+    }
+
+    .risks-slide .subtitle {
+      margin-bottom: 16px;
+      font-size: 17px;
+      line-height: 1.38;
+    }
+
+    .risks-slide .grid-2 {
+      gap: 14px;
+    }
+
+    .risks-slide .card {
+      padding: 18px 20px;
+    }
+
+    .risks-slide .card h2 {
+      font-size: 21px;
+      margin-bottom: 8px;
+    }
+
+    .risks-slide .card h3 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .risks-slide .card li {
+      font-size: 14px;
+      line-height: 1.4;
+      margin-top: 7px;
+    }
+
+    .risks-slide .card li::before {
+      top: 8px;
+    }
+
+    .risks-slide .pills {
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .risks-slide .pill {
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+
+    .risks-slide .quote {
+      padding: 14px 16px;
+      font-size: 18px;
+      line-height: 1.28;
+    }
+
+    .risks-slide .footer {
+      bottom: 10px;
+      font-size: 11px;
+    }
+  </style>
+</head>
+<body>
+  <main class="slide risks-slide">
+    <div class="eyebrow">Risk and Trust</div>
+    <h1 class="title">Risks, Limits, and Trust</h1>
+    <p class="subtitle">Trust cannot be treated as a compliance appendix. In agent-based systems, trust is an operational requirement that shapes deployment scope, governance design, and human willingness to rely on the system.</p>
+
+    <section class="grid-2">
+      <article class="card">
+        <h2>1. Reliability and performance</h2>
+        <ul>
+          <li>Hallucinations, brittle reasoning, and weak context retention.</li>
+          <li>Silent failure modes in multi-agent handoffs and tool use.</li>
+          <li>Performance drift as policies, interfaces, and data change over time.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>2. Human agency and labor quality</h2>
+        <ul>
+          <li>Deskilling when people become passive reviewers of machine output.</li>
+          <li>Automation pressure on clerical and support roles.</li>
+          <li>Fatigue and confusion if escalation paths are unclear.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>3. Governance, legal, and data exposure</h2>
+        <ul>
+          <li>Privacy, confidentiality, procurement, and IP risks.</li>
+          <li>Weak accountability when multiple vendors and agents are involved.</li>
+          <li>Regulatory mismatch between fast experimentation and slow oversight.</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>4. Equity, legitimacy, and public trust</h2>
+        <ul>
+          <li>Bias amplification across admissions, grading, HR, or service delivery.</li>
+          <li>Opaque ranking or routing systems that affect people unequally.</li>
+          <li>Loss of institutional legitimacy when appeal channels are weak.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="grid-2" style="margin-top: 14px;">
+      <article class="card">
+        <h3>What trust requires in practice</h3>
+        <div class="pills">
+          <span class="pill">Testing before deployment</span>
+          <span class="pill">Monitoring after deployment</span>
+          <span class="pill">Clear escalation paths</span>
+          <span class="pill">Human override rights</span>
+          <span class="pill">Documented accountability</span>
+          <span class="pill">Periodic red-team review</span>
+        </div>
+      </article>
+
+      <article class="card">
+        <h3>Core leadership question</h3>
+        <div class="quote">The hardest question is not "Can the agent do this?" but "Who is accountable when it fails, and how quickly can the institution recover trust?"</div>
+      </article>
+    </section>
+
+  </main>
+</body>
+</html>
