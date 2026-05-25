@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>국회 AI시대의 데이터활용과 행정조직 대응</title>
+  <style>
+    :root {
+      --bg: #0a1118;
+      --panel: rgba(12, 18, 27, 0.88);
+      --panel-border: rgba(255, 255, 255, 0.12);
+      --text: #eef4f8;
+      --muted: #aebbc6;
+      --accent: #ffb347;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(255, 179, 71, 0.12), transparent 20%),
+        linear-gradient(180deg, #0c121b, #070b11);
+      color: var(--text);
+      font-family: "Malgun Gothic", sans-serif;
+      overflow: hidden;
+    }
+
+    .viewer {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 20px 20px 104px;
+    }
+
+    .slide-frame {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide-image {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      box-shadow: 0 28px 60px rgba(0, 0, 0, 0.45);
+      border-radius: 10px;
+      background: #fff;
+    }
+
+    .toolbar {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      transform: translateX(-50%);
+      width: min(1080px, calc(100vw - 24px));
+      display: grid;
+      grid-template-columns: auto auto minmax(140px, 1fr) minmax(220px, 360px) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 18px;
+      background: var(--panel);
+      border: 1px solid var(--panel-border);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    button,
+    select,
+    a.tool-link {
+      border: 0;
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    button,
+    a.tool-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 11px 16px;
+      text-decoration: none;
+      cursor: pointer;
+      background: #edf2f6;
+      color: #0a1118;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    button.primary {
+      background: var(--accent);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .meta {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .meta-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .meta-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .progress {
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .progress-fill {
+      width: 0;
+      height: 100%;
+      background: linear-gradient(90deg, #ffb347, #ffd27f);
+    }
+
+    select {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--text);
+    }
+
+    .hint {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .topnote {
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      right: 16px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    .badge {
+      pointer-events: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(12, 18, 27, 0.82);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      backdrop-filter: blur(12px);
+      font-size: 13px;
+    }
+
+    .badge strong {
+      color: var(--accent);
+    }
+
+    @media (max-width: 960px) {
+      .toolbar {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .meta,
+      select,
+      .hint {
+        grid-column: 1 / -1;
+      }
+
+      .hint {
+        text-align: left;
+        white-space: normal;
+      }
+
+      .topnote {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="topnote">
+    <div class="badge"><strong>원본 반영</strong> 첨부 PPT 40장을 슬라이드 이미지로 그대로 구성</div>
+    <a class="badge tool-link" href="./summary_reconstructed.html">요약형 재구성 보기</a>
+  </div>
+
+  <div class="viewer">
+    <div class="slide-frame">
+      <img id="slideImage" class="slide-image" alt="슬라이드 이미지" />
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button id="prevBtn">이전</button>
+    <button id="nextBtn" class="primary">다음</button>
+
+    <div class="meta">
+      <div class="meta-top">
+        <span id="positionLabel">1 / 40</span>
+        <span class="meta-title" id="titleLabel">국회 AI시대의 데이터활용과 행정조직 대응</span>
+      </div>
+      <div class="progress"><div id="progressFill" class="progress-fill"></div></div>
+    </div>
+
+    <select id="slidePicker" aria-label="슬라이드 선택"></select>
+    <div class="hint">키보드: ← → Home End Space · 원본 슬라이드 순서 유지</div>
+  </div>
+
+  <script>
+    (function () {
+      const totalSlides = 40;
+      const slides = Array.from({ length: totalSlides }, function (_, index) {
+        return "original_slide_assets/slide_" + String(index + 1).padStart(3, "0") + ".png";
+      });
+
+      const titles = [
+        "AI 시대의 데이터 활용과 행정조직 대응",
+        "도입",
+        "우리는 한국사회를 얼마나 잘 알고 있을까?",
+        "Data Analytics in the era of AI",
+        "AI 시대의 도래",
+        "PART 1 설명과 분석을 위한 데이터 분석",
+        "데이터에 기반한 현실의 이해",
+        "사천시 인구 변화",
+        "월별 인구변동",
+        "인구감소는 사천시만의 문제인가",
+        "AI와 데이터의 연결",
+        "기존 LLM의 한계",
+        "에이전틱 접근 방식",
+        "Korea in Data 도구들",
+        "KOSIS 통계 데이터 수집 및 처리",
+        "예시 처리 흐름",
+        "예시 질문 처리 흐름",
+        "향후 계획",
+        "고령화 비율이 20% 초과인 지역",
+        "서울시 기후동행카드 사례",
+        "혁신도시조성사업 효과 분석",
+        "PART 2 공공조직에 AI 도입",
+        "해외 유사기관 AI 도입 동향",
+        "조직진단 1 전략적 기획 및 리더십",
+        "조직진단 2 데이터 거버넌스",
+        "조직진단 2 데이터 거버넌스 심화",
+        "조직진단 3 인적 역량",
+        "조직진단 4 조직구조 및 문화",
+        "조직진단 4 변화관리",
+        "조직진단 5 법제 및 윤리",
+        "PART 3 예측의 어려움",
+        "미래예측과 세대별 예측",
+        "결정된 미래? 인구예측은 얼마나 정확한가",
+        "미래 기간으로 갈수록 불확실성은 더 커짐",
+        "AI가 더 잘 예측한다?",
+        "AI 미래예측 평가의 다면성",
+        "All models are wrong, but some are useful",
+        "결론을 대신해서",
+        "예측 비용과 사회적 합의",
+        "감사합니다"
+      ];
+
+      const image = document.getElementById("slideImage");
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const picker = document.getElementById("slidePicker");
+      const positionLabel = document.getElementById("positionLabel");
+      const titleLabel = document.getElementById("titleLabel");
+      const progressFill = document.getElementById("progressFill");
+      let current = 0;
+
+      titles.forEach(function (title, index) {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = (index + 1) + ". " + title;
+        picker.appendChild(option);
+      });
+
+      function render() {
+        image.src = slides[current];
+        image.alt = titles[current] || ("슬라이드 " + (current + 1));
+        picker.value = String(current);
+        positionLabel.textContent = (current + 1) + " / " + totalSlides;
+        titleLabel.textContent = titles[current] || "슬라이드";
+        progressFill.style.width = (((current + 1) / totalSlides) * 100) + "%";
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === totalSlides - 1;
+      }
+
+      function moveTo(index) {
+        current = Math.max(0, Math.min(totalSlides - 1, index));
+        render();
+      }
+
+      prevBtn.addEventListener("click", function () { moveTo(current - 1); });
+      nextBtn.addEventListener("click", function () { moveTo(current + 1); });
+      picker.addEventListener("change", function () { moveTo(Number(picker.value)); });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft" || event.key === "PageUp") moveTo(current - 1);
+        if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+          event.preventDefault();
+          moveTo(current + 1);
+        }
+        if (event.key === "Home") moveTo(0);
+        if (event.key === "End") moveTo(totalSlides - 1);
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>

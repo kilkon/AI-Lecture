@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Future uncertainty and diverging scenarios</title>
+  <desc id="desc">A path splits into multiple futures beneath dark storm clouds, symbolizing increasing uncertainty over time.</desc>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef5f8"/>
+      <stop offset="50%" stop-color="#e0ebf1"/>
+      <stop offset="100%" stop-color="#f7fafc"/>
+    </linearGradient>
+    <linearGradient id="storm" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#556b7b"/>
+      <stop offset="100%" stop-color="#2c4353"/>
+    </linearGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#edf4d6"/>
+      <stop offset="100%" stop-color="#dce8b8"/>
+    </linearGradient>
+    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fbf6ef"/>
+      <stop offset="100%" stop-color="#d8c7ae"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#203543" flood-opacity="0.18"/>
+    </filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="720" rx="28" fill="url(#sky)"/>
+  <rect y="520" width="1200" height="200" fill="url(#ground)"/>
+
+  <g opacity="0.5">
+    <line x1="100" y1="560" x2="1120" y2="560" stroke="#d4dee4" stroke-width="3"/>
+    <line x1="100" y1="440" x2="1120" y2="440" stroke="#d4dee4" stroke-width="3"/>
+    <line x1="100" y1="320" x2="1120" y2="320" stroke="#d4dee4" stroke-width="3"/>
+    <line x1="100" y1="200" x2="1120" y2="200" stroke="#d4dee4" stroke-width="3"/>
+  </g>
+
+  <g filter="url(#soft)" opacity="0.32">
+    <ellipse cx="900" cy="210" rx="220" ry="110" fill="#7c93a3"/>
+    <ellipse cx="980" cy="250" rx="180" ry="90" fill="#6d8594"/>
+    <ellipse cx="1040" cy="200" rx="120" ry="70" fill="#596f7f"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <path d="M790 140
+             C846 90 926 80 1006 114
+             C1082 79 1168 130 1178 214
+             C1176 302 1083 340 1017 321
+             C958 352 869 344 820 299
+             C744 299 694 242 706 188
+             C715 149 750 128 790 140 Z"
+          fill="url(#storm)"/>
+    <path d="M744 248
+             C775 221 816 217 852 232
+             C886 210 929 219 952 251
+             C982 237 1021 244 1041 273
+             C1017 316 958 329 914 314
+             C876 334 825 335 790 313
+             C756 315 724 291 718 267
+             C717 257 726 250 744 248 Z"
+          fill="#415767"/>
+  </g>
+
+  <g stroke="#f0c14f" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M926 230 L892 302 L942 300 L904 372"/>
+    <path d="M1036 256 L1006 314 L1048 313 L1017 368"/>
+  </g>
+
+  <path d="M417 719
+           C420 660 442 614 480 574
+           C528 524 594 487 668 460
+           C725 438 784 424 852 414
+           C824 444 791 474 752 502
+           C713 530 668 557 626 592
+           C578 633 547 675 530 719 Z"
+        fill="url(#road)" opacity="0.96"/>
+
+  <path d="M536 719
+           C555 657 593 605 650 560
+           C708 515 784 480 878 455
+           C944 437 1011 426 1096 421
+           C1064 454 1017 489 963 526
+           C903 567 852 608 812 655
+           C793 678 777 698 764 719 Z"
+        fill="url(#road)" opacity="0.94"/>
+
+  <path d="M330 719
+           C332 669 349 625 382 589
+           C422 544 481 510 546 488
+           C591 472 640 462 695 456
+           C670 483 639 512 603 543
+           C565 574 525 607 489 648
+           C468 672 453 694 443 719 Z"
+        fill="url(#road)" opacity="0.86"/>
+
+  <g fill="none" stroke="#b76143" stroke-width="8" stroke-linecap="round">
+    <path d="M468 650 C531 582 611 530 719 482"/>
+    <path d="M602 674 C681 589 789 517 939 466"/>
+    <path d="M404 678 C462 615 531 565 624 522"/>
+  </g>
+
+  <g fill="#2f6f8a">
+    <circle cx="470" cy="649" r="8"/>
+    <circle cx="604" cy="674" r="8"/>
+    <circle cx="404" cy="678" r="8"/>
+    <circle cx="721" cy="482" r="7"/>
+    <circle cx="938" cy="466" r="7"/>
+    <circle cx="624" cy="522" r="7"/>
+  </g>
+
+  <g fill="#172533" font-family="Pretendard Variable, SUIT Variable, sans-serif">
+    <text x="88" y="86" font-size="28" font-weight="700">Forecast uncertainty rises over time</text>
+    <text x="104" y="620" font-size="22" font-weight="700">Present</text>
+    <text x="1010" y="618" font-size="22" font-weight="700">Future</text>
+    <text x="818" y="118" font-size="22" font-weight="700" fill="#324858">Scenario shock</text>
+    <text x="805" y="146" font-size="18" fill="#536776">policy, market, behavior, external events</text>
+  </g>
+</svg>

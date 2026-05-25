@@ -1,0 +1,1367 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI 시대의 데이터 활용과 행정조직 대응</title>
+  <style>
+    :root {
+      --bg: #08141f;
+      --bg-2: #10283a;
+      --panel: #f7f2e8;
+      --panel-2: #fffaf3;
+      --ink: #152230;
+      --muted: #5f6f7d;
+      --accent: #d95d39;
+      --accent-2: #1f7a8c;
+      --accent-3: #f1a208;
+      --danger: #b33a3a;
+      --shadow: 0 26px 70px rgba(0, 0, 0, 0.34);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      font-family: "Pretendard Variable", "SUIT Variable", "Malgun Gothic", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(241, 162, 8, 0.18), transparent 24%),
+        radial-gradient(circle at 85% 18%, rgba(31, 122, 140, 0.18), transparent 20%),
+        linear-gradient(135deg, var(--bg), var(--bg-2));
+      color: var(--ink);
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      border-radius: 999px;
+      pointer-events: none;
+      filter: blur(6px);
+      opacity: 0.55;
+      z-index: 0;
+    }
+
+    body::before {
+      width: 360px;
+      height: 360px;
+      left: -120px;
+      top: -120px;
+      background: rgba(241, 162, 8, 0.12);
+    }
+
+    body::after {
+      width: 320px;
+      height: 320px;
+      right: -100px;
+      bottom: 42px;
+      background: rgba(217, 93, 57, 0.12);
+    }
+
+    .deck-shell {
+      position: relative;
+      z-index: 1;
+      width: 100vw;
+      height: 100vh;
+      padding: 18px 18px 96px;
+      display: grid;
+      place-items: center;
+    }
+
+    .slide {
+      display: none;
+      position: relative;
+      width: min(1280px, 96vw, calc((100vh - 132px) * 1.7778));
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(180deg, var(--panel-2), var(--panel));
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .slide.active { display: block; }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(31, 122, 140, 0.09), transparent 24%),
+        radial-gradient(circle at right top, rgba(217, 93, 57, 0.11), transparent 22%);
+      pointer-events: none;
+    }
+
+    .slide-inner {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      padding: clamp(24px, 3vw, 40px);
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 2vw, 22px);
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .eyebrow,
+    .counter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: clamp(12px, 1.15vw, 16px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(21, 34, 48, 0.06);
+      color: var(--accent-2);
+    }
+
+    .counter-chip { color: var(--accent); }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: clamp(18px, 2vw, 26px);
+      align-items: stretch;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .content-grid {
+      display: grid;
+      gap: 16px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .content-grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .content-grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .content-grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .content-grid.five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    .title {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 62px);
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      color: #0d1d2b;
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: clamp(16px, 1.55vw, 24px);
+      line-height: 1.55;
+      color: var(--muted);
+      max-width: 38em;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(26px, 2.7vw, 40px);
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #102233;
+    }
+
+    .section-lead {
+      margin: 0;
+      font-size: clamp(16px, 1.45vw, 21px);
+      line-height: 1.52;
+      color: var(--muted);
+    }
+
+    .panel,
+    .pill-card,
+    .stat-card,
+    .timeline-card,
+    .matrix-card {
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(21, 34, 48, 0.09);
+      border-radius: 22px;
+      padding: clamp(16px, 1.7vw, 24px);
+      backdrop-filter: blur(10px);
+    }
+
+    .panel.soft { background: rgba(255, 249, 238, 0.9); }
+    .panel.accent { background: linear-gradient(160deg, rgba(217, 93, 57, 0.1), rgba(255, 255, 255, 0.82)); }
+    .panel.teal { background: linear-gradient(160deg, rgba(31, 122, 140, 0.12), rgba(255, 255, 255, 0.82)); }
+
+    .panel h3,
+    .pill-card h3,
+    .stat-card h3,
+    .timeline-card h3,
+    .matrix-card h3 {
+      margin: 0 0 10px;
+      font-size: clamp(18px, 1.45vw, 24px);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      color: #0f2131;
+    }
+
+    .panel p,
+    .pill-card p,
+    .stat-card p,
+    .timeline-card p,
+    .matrix-card p,
+    .note,
+    li {
+      margin: 0;
+      font-size: clamp(14px, 1.22vw, 19px);
+      line-height: 1.55;
+      color: #233240;
+    }
+
+    .big-number {
+      font-size: clamp(34px, 3.3vw, 50px);
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .mini-label {
+      display: inline-block;
+      margin-bottom: 10px;
+      font-size: clamp(11px, 0.92vw, 14px);
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent-2);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: clamp(12px, 1vw, 15px);
+      font-weight: 700;
+      background: rgba(31, 122, 140, 0.1);
+      color: var(--accent-2);
+    }
+
+    .hero-list,
+    .clean-list,
+    .compact-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .hero-list li,
+    .clean-list li,
+    .compact-list li {
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .hero-list li::before,
+    .clean-list li::before,
+    .compact-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.65em;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .compact-list { gap: 6px; }
+
+    .statement {
+      margin-top: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: 22px;
+      background: linear-gradient(90deg, rgba(217, 93, 57, 0.12), rgba(31, 122, 140, 0.08));
+      border: 1px solid rgba(21, 34, 48, 0.08);
+      font-size: clamp(16px, 1.3vw, 20px);
+      line-height: 1.5;
+      font-weight: 700;
+      color: #0f2131;
+    }
+
+    .statement::before {
+      content: "핵심";
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: var(--accent);
+      color: #fff;
+      font-size: clamp(11px, 0.95vw, 14px);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .process {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 6px;
+    }
+
+    .step {
+      position: relative;
+      padding: 16px 14px 14px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(21, 34, 48, 0.08);
+      min-height: 132px;
+    }
+
+    .step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      width: 16px;
+      height: 2px;
+      background: rgba(31, 122, 140, 0.45);
+    }
+
+    .step-number {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      background: rgba(31, 122, 140, 0.12);
+      color: var(--accent-2);
+      font-weight: 800;
+      font-size: clamp(16px, 1.2vw, 18px);
+    }
+
+    .compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+      min-height: 0;
+    }
+
+    .compare .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .table-wrap {
+      overflow: hidden;
+      border-radius: 22px;
+      border: 1px solid rgba(21, 34, 48, 0.08);
+      background: rgba(255, 255, 255, 0.72);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: clamp(13px, 1.08vw, 17px);
+    }
+
+    th,
+    td {
+      padding: 14px 14px;
+      vertical-align: top;
+      text-align: left;
+      border-bottom: 1px solid rgba(21, 34, 48, 0.08);
+    }
+
+    th {
+      background: rgba(21, 34, 48, 0.04);
+      color: #102233;
+      font-size: clamp(12px, 1vw, 15px);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .risk-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .risk-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: clamp(18px, 1.8vw, 24px);
+      border-radius: 24px;
+      color: #fff;
+      min-height: 0;
+    }
+
+    .risk-card.optimism { background: linear-gradient(160deg, #d95d39, #b33a3a); }
+    .risk-card.pessimism { background: linear-gradient(160deg, #1f7a8c, #144e60); }
+
+    .risk-card h3,
+    .risk-card p,
+    .risk-card li { color: #fff; }
+
+    .quote-panel {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 16px;
+      flex: 1;
+    }
+
+    .quote {
+      font-size: clamp(28px, 2.8vw, 44px);
+      line-height: 1.18;
+      letter-spacing: -0.04em;
+      color: #102233;
+      margin: 0;
+    }
+
+    .quote small {
+      display: block;
+      margin-top: 12px;
+      font-size: clamp(14px, 1.1vw, 17px);
+      letter-spacing: 0;
+      color: var(--muted);
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 14px;
+      flex: 1;
+    }
+
+    .pillar-index {
+      display: inline-flex;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      background: rgba(217, 93, 57, 0.12);
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    .roadmap {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      flex: 1;
+    }
+
+    .roadmap .timeline-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .timeline-chip {
+      display: inline-flex;
+      width: fit-content;
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: rgba(241, 162, 8, 0.14);
+      color: #9a6400;
+      font-weight: 800;
+      font-size: clamp(12px, 1vw, 15px);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-top: auto;
+      font-size: clamp(12px, 1vw, 15px);
+      color: var(--muted);
+    }
+
+    .footer strong { color: #102233; }
+
+    .nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: auto auto minmax(120px, 1fr) minmax(180px, 320px) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px 14px;
+      background: rgba(7, 16, 26, 0.92);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: #ebf3f7;
+    }
+
+    .nav button,
+    .nav select {
+      border: 0;
+      border-radius: 12px;
+      font: inherit;
+    }
+
+    .nav button {
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: #e7edf2;
+      color: #0d1d2b;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .nav button.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .nav button:hover:not(:disabled) { transform: translateY(-1px); }
+
+    .nav button:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .nav select {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+
+    .progress-wrap {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13px;
+      color: rgba(235, 243, 247, 0.86);
+    }
+
+    .progress-bar {
+      position: relative;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .progress-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--accent-3));
+    }
+
+    .hint {
+      font-size: 13px;
+      text-align: right;
+      color: rgba(235, 243, 247, 0.7);
+    }
+
+    @media (max-width: 1100px) {
+      .content-grid.five,
+      .pillars,
+      .process {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .process .step:not(:last-child)::after { display: none; }
+
+      .hero,
+      .quote-panel,
+      .compare,
+      .risk-columns,
+      .roadmap {
+        grid-template-columns: 1fr;
+      }
+
+      .nav { grid-template-columns: 1fr 1fr; }
+      .hint {
+        grid-column: 1 / -1;
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .deck-shell { padding: 10px 10px 144px; }
+      .slide { width: 100%; }
+
+      .content-grid.two,
+      .content-grid.three,
+      .content-grid.four,
+      .pillars,
+      .roadmap,
+      .risk-columns,
+      .compare,
+      .quote-panel,
+      .process {
+        grid-template-columns: 1fr;
+      }
+
+      .nav { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck-shell">
+    <section class="slide active">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">HTML 발표자료 · 원본 PPT 재구성</div>
+          <div class="counter-chip">Slide 1</div>
+        </div>
+
+        <div class="hero">
+          <div class="panel soft" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div class="mini-label">AI, Data, Public Organization</div>
+              <h1 class="title">AI 시대의<br />데이터 활용과<br />행정조직 대응</h1>
+              <p class="subtitle" style="margin-top: 18px;">
+                예측과 설명의 차이를 분명히 하고, 막연한 낙관론과 비관론을 넘어,
+                공공조직이 실제로 준비해야 할 역량과 실행 원칙을 정리한 발표자료입니다.
+              </p>
+            </div>
+
+            <div class="statement">
+              기술 그 자체보다 중요한 것은 어떤 질문을 던지고, 어떤 데이터로 검증하며, 어떤 조직이 학습하느냐입니다.
+            </div>
+          </div>
+
+          <div class="content-grid" style="grid-template-rows: auto 1fr;">
+            <div class="panel accent">
+              <h3>발표의 초점</h3>
+              <ul class="hero-list">
+                <li>AI 시대에 데이터는 어떻게 활용되어야 하는가</li>
+                <li>예측과 설명은 왜 다른 분석 과제인가</li>
+                <li>막연한 낙관론과 비관론은 왜 모두 위험한가</li>
+                <li>행정조직은 어떤 준비와 진단이 필요한가</li>
+              </ul>
+            </div>
+
+            <div class="panel teal">
+              <h3>원자료에서 가져온 핵심 흐름</h3>
+              <div class="chip-row">
+                <span class="chip">현실 이해를 위한 데이터 분석</span>
+                <span class="chip">AI 에이전트와 도구 결합</span>
+                <span class="chip">공공조직 AX 진단</span>
+                <span class="chip">예측의 한계와 유용성</span>
+              </div>
+              <p style="margin-top: 14px;">
+                첨부하신 PPT의 문제의식과 구조를 바탕으로, 발표용 흐름이 더 선명하도록 단일 HTML 슬라이드 덱으로 재편집했습니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span><strong>주제</strong> AI 시대의 데이터 활용과 행정조직 대응</span>
+          <span>원자료: 첨부 PPT 기반 재구성</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Agenda</div>
+          <div class="counter-chip">Slide 2</div>
+        </div>
+
+        <h2 class="section-title">오늘의 질문은 네 가지입니다</h2>
+        <p class="section-lead">
+          이번 발표는 기술 소개보다 정책과 조직의 관점에서 무엇을 구분하고 무엇을 준비해야 하는지를 묻는 구조로 가는 것이 좋습니다.
+        </p>
+
+        <div class="content-grid four">
+          <div class="pill-card">
+            <div class="mini-label">Question 1</div>
+            <h3>데이터는 어떻게 써야 하나</h3>
+            <p>현황 파악, 비교, 설명, 정책평가, 예측을 한 흐름 안에서 연결해야 합니다.</p>
+          </div>
+
+          <div class="pill-card">
+            <div class="mini-label">Question 2</div>
+            <h3>예측과 설명은 무엇이 다른가</h3>
+            <p>질문도, 필요한 데이터도, 좋은 분석의 기준도 다릅니다.</p>
+          </div>
+
+          <div class="pill-card">
+            <div class="mini-label">Question 3</div>
+            <h3>왜 낙관과 비관이 모두 위험한가</h3>
+            <p>과신은 실패를 부르고, 과도한 회피는 학습과 혁신을 멈추게 만듭니다.</p>
+          </div>
+
+          <div class="pill-card">
+            <div class="mini-label">Question 4</div>
+            <h3>행정조직은 어떻게 대응해야 하나</h3>
+            <p>리더십, 데이터 거버넌스, 인재, 문화, 법·윤리를 함께 설계해야 합니다.</p>
+          </div>
+        </div>
+
+        <div class="statement">
+          AI 도입 논의는 “무엇을 자동화할 것인가”보다 “무엇을 더 잘 이해하고 더 잘 판단할 것인가”에서 시작해야 합니다.
+        </div>
+
+        <div class="footer">
+          <span><strong>메시지</strong> 질문 설계가 기술 선택보다 먼저입니다</span>
+          <span>2 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Part 1</div>
+          <div class="counter-chip">Slide 3</div>
+        </div>
+
+        <h2 class="section-title">데이터 활용의 출발점은 현실을 더 잘 이해하는 일입니다</h2>
+        <p class="section-lead">
+          원본 PPT의 여러 사례가 보여주듯, 데이터는 먼저 “무슨 일이 벌어지고 있는가”를 구조화하는 도구입니다.
+        </p>
+
+        <div class="compare">
+          <div class="panel soft">
+            <h3>데이터 활용의 기본 흐름</h3>
+            <ul class="clean-list">
+              <li><strong>현황 파악</strong>: 우리 지역, 우리 부처, 우리 정책이 지금 어떤 상태인가</li>
+              <li><strong>비교와 벤치마킹</strong>: 다른 지역·기관과 비교하면 무엇이 다른가</li>
+              <li><strong>원인 설명</strong>: 왜 이런 변화가 나타났는가</li>
+              <li><strong>정책 평가</strong>: 특정 정책이 실제로 효과가 있었는가</li>
+              <li><strong>소통과 학습</strong>: 분석 결과를 조직 내부와 외부가 공유할 수 있는가</li>
+            </ul>
+          </div>
+
+          <div class="panel teal">
+            <h3>원자료에서 가져온 사례 질문</h3>
+            <ul class="clean-list">
+              <li>우주항공청 이전 이후 사천시 인구감소 추세는 완화되었는가</li>
+              <li>부처별 프로그램 예산 구조를 어떻게 읽어야 하는가</li>
+              <li>저출산·고령화 문제는 어떤 쟁점과 지역차를 가지는가</li>
+              <li>서울시 기후동행카드의 실제 효과와 재정 부담은 무엇인가</li>
+            </ul>
+            <p style="margin-top: 14px;">
+              좋은 데이터 활용은 숫자를 많이 모으는 일이 아니라, 정책문제를 비교 가능하고 설명 가능한 형태로 바꾸는 일입니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span><strong>기본 원칙</strong> 데이터는 현실을 읽는 언어입니다</span>
+          <span>3 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">AI + Data</div>
+          <div class="counter-chip">Slide 4</div>
+        </div>
+
+        <h2 class="section-title">AI는 데이터를 대신하지 않고 분석 파이프라인을 연결합니다</h2>
+        <p class="section-lead">
+          원자료는 기존 LLM의 한계와, 이를 도구 결합형 에이전트로 보완하는 접근을 강조합니다.
+        </p>
+
+        <div class="content-grid four">
+          <div class="stat-card">
+            <div class="mini-label">LLM 한계 1</div>
+            <h3>컨텍스트와 규모</h3>
+            <p>대용량 통계 데이터셋을 한 번에 안정적으로 다루기 어렵습니다.</p>
+          </div>
+          <div class="stat-card">
+            <div class="mini-label">LLM 한계 2</div>
+            <h3>계산 정확성</h3>
+            <p>텍스트 추론만으로 수치 계산과 집계를 처리하면 오류가 생기기 쉽습니다.</p>
+          </div>
+          <div class="stat-card">
+            <div class="mini-label">LLM 한계 3</div>
+            <h3>최신성 부족</h3>
+            <p>학습 시점 이후의 정책 변화와 최신 통계에 자동으로 접근하지 못합니다.</p>
+          </div>
+          <div class="stat-card">
+            <div class="mini-label">LLM 한계 4</div>
+            <h3>출처 추적성</h3>
+            <p>원본 데이터와 근거를 투명하게 되짚기 어려우면 행정 활용이 불안정해집니다.</p>
+          </div>
+        </div>
+
+        <div class="process">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>계획</h3>
+            <p>질문을 분석하고 필요한 데이터와 범위를 정합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>탐색</h3>
+            <p>적합한 데이터셋과 메타데이터를 찾아 선택합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>분석</h3>
+            <p>Python, 통계 도구, 규칙 기반 검증으로 계산을 수행합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>시각화</h3>
+            <p>그래프, 비교표, 지도로 결과를 해석 가능한 형태로 만듭니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">5</div>
+            <h3>맥락화</h3>
+            <p>뉴스, 정책자료, 전문가 분석으로 사회적 배경을 보강합니다.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">6</div>
+            <h3>보고</h3>
+            <p>근거, 한계, 시사점을 함께 정리해 의사결정에 연결합니다.</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span><strong>시사점</strong> AI의 가치도 결국 데이터와 도구, 검증 절차의 결합에서 나옵니다</span>
+          <span>4 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Explanation vs Prediction</div>
+          <div class="counter-chip">Slide 5</div>
+        </div>
+
+        <h2 class="section-title">예측과 설명은 비슷해 보이지만, 다른 질문을 다룹니다</h2>
+        <p class="section-lead">
+          둘을 섞어 버리면 모델 선택도, 성과평가도, 정책 해석도 모두 흔들립니다.
+        </p>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>설명</th>
+                <th>예측</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>핵심 질문</strong></td>
+                <td>왜 그런 현상이 발생했는가, 어떤 요인이 효과를 만들었는가</td>
+                <td>앞으로 무엇이 일어날 가능성이 큰가, 어디에 위험이 집중되는가</td>
+              </tr>
+              <tr>
+                <td><strong>주요 데이터</strong></td>
+                <td>원인변수, 제도 변화, 비교집단, 맥락정보, 정책 개입 정보</td>
+                <td>선행지표, 시계열 패턴, 실시간 신호, 세부집단별 특성</td>
+              </tr>
+              <tr>
+                <td><strong>좋은 분석의 기준</strong></td>
+                <td>해석 가능성, 내적 타당성, 인과적 설득력, 설명력</td>
+                <td>표본 밖 정확도, 정밀도, 민감도, 조기경보 성능</td>
+              </tr>
+              <tr>
+                <td><strong>정책에서의 역할</strong></td>
+                <td>책임성 확보, 제도 개선, 정책효과 이해, 조직 학습</td>
+                <td>자원 배분, 위험 대응, 우선순위 설정, 사전 준비</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="statement">
+          설명은 “왜 그랬는가”를 통해 배우게 하고, 예측은 “무엇이 올 것인가”를 통해 대비하게 합니다.
+        </div>
+
+        <div class="footer">
+          <span><strong>구분</strong> 설명과 예측은 목적도 평가지표도 다릅니다</span>
+          <span>5 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Forecasting Limits</div>
+          <div class="counter-chip">Slide 6</div>
+        </div>
+
+        <h2 class="section-title">예측은 원래 어렵고, 미래로 갈수록 불확실성은 더 커집니다</h2>
+        <p class="section-lead">
+          원자료의 사례들은 예측이 단순 계산이 아니라 불확실성 관리라는 점을 잘 보여줍니다.
+        </p>
+
+        <div class="content-grid three">
+          <div class="stat-card">
+            <div class="mini-label">세부집단 반응</div>
+            <div class="big-number">68% vs 84%</div>
+            <p>
+              2010~2021년 1인당 공공보건소비 증가율은 5세에서 68%, 70세에서 84%, 80세에서는 108%였습니다.
+              세대별 반응이 달라 세부집단 예측이 필요합니다.
+            </p>
+          </div>
+
+          <div class="stat-card">
+            <div class="mini-label">인구추계의 수정</div>
+            <div class="big-number">1.35 → 0.90 → 0.84</div>
+            <p>
+              2012년 예측한 2020년 합계출산율은 1.35, 2017년 재추계는 0.90, 실제 값은 0.84였습니다.
+              같은 지표도 전망 시점에 따라 크게 달라집니다.
+            </p>
+          </div>
+
+          <div class="stat-card">
+            <div class="mini-label">미래의 특성</div>
+            <div class="big-number">불확실성 확대</div>
+            <p>
+              예측 시점이 멀수록 신뢰구간이 넓어집니다.
+              따라서 단일 점추정보다 범위, 시나리오, 오차비용을 함께 봐야 합니다.
+            </p>
+          </div>
+        </div>
+
+        <div class="statement">
+          좋은 예측은 숫자 하나를 맞히는 일이 아니라, 어디까지를 알고 어디부터를 모르는지 분명히 말하는 일입니다.
+        </div>
+
+        <div class="footer">
+          <span><strong>한계</strong> 예측은 정확성 경쟁이 아니라 불확실성 관리입니다</span>
+          <span>6 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Evaluation</div>
+          <div class="counter-chip">Slide 7</div>
+        </div>
+
+        <h2 class="section-title">좋은 예측의 기준은 정책이 감수할 오류의 비용에 달려 있습니다</h2>
+        <p class="section-lead">
+          원자료의 설비고장 예측 예시처럼, 공공정책에서도 무엇을 더 치명적인 오류로 볼 것인지 먼저 정해야 합니다.
+        </p>
+
+        <div class="compare">
+          <div class="panel soft">
+            <h3>정밀도(Precision)가 중요한 경우</h3>
+            <ul class="clean-list">
+              <li><strong>거짓 경보(FP)</strong>를 줄여야 할 때</li>
+              <li>실제 필요하지 않은데 개입한다고 판단하면 예산 낭비와 부작용이 커지는 정책</li>
+              <li>예: 불필요한 현장점검 확대, 과도한 규제 알림, 잘못된 위험지정</li>
+            </ul>
+          </div>
+
+          <div class="panel accent">
+            <h3>민감도(Recall)가 중요한 경우</h3>
+            <ul class="clean-list">
+              <li><strong>놓침(FN)</strong>을 줄여야 할 때</li>
+              <li>실제 위험인데 정상이라고 보면 피해가 커지는 정책</li>
+              <li>예: 복지사각지대 누락, 재난 취약가구 미탐지, 조기경보 실패</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="content-grid two">
+          <div class="matrix-card">
+            <h3>정책 질문이 먼저</h3>
+            <p>무엇을 맞힐 것인가보다, 어떤 오류를 더 감당하기 어려운가를 먼저 정해야 합니다.</p>
+          </div>
+          <div class="matrix-card">
+            <h3>평가지표도 달라져야 함</h3>
+            <p>정확도 하나로는 부족합니다. 정밀도, 민감도, 오탐 비용, 미탐 비용을 함께 봐야 합니다.</p>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span><strong>평가</strong> 미래예측은 성능 경쟁이 아니라 오류비용의 선택입니다</span>
+          <span>7 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Risk of Extremes</div>
+          <div class="counter-chip">Slide 8</div>
+        </div>
+
+        <h2 class="section-title">막연한 낙관론과 비관론은 모두 위험합니다</h2>
+        <p class="section-lead">
+          극단적인 태도는 모두 질문을 약화시키고, 결국 공공조직의 학습능력을 떨어뜨립니다.
+        </p>
+
+        <div class="risk-columns">
+          <div class="risk-card optimism">
+            <div class="mini-label" style="color: rgba(255,255,255,0.75);">Naive Optimism</div>
+            <h3>“AI가 알아서 해결해 줄 것”이라는 낙관론</h3>
+            <ul class="clean-list" style="color:#fff;">
+              <li>문제정의와 데이터 품질 점검을 생략하게 만듭니다</li>
+              <li>알고리즘의 객관성을 과신해 책임소재를 흐리게 합니다</li>
+              <li>벤더 의존과 성급한 전면 도입으로 실패비용을 키웁니다</li>
+              <li>조직역량이 없는 상태에서 자동화 환상에 빠지게 만듭니다</li>
+            </ul>
+          </div>
+
+          <div class="risk-card pessimism">
+            <div class="mini-label" style="color: rgba(255,255,255,0.75);">Naive Pessimism</div>
+            <h3>“어차피 틀리니 쓰지 말자”는 비관론</h3>
+            <ul class="clean-list" style="color:#fff;">
+              <li>데이터 기반 학습과 실험의 기회를 잃게 합니다</li>
+              <li>검증 가능한 분석보다 직관과 관성의 지배를 강화합니다</li>
+              <li>민간과 해외 공공기관의 변화 속도를 따라가기 어려워집니다</li>
+              <li>작은 파일럿과 점진적 개선이라는 현실적 경로를 놓치게 합니다</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="statement">
+          위험한 것은 AI 자체가 아니라, 검증 없이 믿는 태도와 실험 없이 거부하는 태도입니다.
+        </div>
+
+        <div class="footer">
+          <span><strong>태도</strong> 맹신도 금물, 공포도 금물입니다</span>
+          <span>8 / 12</span>
+        </div>
+      </div>
+    </section>
+    
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Pragmatic Principles</div>
+          <div class="counter-chip">Slide 9</div>
+        </div>
+
+        <h2 class="section-title">필요한 것은 맹신도 거부도 아닌, 검증 가능한 실용주의입니다</h2>
+
+        <div class="quote-panel">
+          <div class="panel soft" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <p class="quote">
+                “All models are wrong,<br />but some are useful.”
+                <small>조지 박스의 이 문장은 AI 시대에도 유효합니다. 완벽한 모델을 기다리기보다, 한계를 알면서 유용성을 키워야 합니다.</small>
+              </p>
+            </div>
+
+            <div class="statement">
+              핵심은 모델의 전능함이 아니라, 조직이 그 모델의 한계를 알고 활용할 수 있느냐입니다.
+            </div>
+          </div>
+
+          <div class="content-grid">
+            <div class="panel teal">
+              <h3>원칙 1. 질문이 먼저다</h3>
+              <p>도구 도입보다 정책문제 정의, 분석목적 설정, 필요한 판단 단위를 먼저 정합니다.</p>
+            </div>
+            <div class="panel">
+              <h3>원칙 2. 설명·예측·평가를 구분한다</h3>
+              <p>서로 다른 질문을 하나의 모델이 모두 해결해 줄 것이라 기대하지 않습니다.</p>
+            </div>
+            <div class="panel">
+              <h3>원칙 3. 출처와 품질을 관리한다</h3>
+              <p>대표성, 오류, 결측, 편향, 변경 이력을 점검해야 공공적 정당성이 생깁니다.</p>
+            </div>
+            <div class="panel accent">
+              <h3>원칙 4. 인간 감독을 유지한다</h3>
+              <p>최종 판단, 이의제기, 예외 처리, 책임성은 반드시 사람과 제도로 보완해야 합니다.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span><strong>원칙</strong> 현실적 회의주의가 가장 생산적인 태도입니다</span>
+          <span>9 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Organizational Response</div>
+          <div class="counter-chip">Slide 10</div>
+        </div>
+
+        <h2 class="section-title">행정조직의 대응은 “도입”이 아니라 “조직 진단과 역량 구축”이어야 합니다</h2>
+        <p class="section-lead">
+          원자료의 조직진단 틀을 압축하면, 공공부문 AX는 최소한 아래 다섯 축을 동시에 점검해야 합니다.
+        </p>
+
+        <div class="pillars">
+          <div class="pill-card">
+            <div class="pillar-index">1</div>
+            <h3>전략과 리더십</h3>
+            <p>기관의 미션, 공공가치, 최고위층 지원, 공식 로드맵과 KPI를 연결합니다.</p>
+          </div>
+          <div class="pill-card">
+            <div class="pillar-index">2</div>
+            <h3>데이터 거버넌스</h3>
+            <p>품질, 표준화, 상호운용성, 출처 추적, 편향 관리, 보안을 설계합니다.</p>
+          </div>
+          <div class="pill-card">
+            <div class="pillar-index">3</div>
+            <h3>인적 역량</h3>
+            <p>AI 리터러시, 데이터 분석 역량, 정책·법·윤리 융합 인재를 확보합니다.</p>
+          </div>
+          <div class="pill-card">
+            <div class="pillar-index">4</div>
+            <h3>조직 구조와 문화</h3>
+            <p>사일로를 줄이고, 파일럿과 실패학습, 부서 간 협업을 제도화합니다.</p>
+          </div>
+          <div class="pill-card">
+            <div class="pillar-index">5</div>
+            <h3>법제와 윤리</h3>
+            <p>고위험 영역 검증, 책임 규율, 조달 기준, 외부 검증과 국제 규제 대응을 포함합니다.</p>
+          </div>
+        </div>
+
+        <div class="statement">
+          조직역량을 키우지 않은 채 기술이 자동으로 혁신을 가져온다는 기대는, 원자료가 지적하듯 환상에 가깝습니다.
+        </div>
+
+        <div class="footer">
+          <span><strong>대응</strong> 행정 AX는 기술 프로젝트가 아니라 조직 전환 프로젝트입니다</span>
+          <span>10 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Execution</div>
+          <div class="counter-chip">Slide 11</div>
+        </div>
+
+        <h2 class="section-title">현실적인 대응은 작은 파일럿과 엄격한 학습 루프에서 시작합니다</h2>
+        <p class="section-lead">
+          무리한 전면 확산보다, 문제정의와 성과측정이 가능한 과제부터 90일 단위로 실험하는 접근이 안전하고 효과적입니다.
+        </p>
+
+        <div class="roadmap">
+          <div class="timeline-card">
+            <div class="timeline-chip">0-30일</div>
+            <h3>문제와 데이터 정리</h3>
+            <ul class="compact-list">
+              <li>반복적이고 데이터가 있는 업무 2~3개 선정</li>
+              <li>보유 데이터, 누락 데이터, 품질 리스크 점검</li>
+              <li>설명용 과제와 예측용 과제를 구분</li>
+              <li>기초 AI 리터러시와 역할 분담 교육 시작</li>
+            </ul>
+          </div>
+
+          <div class="timeline-card">
+            <div class="timeline-chip">31-60일</div>
+            <h3>파일럿과 거버넌스 설계</h3>
+            <ul class="compact-list">
+              <li>하나의 문서 흐름 또는 업무 흐름에서 시범 적용</li>
+              <li>정확도 외에 정밀도·민감도·업무시간 절감 등 KPI 설정</li>
+              <li>Human-in-the-loop, 이의제기, 로그 기록 절차 마련</li>
+              <li>법무·윤리·보안 검토를 병행</li>
+            </ul>
+          </div>
+
+          <div class="timeline-card">
+            <div class="timeline-chip">61-90일</div>
+            <h3>비교 평가와 확산 판단</h3>
+            <ul class="compact-list">
+              <li>도입 전후 성과, 오류비용, 사용자 경험 비교</li>
+              <li>데이터셋, 프롬프트, 규칙, 예외사례를 문서화</li>
+              <li>확산할 것과 중단할 것을 명확히 구분</li>
+              <li>성공사례보다 실패사례를 더 조직적으로 공유</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span><strong>실행</strong> 한 번에 크게보다 작게 시작하고 엄격하게 검증해야 합니다</span>
+          <span>11 / 12</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="slide-inner">
+        <div class="topbar">
+          <div class="eyebrow">Closing</div>
+          <div class="counter-chip">Slide 12</div>
+        </div>
+
+        <div class="hero">
+          <div class="panel soft" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <div class="mini-label">Closing Message</div>
+              <h2 class="section-title" style="font-size: clamp(30px, 3vw, 46px);">
+                AI 시대의 핵심 경쟁력은<br />알고리즘 자체보다<br />문제를 정의하고 데이터를 해석하며<br />조직을 학습시키는 능력입니다
+              </h2>
+            </div>
+
+            <div class="statement">
+              예측도 설명도 결국 더 나은 정책결정을 위한 도구이며, 그 한계와 유용성을 함께 다루는 태도가 필요합니다.
+            </div>
+          </div>
+
+          <div class="content-grid">
+            <div class="panel accent">
+              <h3>마지막으로 남길 세 문장</h3>
+              <ul class="clean-list">
+                <li>데이터는 현상을 보는 도구이자, 정책대화를 정교하게 만드는 언어입니다.</li>
+                <li>AI는 분석 역량의 증폭기일 수 있지만, 조직역량을 대신해 주지는 않습니다.</li>
+                <li>행정조직의 대응은 기술 채택이 아니라 질문, 데이터, 사람, 제도의 동시 전환이어야 합니다.</li>
+              </ul>
+            </div>
+
+            <div class="panel teal">
+              <h3>토론용 질문</h3>
+              <ul class="clean-list">
+                <li>우리 조직에서 지금 가장 먼저 “설명”이 필요한 문제는 무엇인가</li>
+                <li>우리 조직에서 가장 먼저 “예측”이 필요한 위험은 무엇인가</li>
+                <li>바로 시작할 수 있는 가장 작은 파일럿 과제는 무엇인가</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="footer">
+          <span><strong>끝맺음</strong> 발표 후 질의응답 또는 토론 세션으로 자연스럽게 연결할 수 있습니다</span>
+          <span>12 / 12</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="nav">
+    <button id="prevBtn">이전</button>
+    <button id="nextBtn" class="primary">다음</button>
+
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span id="positionLabel">1 / 12</span>
+        <span id="titleLabel">AI 시대의 데이터 활용과 행정조직 대응</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+
+    <select id="slidePicker" aria-label="슬라이드 선택"></select>
+    <div class="hint">키보드: ← → Home End Space</div>
+  </div>
+
+  <script>
+    (function () {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const prevBtn = document.getElementById("prevBtn");
+      const nextBtn = document.getElementById("nextBtn");
+      const picker = document.getElementById("slidePicker");
+      const positionLabel = document.getElementById("positionLabel");
+      const titleLabel = document.getElementById("titleLabel");
+      const progressFill = document.getElementById("progressFill");
+      let current = 0;
+
+      slides.forEach((slide, index) => {
+        const title = slide.querySelector(".title, .section-title");
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = (index + 1) + ". " + (title ? title.textContent.replace(/\s+/g, " ").trim() : "슬라이드");
+        picker.appendChild(option);
+      });
+
+      function render() {
+        slides.forEach((slide, index) => {
+          slide.classList.toggle("active", index === current);
+        });
+
+        const activeTitle = slides[current].querySelector(".title, .section-title");
+        const titleText = activeTitle ? activeTitle.textContent.replace(/\s+/g, " ").trim() : "슬라이드";
+        const progress = ((current + 1) / slides.length) * 100;
+
+        picker.value = String(current);
+        positionLabel.textContent = (current + 1) + " / " + slides.length;
+        titleLabel.textContent = titleText;
+        progressFill.style.width = progress + "%";
+        prevBtn.disabled = current === 0;
+        nextBtn.disabled = current === slides.length - 1;
+      }
+
+      function moveTo(index) {
+        current = Math.max(0, Math.min(slides.length - 1, index));
+        render();
+      }
+
+      prevBtn.addEventListener("click", function () {
+        moveTo(current - 1);
+      });
+
+      nextBtn.addEventListener("click", function () {
+        moveTo(current + 1);
+      });
+
+      picker.addEventListener("change", function () {
+        moveTo(Number(picker.value));
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") moveTo(current - 1);
+        if (event.key === "ArrowRight" || event.key === " ") {
+          event.preventDefault();
+          moveTo(current + 1);
+        }
+        if (event.key === "Home") moveTo(0);
+        if (event.key === "End") moveTo(slides.length - 1);
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
