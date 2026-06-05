@@ -1,0 +1,1434 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AI의 학습데이터로의 전환과 정책역량 강화</title>
+  <style>
+    :root {
+      --snu-blue: #003478;
+      --ink: #1d2430;
+      --muted: #5d6675;
+      --line: #d9dee7;
+      --paper: #ffffff;
+      --soft: #f4f6f9;
+      --accent: #8f1230;
+      --gold: #b58b2a;
+      --grid: rgba(0, 52, 120, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #e9edf3;
+      color: var(--ink);
+      font-family: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .deck {
+      width: min(100vw - 48px, 1366px);
+      aspect-ratio: 16 / 9;
+      background: var(--paper);
+      box-shadow: 0 18px 48px rgba(20, 32, 52, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 58px 76px 54px;
+      display: none;
+      background:
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0 / 80px 80px,
+        linear-gradient(0deg, var(--grid) 1px, transparent 1px) 0 0 / 80px 80px,
+        var(--paper);
+    }
+
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 18px;
+      height: 100%;
+      background: var(--snu-blue);
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      left: 76px;
+      right: 330px;
+      top: 32px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--snu-blue), var(--line) 45%, transparent);
+    }
+
+    .slide-logo {
+      position: absolute;
+      top: 40px;
+      right: 76px;
+      width: 178px;
+      height: auto;
+      display: block;
+      z-index: 3;
+    }
+
+    .kicker {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--snu-blue);
+      margin-bottom: 18px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 52px;
+      line-height: 1.16;
+      font-weight: 800;
+      color: #111827;
+      max-width: 1000px;
+      word-break: keep-all;
+    }
+
+    h2 {
+      font-size: 39px;
+      line-height: 1.18;
+      font-weight: 800;
+      color: var(--snu-blue);
+      margin-bottom: 28px;
+      word-break: keep-all;
+    }
+
+    h3 {
+      font-size: 24px;
+      line-height: 1.25;
+      font-weight: 800;
+      color: #14213d;
+      margin-bottom: 14px;
+      word-break: keep-all;
+    }
+
+    .subtitle {
+      margin-top: 26px;
+      font-size: 24px;
+      line-height: 1.45;
+      color: #343d4b;
+      max-width: 980px;
+      word-break: keep-all;
+    }
+
+    .meta {
+      margin-top: auto;
+      padding-top: 28px;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      font-size: 17px;
+      color: var(--muted);
+    }
+
+    .cover {
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .cover-content {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      display: grid;
+      gap: 24px;
+      justify-items: center;
+    }
+
+    .cover .kicker {
+      margin-bottom: 0;
+    }
+
+    .cover h1 {
+      max-width: 980px;
+    }
+
+    .cover .subtitle {
+      margin-top: 0;
+      max-width: 860px;
+    }
+
+    .cover-presenter {
+      margin-top: 18px;
+      padding-top: 26px;
+      border-top: 2px solid var(--line);
+      width: min(680px, 100%);
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+    }
+
+    .cover-presenter strong {
+      font-size: 28px;
+      color: var(--ink);
+      font-weight: 900;
+    }
+
+    .cover-presenter span {
+      font-size: 20px;
+      color: #343d4b;
+      line-height: 1.45;
+    }
+
+    .cover-qr {
+      position: absolute;
+      right: 76px;
+      bottom: 84px;
+      width: 148px;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      padding: 10px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--snu-blue);
+    }
+
+    .cover-qr img {
+      width: 118px;
+      height: 118px;
+      display: block;
+    }
+
+    .cover-qr span {
+      font-size: 10px;
+      line-height: 1.25;
+      color: var(--muted);
+      text-align: center;
+      word-break: break-all;
+    }
+
+    .presenter {
+      display: grid;
+      gap: 6px;
+    }
+
+    .presenter strong {
+      color: var(--ink);
+      font-size: 21px;
+      font-weight: 800;
+    }
+
+    .presenter span {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .body {
+      flex: 1;
+      display: grid;
+      align-content: center;
+      gap: 24px;
+    }
+
+    .body.top {
+      align-content: start;
+    }
+
+    .twocol {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .wide-narrow {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 34px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border-top: 4px solid var(--snu-blue);
+      background: rgba(244, 246, 249, 0.86);
+      padding: 26px 28px;
+      min-height: 100%;
+    }
+
+    .panel.accent {
+      border-top-color: var(--accent);
+    }
+
+    .panel.gold {
+      border-top-color: var(--gold);
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 24px;
+    }
+
+    li {
+      font-size: 22px;
+      line-height: 1.48;
+      margin: 8px 0;
+      word-break: keep-all;
+    }
+
+    .compact li {
+      font-size: 19px;
+      line-height: 1.4;
+      margin: 6px 0;
+    }
+
+    .lead {
+      font-size: 28px;
+      line-height: 1.5;
+      font-weight: 700;
+      color: #202938;
+      word-break: keep-all;
+    }
+
+    .quote {
+      border-left: 8px solid var(--snu-blue);
+      padding: 22px 0 22px 28px;
+      font-size: 31px;
+      line-height: 1.42;
+      font-weight: 800;
+      color: #111827;
+      word-break: keep-all;
+      background: linear-gradient(90deg, rgba(0, 52, 120, 0.05), transparent);
+    }
+
+    .small {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.5;
+      word-break: keep-all;
+    }
+
+    .source-note {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #6b7280;
+      line-height: 1.45;
+      word-break: keep-all;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .asset {
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--snu-blue);
+      background: #fff;
+      padding: 20px 18px;
+      min-height: 244px;
+    }
+
+    .asset:nth-child(2) {
+      border-top-color: var(--accent);
+    }
+
+    .asset:nth-child(3) {
+      border-top-color: var(--gold);
+    }
+
+    .asset:nth-child(4) {
+      border-top-color: #2f6f5e;
+    }
+
+    .asset .num {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .asset h3 {
+      font-size: 25px;
+      margin-bottom: 14px;
+    }
+
+    .asset p {
+      font-size: 18px;
+      line-height: 1.45;
+      color: #343d4b;
+      word-break: keep-all;
+    }
+
+    .agent-examples {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+      margin-top: 4px;
+    }
+
+    .agent-example {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--snu-blue);
+      padding: 15px 16px;
+      min-height: 112px;
+    }
+
+    .agent-example strong {
+      display: block;
+      font-size: 18px;
+      color: var(--snu-blue);
+      margin-bottom: 8px;
+    }
+
+    .agent-example span {
+      display: block;
+      font-size: 16px;
+      line-height: 1.42;
+      color: #343d4b;
+      word-break: keep-all;
+    }
+
+    .platform-diagram {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .agent-node {
+      position: relative;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--snu-blue);
+      padding: 16px 14px;
+      min-height: 148px;
+    }
+
+    .agent-node:nth-child(2) {
+      border-top-color: var(--accent);
+    }
+
+    .agent-node:nth-child(3) {
+      border-top-color: var(--gold);
+    }
+
+    .agent-node:nth-child(4) {
+      border-top-color: #2f6f5e;
+    }
+
+    .agent-node:nth-child(5) {
+      border-top-color: #4b5563;
+    }
+
+    .agent-node::after {
+      content: "";
+      position: absolute;
+      right: -10px;
+      top: 48%;
+      width: 18px;
+      height: 2px;
+      background: var(--snu-blue);
+    }
+
+    .agent-node:last-child::after {
+      display: none;
+    }
+
+    .agent-node strong {
+      display: block;
+      font-size: 19px;
+      line-height: 1.25;
+      color: #14213d;
+      margin-bottom: 10px;
+      word-break: keep-all;
+    }
+
+    .agent-node span {
+      display: block;
+      font-size: 15px;
+      line-height: 1.42;
+      color: #4b5563;
+      word-break: keep-all;
+    }
+
+    .intelligence-layer {
+      margin-top: 20px;
+      border: 2px solid var(--snu-blue);
+      background: linear-gradient(90deg, rgba(0, 52, 120, 0.07), #fff);
+      padding: 20px 24px;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 22px;
+      align-items: center;
+    }
+
+    .intelligence-layer strong {
+      font-size: 23px;
+      color: var(--snu-blue);
+      word-break: keep-all;
+    }
+
+    .layer-items {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .layer-items span {
+      border-left: 4px solid var(--snu-blue);
+      background: #fff;
+      padding: 10px 12px;
+      font-size: 15px;
+      font-weight: 800;
+      color: #343d4b;
+      word-break: keep-all;
+    }
+
+    .platform-output {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+    }
+
+    .platform-output span {
+      background: var(--soft);
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #202938;
+      text-align: center;
+      word-break: keep-all;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 18px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+
+    .table th,
+    .table td {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      line-height: 1.42;
+      word-break: keep-all;
+    }
+
+    .table th {
+      background: var(--snu-blue);
+      color: #fff;
+      text-align: left;
+      font-weight: 800;
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .table.dense td {
+      font-size: 17px;
+      line-height: 1.48;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .step {
+      position: relative;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 20px 16px;
+      min-height: 182px;
+    }
+
+    .step::after {
+      content: "";
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      width: 18px;
+      height: 2px;
+      background: var(--snu-blue);
+    }
+
+    .step:last-child::after {
+      display: none;
+    }
+
+    .step strong {
+      display: block;
+      color: var(--snu-blue);
+      font-size: 17px;
+      margin-bottom: 12px;
+    }
+
+    .step span {
+      display: block;
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      word-break: keep-all;
+    }
+
+    .step p {
+      font-size: 16px;
+      line-height: 1.45;
+      color: var(--muted);
+      word-break: keep-all;
+    }
+
+    .emphasis {
+      display: grid;
+      grid-template-columns: 0.7fr 1.3fr;
+      gap: 26px;
+      align-items: center;
+    }
+
+    .big-number {
+      font-size: 140px;
+      line-height: 0.9;
+      font-weight: 900;
+      color: var(--snu-blue);
+      text-align: center;
+      border-right: 1px solid var(--line);
+    }
+
+    .footer {
+      position: absolute;
+      left: 76px;
+      right: 76px;
+      bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #6b7280;
+      font-size: 13px;
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+    }
+
+    .progress {
+      position: absolute;
+      left: 18px;
+      bottom: 0;
+      height: 5px;
+      background: var(--accent);
+      width: 0;
+      transition: width 180ms ease;
+      z-index: 5;
+    }
+
+    .controls {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      display: flex;
+      gap: 8px;
+      z-index: 20;
+    }
+
+    button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: var(--snu-blue);
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #09295d;
+    }
+
+    .badge {
+      display: inline-block;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--snu-blue);
+      padding: 10px 14px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--snu-blue);
+      background: #fff;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+
+    .split-title {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 54px;
+      align-items: start;
+      height: 100%;
+    }
+
+    .seal {
+      width: 260px;
+      height: 260px;
+      border: 12px solid var(--snu-blue);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--snu-blue);
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.15;
+      font-size: 34px;
+      justify-self: center;
+      background:
+        linear-gradient(#fff, #fff) padding-box,
+        repeating-linear-gradient(45deg, rgba(0, 52, 120, 0.08) 0 8px, transparent 8px 16px);
+    }
+
+    .title-logo {
+      width: 360px;
+      max-width: 100%;
+      display: block;
+      justify-self: center;
+      background: #fff;
+      padding: 12px 14px;
+      border-top: 4px solid var(--snu-blue);
+      border-bottom: 1px solid var(--line);
+      margin-top: 12px;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        padding: 0;
+        background: var(--paper);
+      }
+
+      .deck {
+        width: 100vw;
+        height: 100vh;
+        aspect-ratio: auto;
+        box-shadow: none;
+      }
+
+      .slide {
+        padding: 44px 32px 54px;
+      }
+
+      .footer {
+        left: 32px;
+        right: 32px;
+      }
+
+      .slide::after {
+        left: 32px;
+        right: 190px;
+      }
+
+      .slide-logo {
+        width: 130px;
+        top: 40px;
+        right: 32px;
+      }
+
+      h1 {
+        font-size: 34px;
+      }
+
+      h2 {
+        font-size: 28px;
+      }
+
+      li,
+      .lead {
+        font-size: 18px;
+      }
+
+      .twocol,
+      .wide-narrow,
+      .emphasis,
+      .split-title,
+      .matrix,
+      .agent-examples,
+      .platform-diagram,
+      .intelligence-layer,
+      .layer-items,
+      .platform-output,
+      .flow {
+        grid-template-columns: 1fr;
+      }
+
+      .seal {
+        display: none;
+      }
+
+      .title-logo {
+        width: 220px;
+        justify-self: start;
+      }
+
+      .cover-presenter strong {
+        font-size: 24px;
+      }
+
+      .cover-presenter span {
+        font-size: 17px;
+      }
+
+      .cover-qr {
+        right: 32px;
+        bottom: 72px;
+        width: 118px;
+      }
+
+      .cover-qr img {
+        width: 88px;
+        height: 88px;
+      }
+
+      .controls {
+        right: 12px;
+        bottom: 12px;
+      }
+    }
+
+    @media print {
+      body {
+        display: block;
+        padding: 0;
+        background: #fff;
+      }
+
+      .deck {
+        width: 100%;
+        height: auto;
+        aspect-ratio: auto;
+        box-shadow: none;
+      }
+
+      .slide {
+        position: relative;
+        display: flex !important;
+        width: 100vw;
+        height: 56.25vw;
+        page-break-after: always;
+      }
+
+      .controls,
+      .progress {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-live="polite">
+    <section class="slide active cover">
+      <div class="cover-content">
+        <div class="kicker">2026년 국가 데이터 연구 심포지움 기조강연</div>
+        <h1>AI의 학습데이터로의 전환과 정책역량 강화</h1>
+        <p class="subtitle">공공데이터를 문서와 수치 자료에서 코드, API, 프롬프트, 에이전트 실행 이력까지 포함하는 국가 학습자산으로 재정의하기</p>
+        <div class="cover-presenter">
+          <strong>고길곤</strong>
+          <span>서울대학교 행정대학원 교수<br>정보화본부 본부장</span>
+        </div>
+      </div>
+      <div class="cover-qr" aria-label="발표자료 웹사이트 QR 코드">
+        <img src="policydata-qr.png" alt="https://pubdata.snu.ac.kr/lecture/policydata/ QR 코드">
+        <span>pubdata.snu.ac.kr/lecture/policydata/</span>
+      </div>
+      <div class="meta">
+        <span>AI 학습데이터와 국가 정책역량</span>
+        <span>2026</span>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Opening Question</div>
+      <h2>AI 시대, 국가데이터의 의미가 바뀌고 있다</h2>
+      <div class="body">
+        <p class="quote">국가 데이터처의 데이터, 코드, 업무 절차는 AI가 정책문제를 이해하고 실행할 수 있는 형태인가?</p>
+        <div class="twocol">
+          <div class="panel">
+            <h3>기존 공공데이터 정책</h3>
+            <ul>
+              <li>개방 건수와 활용 실적 중심</li>
+              <li>민간 서비스 개발과 행정 효율화 지원</li>
+              <li>데이터셋 단위의 관리와 공개</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>AI 시대의 다음 질문</h3>
+            <ul class="compact">
+              <li>복지, 고용, 교육, 지역 데이터가 정책문제 단위로 연결되어 있는가</li>
+              <li>데이터의 생성 근거, 수집 방식, 품질 한계가 메타데이터로 남아 있는가</li>
+              <li>지표와 분석 결과를 만든 코드와 파이프라인을 재현할 수 있는가</li>
+              <li>AI 에이전트의 판단 로그와 사람의 승인 이력이 감사 가능한가</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Intelligent Policy AI Platform</div>
+      <h2>지능형 정책 AI 플랫폼: Agent들의 결합</h2>
+      <div class="body top">
+        <div class="platform-diagram">
+          <div class="agent-node">
+            <strong>질문형성 Agent</strong>
+            <span>정책문제를 하위 질문, 이해관계, 필요한 근거로 분해</span>
+          </div>
+          <div class="agent-node">
+            <strong>통계수집 Agent</strong>
+            <span>공공데이터, 행정자료, 통계표, 문서를 탐색하고 수집</span>
+          </div>
+          <div class="agent-node">
+            <strong>통계분석 Agent</strong>
+            <span>코드와 모델을 실행해 지표, 추세, 이상값, 불확실성을 분석</span>
+          </div>
+          <div class="agent-node">
+            <strong>정책형성 분석 Agent</strong>
+            <span>대안별 효과, 비용, 위험, 가치 충돌과 집행 가능성을 비교</span>
+          </div>
+          <div class="agent-node">
+            <strong>정책제언 Agent</strong>
+            <span>정책대안, 근거표, 설명자료, 보고서 초안과 후속 과제를 제안</span>
+          </div>
+        </div>
+        <div class="intelligence-layer">
+          <strong>공유 정책지능 레이어</strong>
+          <div class="layer-items">
+            <span>국가데이터·공공데이터</span>
+            <span>문서·법령·민원</span>
+            <span>분석 코드·API</span>
+            <span>프롬프트·실행 로그</span>
+          </div>
+        </div>
+        <div class="platform-output">
+          <span>질문 기반 정책</span>
+          <span>근거 기반 정책</span>
+          <span>학습하는 정책체계</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Core Message</div>
+      <h2>개방에서 학습으로: 공공데이터의 다음 단계</h2>
+      <div class="body">
+        <div class="emphasis">
+          <div class="big-number">3</div>
+          <div>
+            <p class="lead">공공데이터의 미래 가치는 개방 건수보다 AI가 학습할 수 있는 품질, 맥락, 연결성에서 결정된다.</p>
+            <div style="margin-top: 24px;">
+              <span class="badge">품질</span>
+              <span class="badge">맥락</span>
+              <span class="badge">연결성</span>
+              <span class="badge">재현성</span>
+              <span class="badge">책임성</span>
+            </div>
+          </div>
+        </div>
+        <table class="table dense">
+          <tr>
+            <th>공개 중심</th>
+            <th>활용 중심</th>
+            <th>학습 중심</th>
+          </tr>
+          <tr>
+            <td>AI의 강력한 검색과 데이터 결합 기능을 통해 공개 데이터의 발견 가능성과 연결의 질이 깊어진다.</td>
+            <td>다부처, 다분야, 다가치 정책문제에 대해 질문 기반, 근거 기반 정책을 가능하게 하고 정책 소통의 질을 높인다.</td>
+            <td>정책학습을 통해 과거의 시행착오와 반복적 실패위험을 데이터로 식별하고 줄인다.</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Expanded Definition</div>
+      <h2>AI 학습데이터는 문서와 수치 데이터에 그치지 않는다</h2>
+      <div class="body top">
+        <div class="matrix">
+          <div class="asset">
+            <div class="num">01</div>
+            <h3>문서</h3>
+            <p>법령, 지침, 보고서, 회의록, 민원, 정책자료. 제도와 판단 맥락을 담은 언어 데이터.</p>
+          </div>
+          <div class="asset">
+            <div class="num">02</div>
+            <h3>양적 데이터</h3>
+            <p>통계, 행정 DB, 공공데이터셋, 센서 및 이용 데이터. 정책 상태와 변화를 담은 구조화 데이터.</p>
+          </div>
+          <div class="asset">
+            <div class="num">03</div>
+            <h3>코드</h3>
+            <p>분석 코드, 처리 스크립트, 자동화 로직, API, 시뮬레이션 모델. 실행 가능한 지식.</p>
+          </div>
+          <div class="asset">
+            <div class="num">04</div>
+            <h3>에이전트</h3>
+            <p>프롬프트, 도구 사용 방식, 판단 규칙, 워크플로, 실행 로그. 업무 수행 방식의 기록.</p>
+          </div>
+        </div>
+        <p class="quote">AI는 정보생산 도구를 넘어, 검색하고 결합하고 실행하는 업무수행 Agent로 확장되고 있다.</p>
+        <div class="agent-examples">
+          <div class="agent-example">
+            <strong>정책자료 조사</strong>
+            <span>법령, 선행연구, 해외사례를 검색하고 쟁점별 근거표와 요약안을 생성</span>
+          </div>
+          <div class="agent-example">
+            <strong>행정데이터 분석</strong>
+            <span>공공데이터를 결합하고 분석 코드를 실행해 지표, 그래프, 이상값을 점검</span>
+          </div>
+          <div class="agent-example">
+            <strong>민원·보고 업무</strong>
+            <span>민원 유형을 분류하고 관련 규정 확인, 답변 초안, 후속 조치 목록을 작성</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Code as Data</div>
+      <h2>코드도 학습데이터다: 실행 가능한 정책지식</h2>
+      <div class="body">
+        <div class="wide-narrow">
+          <div class="panel">
+            <h3>코드가 담고 있는 것</h3>
+            <ul>
+              <li>데이터가 어떤 기준으로 정제되고 결합되는가</li>
+              <li>정책 지표가 어떤 계산식으로 산출되는가</li>
+              <li>분석 결과가 어떤 가정과 필터를 거쳐 생성되는가</li>
+              <li>반복 업무가 어떤 순서로 자동화되는가</li>
+            </ul>
+          </div>
+          <div class="panel gold">
+            <h3>간략한 예시</h3>
+            <ul class="compact">
+              <li>GitHub는 코드, 수정 이력, 이슈, 검토 과정을 함께 축적해 재현 가능한 업무 지식으로 만든다.</li>
+              <li>Codex의 skill은 반복 업무 절차와 도구 사용 방식을 명시해 AI가 같은 방식으로 다시 수행하게 한다.</li>
+              <li>따라서 코드는 결과물이 아니라 정책 분석과 행정업무의 절차를 학습시키는 데이터가 된다.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Agent as Data</div>
+      <h2>에이전트도 학습데이터다: 업무 수행 방식의 학습</h2>
+      <div class="body">
+        <div class="twocol">
+          <div class="panel">
+            <h3>에이전트가 남기는 기록</h3>
+            <ul class="compact">
+              <li>프롬프트와 시스템 지시</li>
+              <li>에이전트가 던진 질문과 하위 과제 분해 방식</li>
+              <li>도구 호출과 API 사용 이력</li>
+              <li>중간 판단, 선택지, 오류 수정 과정</li>
+              <li>사람-AI 협업과 승인 절차</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>서울대 사례: 프롬프트 정보의 데이터화</h3>
+            <ul class="compact">
+              <li>질문, 프롬프트, 응답, 피드백을 단순 이용 흔적이 아니라 AI 서비스 개선 데이터로 관리</li>
+              <li>좋은 질문과 실패한 질문을 축적해 교육, 연구, 행정 업무별 프롬프트 자산으로 전환</li>
+              <li>민감정보와 보안 기준을 함께 적용해 책임 있는 활용과 감사 가능성을 확보</li>
+              <li>핵심은 답변만 저장하는 것이 아니라 문제를 묻는 방식 자체를 조직학습 데이터로 삼는 것</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">National Data Office</div>
+      <h2>국가 데이터처의 역할: 통계품질에서 AI 정보품질로</h2>
+      <div class="body top">
+        <table class="table dense">
+          <tr>
+            <th>전통적 품질관리</th>
+            <th>AI 시대의 품질관리</th>
+          </tr>
+          <tr>
+            <td>통계와 행정데이터의 정확성, 완전성, 시의성, 비교 가능성 관리</td>
+            <td>AI가 검색, 결합, 요약, 추론한 정보의 출처, 신뢰도, 편향, 재현성 관리</td>
+          </tr>
+          <tr>
+            <td>데이터셋 단위의 표준, 메타데이터, 오류 점검</td>
+            <td>문서, 데이터, 코드, 프롬프트, 에이전트 로그를 함께 보는 정보 품질 점검</td>
+          </tr>
+          <tr>
+            <td>공표 전 품질 확인과 사후 정정 중심</td>
+            <td>AI 활용 과정에서 생성되는 답변, 지표, 정책 초안의 지속적 검증과 감사</td>
+          </tr>
+        </table>
+        <p class="quote">국가 데이터처는 데이터 품질관리 기관을 넘어, AI가 생산하는 정책정보의 품질을 관리하는 기관이 되어야 한다.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">International Cases I</div>
+      <h2>해외 통계청의 변화: 통계 생산에서 데이터·AI 신뢰 인프라로</h2>
+      <div class="body top">
+        <table class="table dense">
+          <tr>
+            <th>기관</th>
+            <th>변화 방향</th>
+            <th>시사점</th>
+          </tr>
+          <tr>
+            <td>영국 ONS</td>
+            <td>Data Science Campus와 Integrated Data Service를 통해 행정자료, 민간자료, 연구자료를 안전하게 연결하고 공동 분석</td>
+            <td>통계청이 데이터 과학 역량과 범정부 데이터 결합 플랫폼의 중심으로 이동</td>
+          </tr>
+          <tr>
+            <td>캐나다 통계청</td>
+            <td>Data Strategy와 AI 활용 원칙을 통해 데이터 자산 관리, 데이터 리터러시, AI·ML 역량을 현대화 과제로 제시</td>
+            <td>데이터 수집기관에서 데이터 거버넌스와 AI 신뢰성 관리기관으로 확장</td>
+          </tr>
+          <tr>
+            <td>호주 ABS</td>
+            <td>AI transparency statement와 Data Strategy 2025-2030을 통해 AI 활용 책임, 데이터 거버넌스, 신뢰 가능한 통계·인사이트 제공을 명시</td>
+            <td>AI 사용 자체도 설명하고 관리해야 할 공식 통계기관의 책임 영역으로 편입</td>
+          </tr>
+        </table>
+        <p class="source-note">Sources: UK ONS Data Science Campus·Integrated Data Service, Statistics Canada Data Strategy·AI statement, Australian Bureau of Statistics AI transparency statement·Data Strategy.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">International Cases II</div>
+      <h2>해외 데이터처의 변화: 데이터 개방에서 AI 기반 공공가치 창출로</h2>
+      <div class="body">
+        <div class="twocol">
+          <div class="panel">
+            <h3>싱가포르: 국가 AI 전략과 공공부문 실행</h3>
+            <ul class="compact">
+              <li>National AI Strategy 2.0은 AI를 공공선과 경제·사회 전환의 기반으로 제시</li>
+              <li>데이터, 컴퓨팅, 거버넌스, 인재, 공공서비스 적용을 함께 설계</li>
+              <li>데이터 조직의 역할이 데이터 제공을 넘어 AI 활용 조건과 공공서비스 적용을 조정하는 방향으로 확대</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>OECD: 통계청의 신뢰 중개자 역할</h3>
+            <ul class="compact">
+              <li>국가통계기관은 데이터 생태계에서 신뢰받는 중개자로 부상</li>
+              <li>증거기반 정책과 책임 있는 AI 개발을 지원하는 데이터 접근, 공유, 품질, 윤리 기준을 조정</li>
+              <li>핵심은 “데이터 보유”가 아니라 “신뢰 가능한 데이터 활용 조건”을 설계하는 역량</li>
+            </ul>
+          </div>
+        </div>
+        <p class="quote">해외 사례의 공통점은 통계청·데이터처가 데이터 생산과 개방을 넘어, AI 시대의 신뢰·연결·활용을 설계하는 기관으로 이동하고 있다는 점이다.</p>
+        <p class="source-note">Sources: Singapore National AI Strategy 2.0, OECD Digital Economy Paper on national statistical offices as trusted intermediaries in data governance.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Conversion Conditions</div>
+      <h2>공공데이터를 학습데이터로 전환하기 위한 조건</h2>
+      <div class="body top">
+        <table class="table">
+          <tr>
+            <th>조건</th>
+            <th>핵심 질문</th>
+            <th>관리 대상</th>
+          </tr>
+          <tr>
+            <td>문제 중심성</td>
+            <td>어떤 국가적 난제를 풀기 위한 데이터인가</td>
+            <td>정책수요, 의제, 성과지표</td>
+          </tr>
+          <tr>
+            <td>맥락성</td>
+            <td>데이터가 어떤 제도와 현장에서 생성되었는가</td>
+            <td>법령, 절차, 지역, 시점</td>
+          </tr>
+          <tr>
+            <td>연결성</td>
+            <td>기관과 분야를 넘어 상호 운용 가능한가</td>
+            <td>표준, 식별자, 메타데이터</td>
+          </tr>
+          <tr>
+            <td>재현성</td>
+            <td>분석과 판단을 다시 검증할 수 있는가</td>
+            <td>코드, 파이프라인, API</td>
+          </tr>
+          <tr>
+            <td>실행성</td>
+            <td>AI 업무 수행 과정이 기록되고 개선되는가</td>
+            <td>프롬프트, 도구 호출, 에이전트 로그</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Policy Capacity</div>
+      <h2>정책역량 이론과 AI 시대의 쟁점</h2>
+      <div class="body top">
+        <table class="table dense">
+          <tr>
+            <th>정책역량의 차원</th>
+            <th>핵심 의미</th>
+            <th>AI 시대의 쟁점</th>
+          </tr>
+          <tr>
+            <td>분석역량</td>
+            <td>문제를 정의하고 근거를 수집·해석해 정책대안을 설계하는 능력</td>
+            <td>AI가 제시한 근거의 출처, 편향, 불확실성을 검증할 수 있는가</td>
+          </tr>
+          <tr>
+            <td>운영역량</td>
+            <td>정책을 집행하고 조직, 절차, 자원을 안정적으로 작동시키는 능력</td>
+            <td>코드, API, 에이전트가 행정절차 안에서 책임 있게 작동하는가</td>
+          </tr>
+          <tr>
+            <td>정치·조정역량</td>
+            <td>다부처, 다분야, 다가치 갈등을 조정하고 사회적 수용성을 확보하는 능력</td>
+            <td>AI 기반 정책판단을 시민, 국회, 부처, 현장과 설명 가능하게 소통하는가</td>
+          </tr>
+        </table>
+        <p class="quote">AI는 정책역량을 대체하지 않는다. 다만 정책역량의 중심을 “답을 찾는 능력”에서 “좋은 질문을 만들고 근거와 실행을 검증하는 능력”으로 이동시킨다.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Policy Intelligence</div>
+      <h2>정책지능이란 무엇인가</h2>
+      <div class="body">
+        <div class="twocol">
+          <div class="panel">
+            <h3>정책지능의 의미</h3>
+            <ul class="compact">
+              <li>정책문제를 정확히 정의하고 질문으로 전환하는 능력</li>
+              <li>데이터, 문서, 현장 지식에서 근거를 찾고 해석하는 능력</li>
+              <li>대안의 효과, 비용, 위험, 가치 충돌을 비교하는 능력</li>
+              <li>집행 결과를 학습해 다음 정책 판단을 개선하는 능력</li>
+              <li>근거와 판단을 이해관계자에게 설명하고 소통하는 능력</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>AI의 역할</h3>
+            <ul class="compact">
+              <li>분산된 국가데이터와 문서를 빠르게 검색하고 연결</li>
+              <li>복잡한 정책문제를 하위 질문과 분석 과제로 분해</li>
+              <li>코드와 모델을 실행해 근거, 시나리오, 위험 신호를 생성</li>
+              <li>에이전트 로그를 축적해 정책 실패와 반복 업무를 학습</li>
+              <li>국회, 시민, 현장, 부처별 설명 자료를 맞춤형으로 작성</li>
+            </ul>
+          </div>
+        </div>
+        <p class="quote">정책지능은 더 많은 정보를 갖는 것이 아니라, 더 좋은 질문과 검증 가능한 근거로 정책 판단의 질을 높이는 능력이다.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Policy Capability</div>
+      <h2>AI 시대 정책역량의 재정의</h2>
+      <div class="body">
+        <div class="twocol">
+          <div class="panel">
+            <h3>기존 정책역량</h3>
+            <ul>
+              <li>의제 설정</li>
+              <li>정책 분석</li>
+              <li>이해관계 조정</li>
+              <li>집행과 평가</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>AI 시대 추가 역량</h3>
+            <ul class="compact">
+              <li>정책문제를 데이터 문제로 번역</li>
+              <li>국가데이터를 연결하고 해석</li>
+              <li>분석 코드와 파이프라인을 재현</li>
+              <li>에이전트의 판단과 실행 절차를 검증</li>
+              <li>공공 AI 활용의 위험과 책임을 관리</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Role Shift</div>
+      <h2>국가 데이터처에서 지능정보처로</h2>
+      <div class="body top">
+        <table class="table dense">
+          <tr>
+            <th>데이터처의 전통적 역할</th>
+            <th>지능정보처로 발전할 때의 역할</th>
+          </tr>
+          <tr>
+            <td>데이터 개방 관리자</td>
+            <td>국가 학습데이터와 정책지능 인프라 설계자</td>
+          </tr>
+          <tr>
+            <td>부처 간 데이터 중개자</td>
+            <td>다부처, 다분야 정책문제를 해석하는 지능정보 조정자</td>
+          </tr>
+          <tr>
+            <td>데이터 포털 운영자</td>
+            <td>공공 AI가 검색, 결합, 분석, 설명할 수 있는 지식 플랫폼 운영자</td>
+          </tr>
+          <tr>
+            <td>데이터셋 품질 점검자</td>
+            <td>AI가 생산한 정보의 출처, 품질, 편향, 재현성을 관리하는 신뢰 기관</td>
+          </tr>
+          <tr>
+            <td>단기 활용 실적 관리자</td>
+            <td>데이터, 코드, 프롬프트, 에이전트 로그를 축적해 정책학습을 이끄는 기관</td>
+          </tr>
+        </table>
+        <p class="quote">데이터처의 다음 단계는 데이터를 관리하는 기관을 넘어, 국가의 정책판단을 지능화하는 지능정보처로 발전하는 것이다.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Governance Agenda</div>
+      <h2>데이터 거버넌스의 관리 대상도 확장되어야 한다</h2>
+      <div class="body">
+        <div class="twocol">
+          <div class="panel">
+            <h3>기존 관리 대상</h3>
+            <ul>
+              <li>데이터셋</li>
+              <li>메타데이터</li>
+              <li>품질과 표준</li>
+              <li>개인정보와 보안</li>
+            </ul>
+          </div>
+          <div class="panel accent">
+            <h3>새로운 관리 대상</h3>
+            <ul>
+              <li>분석 코드와 모델링 파이프라인</li>
+              <li>API와 자동화 로직</li>
+              <li>프롬프트와 도구 사용 정책</li>
+              <li>에이전트 실행 로그와 승인 이력</li>
+            </ul>
+          </div>
+        </div>
+        <p class="small">핵심은 모든 것을 공개하는 것이 아니라, 정책 판단의 재현성과 책임성을 확보할 수 있는 관리 체계를 갖추는 것이다.</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="kicker">Closing</div>
+      <h2>AI가 학습할 수 있는 국가데이터 체계</h2>
+      <div class="body">
+        <p class="quote">AI를 잘 쓰는 국가는 데이터를 많이 가진 국가가 아니라, 공공데이터와 실행 지식을 정책지능으로 전환할 수 있는 국가다.</p>
+        <div class="twocol">
+          <div class="panel">
+            <h3>전환의 방향</h3>
+            <ul>
+              <li>행정 기록에서 정책 학습자산으로</li>
+              <li>데이터셋 관리에서 실행 지식 관리로</li>
+              <li>일회성 활용에서 축적되는 정책역량으로</li>
+            </ul>
+          </div>
+          <div class="panel gold">
+            <h3>국가 데이터처의 기회</h3>
+            <p class="lead">국가의 정책 경험을 AI가 학습 가능한 공공 인프라로 재구성하는 전략 기관이 되는 것.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="progress" id="progress"></div>
+  </main>
+
+  <div class="controls" aria-label="슬라이드 이동">
+    <button type="button" id="prev" aria-label="이전 슬라이드">‹</button>
+    <button type="button" id="next" aria-label="다음 슬라이드">›</button>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const progress = document.getElementById("progress");
+    let current = 0;
+
+    function render() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === current);
+        if (!slide.querySelector(".slide-logo")) {
+          const logo = document.createElement("img");
+          logo.className = "slide-logo";
+          logo.src = "snu-logo-cropped.png";
+          logo.alt = "서울대학교";
+          slide.appendChild(logo);
+        }
+        let footer = slide.querySelector(".footer");
+        if (!footer) {
+          footer = document.createElement("div");
+          footer.className = "footer";
+          footer.innerHTML = `<span></span><span>${index + 1} / ${slides.length}</span>`;
+          slide.appendChild(footer);
+        } else {
+          footer.lastElementChild.textContent = `${index + 1} / ${slides.length}`;
+        }
+      });
+      progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+      document.title = `${current + 1}/${slides.length} AI의 학습데이터로의 전환과 정책역량 강화`;
+    }
+
+    function go(delta) {
+      current = Math.max(0, Math.min(slides.length - 1, current + delta));
+      render();
+    }
+
+    document.getElementById("prev").addEventListener("click", () => go(-1));
+    document.getElementById("next").addEventListener("click", () => go(1));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") {
+        event.preventDefault();
+        go(1);
+      }
+      if (event.key === "ArrowLeft" || event.key === "PageUp") {
+        event.preventDefault();
+        go(-1);
+      }
+      if (event.key === "Home") {
+        current = 0;
+        render();
+      }
+      if (event.key === "End") {
+        current = slides.length - 1;
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
