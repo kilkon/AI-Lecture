@@ -1,0 +1,1915 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Public-Sector AX Execution Models</title>
+  <style>
+    :root {
+      --bg: #f4f1ec;
+      --paper: #fffaf2;
+      --ink: #1f2a2e;
+      --muted: #627077;
+      --line: #d9d1c3;
+      --blue: #225f73;
+      --green: #54715f;
+      --red: #a6533f;
+      --gold: #bd8b35;
+      --shadow: 0 22px 54px rgba(36, 45, 48, 0.14);
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      overflow: hidden;
+      background:
+        linear-gradient(120deg, rgba(34, 95, 115, 0.08), transparent 34%),
+        linear-gradient(250deg, rgba(189, 139, 53, 0.13), transparent 32%),
+        var(--bg);
+      color: var(--ink);
+      font-family: Inter, "Segoe UI", Arial, "Malgun Gothic", sans-serif;
+    }
+
+    .lang-switch {
+      position: fixed;
+      top: 14px;
+      right: 18px;
+      z-index: 7;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 8px;
+      border: 1px solid rgba(31, 42, 46, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.95);
+      box-shadow: 0 12px 30px rgba(31, 42, 46, 0.12);
+    }
+
+    .lang-switch button {
+      width: auto;
+      height: 34px;
+      min-width: 78px;
+      padding: 0 13px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .lang-switch button.active {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #fff;
+    }
+
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 56px 18px 88px;
+    }
+
+    .slide {
+      display: none;
+      position: relative;
+      width: min(1280px, 96vw, calc((100vh - 162px) * 1.7778));
+      aspect-ratio: 16 / 9;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .slide.active { display: block; }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 7px;
+      background: linear-gradient(90deg, var(--blue), var(--green), var(--gold), var(--red));
+    }
+
+    .inner {
+      height: 100%;
+      padding: clamp(30px, 3.2vw, 48px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      overflow: auto;
+    }
+
+    .kicker {
+      margin: 0;
+      color: var(--blue);
+      font-size: clamp(15px, 1.2vw, 18px);
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2 {
+      margin: 0;
+      letter-spacing: 0;
+      line-height: 1.07;
+    }
+
+    h1 {
+      max-width: 980px;
+      font-size: clamp(42px, 5vw, 72px);
+    }
+
+    h2 {
+      max-width: 1100px;
+      font-size: clamp(32px, 3.25vw, 50px);
+    }
+
+    p {
+      margin: 0;
+      font-size: clamp(17px, 1.45vw, 23px);
+      line-height: 1.5;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+      font-size: clamp(16px, 1.18vw, 19px);
+      line-height: 1.45;
+    }
+
+    li + li { margin-top: 6px; }
+
+    .subtitle {
+      max-width: 920px;
+      color: var(--muted);
+      font-size: clamp(21px, 1.9vw, 29px);
+    }
+
+    .presenter {
+      max-width: 920px;
+      padding-top: 4px;
+      color: var(--blue);
+      font-size: clamp(17px, 1.35vw, 22px);
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .grid {
+      display: grid;
+      gap: 15px;
+    }
+
+    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .box {
+      min-height: 100%;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.64);
+    }
+
+    .box h3 {
+      margin: 0 0 9px;
+      color: var(--blue);
+      font-size: clamp(18px, 1.42vw, 24px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .box p,
+    .box li {
+      font-size: clamp(14px, 1.06vw, 18px);
+      line-height: 1.4;
+    }
+
+    .quote {
+      max-width: 1040px;
+      padding-left: 21px;
+      border-left: 6px solid var(--gold);
+      color: #39464b;
+      font-size: clamp(21px, 1.85vw, 30px);
+      line-height: 1.36;
+      font-weight: 760;
+    }
+
+    .hero-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(300px, 0.96fr);
+      gap: 26px;
+      align-items: center;
+      min-height: 0;
+    }
+
+    .hero-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-width: 0;
+    }
+
+    .image-panel {
+      min-height: 0;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 16px 34px rgba(31, 42, 46, 0.11);
+    }
+
+    .image-panel img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 16 / 11;
+      object-fit: cover;
+    }
+
+    .image-caption {
+      padding: 10px 13px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      background: rgba(255, 250, 242, 0.94);
+      border-top: 1px solid var(--line);
+    }
+
+    .split-visual {
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+      gap: 22px;
+      align-items: center;
+      min-height: 0;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .step {
+      position: relative;
+      padding: 15px 13px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .step::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .step:last-child::after { display: none; }
+
+    .step b {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--red);
+      font-size: clamp(16px, 1.15vw, 20px);
+    }
+
+    .step span {
+      display: block;
+      color: var(--muted);
+      font-size: clamp(13px, 0.95vw, 16px);
+      line-height: 1.34;
+    }
+
+    .matrix {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: clamp(13px, 0.92vw, 17px);
+      line-height: 1.3;
+    }
+
+    .matrix th,
+    .matrix td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .matrix th {
+      background: rgba(34, 95, 115, 0.1);
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .matrix tr:last-child td { border-bottom: 0; }
+
+    html:lang(vi) .inner {
+      padding: clamp(24px, 2.55vw, 38px);
+      gap: 12px;
+    }
+
+    html:lang(vi) .kicker {
+      font-size: clamp(12px, 0.92vw, 15px);
+    }
+
+    html:lang(vi) h1 {
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: 1.08;
+    }
+
+    html:lang(vi) h2 {
+      max-width: 1160px;
+      font-size: clamp(25px, 2.45vw, 38px);
+      line-height: 1.12;
+    }
+
+    html:lang(vi) p,
+    html:lang(vi) ul {
+      font-size: clamp(13px, 1vw, 17px);
+      line-height: 1.34;
+    }
+
+    html:lang(vi) li + li { margin-top: 4px; }
+
+    html:lang(vi) .grid {
+      gap: 10px;
+    }
+
+    html:lang(vi) .box {
+      padding: 11px 12px;
+      min-width: 0;
+    }
+
+    html:lang(vi) .box h3 {
+      margin-bottom: 6px;
+      font-size: clamp(15px, 1.04vw, 19px);
+      line-height: 1.12;
+      overflow-wrap: anywhere;
+    }
+
+    html:lang(vi) .box p,
+    html:lang(vi) .box li {
+      font-size: clamp(11.5px, 0.82vw, 14px);
+      line-height: 1.26;
+      overflow-wrap: anywhere;
+    }
+
+    html:lang(vi) .quote {
+      padding-left: 14px;
+      border-left-width: 5px;
+      font-size: clamp(15px, 1.18vw, 21px);
+      line-height: 1.25;
+    }
+
+    html:lang(vi) .matrix {
+      table-layout: fixed;
+      font-size: clamp(10px, 0.72vw, 13px);
+      line-height: 1.18;
+    }
+
+    html:lang(vi) .matrix th,
+    html:lang(vi) .matrix td {
+      padding: 6px 7px;
+      overflow-wrap: anywhere;
+      hyphens: auto;
+    }
+
+    html:lang(vi) .split-visual {
+      grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+      gap: 16px;
+    }
+
+    html:lang(vi) .image-caption {
+      padding: 8px 10px;
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .note {
+      display: none;
+      margin-top: auto;
+      padding: 12px 14px;
+      border-left: 5px solid var(--green);
+      background: rgba(84, 113, 95, 0.1);
+      color: #43514a;
+      font-size: clamp(13px, 0.94vw, 16px);
+      line-height: 1.42;
+    }
+
+    body.show-notes .note { display: block; }
+
+    .controls {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      z-index: 5;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 10px 12px;
+      border: 1px solid rgba(31, 42, 46, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 250, 242, 0.94);
+      box-shadow: 0 12px 34px rgba(31, 42, 46, 0.13);
+    }
+
+    button {
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: #fff;
+      color: var(--ink);
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--blue); color: var(--blue); }
+
+    .counter {
+      min-width: 74px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .footer {
+      position: absolute;
+      left: clamp(30px, 3.2vw, 48px);
+      right: clamp(30px, 3.2vw, 48px);
+      bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      color: #879197;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .hero-layout,
+      .split-visual { grid-template-columns: 1fr; }
+      .image-panel img { aspect-ratio: 16 / 8; }
+    }
+
+    @media (max-width: 760px) {
+      body { overflow: auto; }
+      .lang-switch {
+        left: 10px;
+        right: 10px;
+        justify-content: center;
+      }
+      .lang-switch button { min-width: 0; }
+      .deck {
+        height: auto;
+        min-height: 100vh;
+        padding: 70px 10px 76px;
+      }
+      .slide {
+        width: 100%;
+        min-height: calc(100vh - 148px);
+        aspect-ratio: auto;
+      }
+      .inner { padding: 26px 20px 54px; }
+      .cols-2,
+      .cols-3,
+      .cols-4,
+      .flow { grid-template-columns: 1fr; }
+      .step::after { display: none; }
+      .footer { left: 20px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="lang-switch" aria-label="Language selection">
+    <button type="button" data-lang="en">English</button>
+    <button type="button" data-lang="vi">Tiếng Việt</button>
+    <button type="button" data-lang="ko">한국어</button>
+  </div>
+
+  <main class="deck" id="deck" aria-live="polite"></main>
+
+  <nav class="controls" aria-label="Slide navigation">
+    <button type="button" id="prev" title="Previous slide" aria-label="Previous slide">&#8249;</button>
+    <span class="counter" id="counter">1 / 28</span>
+    <button type="button" id="next" title="Next slide" aria-label="Next slide">&#8250;</button>
+    <button type="button" id="notes" title="Toggle teaching notes" aria-label="Toggle teaching notes">N</button>
+  </nav>
+
+  <script>
+    const langMeta = {
+      en: { lang: "en", title: "Public-Sector AX Execution Models" },
+      vi: { lang: "vi", title: "Các mô hình thực thi AX trong khu vực công" },
+      ko: { lang: "ko", title: "공공부문 AX 실행모델" }
+    };
+
+    const slidesByLang = {
+      en: [
+        {
+          type: "hero",
+          kicker: "From strategy to implementation",
+          title: "Public-Sector AX Execution Models",
+          subtitle: "For Viet Nam and developing countries: choose the model by administrative problem type, not by AI technology.",
+          presenter: "Kilkon Ko, Chief Information Officer, Seoul National University; Professor, Graduate School of Public Administration, Seoul National University",
+          image: "assets/ax-collaboration.png",
+          imageAlt: "Civil servants, researchers, citizens, and technologists collaborating around a digital public-service map",
+          caption: "The practical question is how to combine public authority with private and civic capabilities.",
+          note: "This version reduces general AX theory. The deck asks: for a specific public problem, which implementation model should government use, and what capacity must government keep?",
+          footer: "Problem-type execution models"
+        },
+        {
+          kicker: "Implementation conditions",
+          title: "Why AX is harder in developing countries",
+          cols: 3,
+          boxes: [
+            { title: "Data quality gaps", text: "Records may be incomplete, outdated, duplicated, or stored in separate systems that do not share definitions." },
+            { title: "Ministerial silos", text: "The agency with the data, the agency with the budget, and the agency facing citizens are often different." },
+            { title: "Budget constraints", text: "Pilots may be funded, while maintenance, integration, training, and evaluation are left unfunded." },
+            { title: "Thin technical capacity", text: "Few officials can act as product owners, data stewards, model evaluators, or technical architects." },
+            { title: "Dependence on private service providers", text: "External expertise can accelerate delivery, but it can also capture knowledge, data, and future choices." },
+            { title: "Uneven local capacity", text: "A central AX strategy fails if provinces, districts, or frontline offices cannot change daily workflows." }
+          ],
+          quote: "The first AX task is not choosing the most advanced model; it is identifying the constraint that will break implementation.",
+          note: "This slide starts from the audience's administrative reality. It legitimizes practical constraints before presenting Korea's experience and execution models.",
+          footer: "Start from implementation constraints"
+        },
+        {
+          kicker: "Before choosing AI",
+          title: "Diagnose the administrative constraint before diagnosing the technology",
+          table: {
+            headers: ["Constraint", "Question for officials", "Minimum response"],
+            rows: [
+              ["Data", "Are records complete, current, linkable, and legally usable?", "Name a data owner, fix critical fields, and define an update routine."],
+              ["Coordination", "Which agency owns the decision, data, budget, and citizen contact?", "Create a joint owner group, escalation channel, and shared success metric."],
+              ["Budget", "Is there funding for maintenance, training, evaluation, and redesign after the pilot?", "Move from pilot-only funding to lifecycle budgeting."],
+              ["Skills", "Who can manage private service providers, assess models, and support frontline staff?", "Build a small public capability core before procurement."],
+              ["Local delivery", "Can local offices actually use the tool and explain it to citizens?", "Pilot in real service sites and feed barriers back to the national AX unit."]
+            ]
+          },
+          note: "This slide gives civil servants a practical diagnostic habit. It makes AX less abstract and prepares the later problem-type execution models.",
+          footer: "Diagnose constraints first"
+        },
+        {
+          kicker: "Where AX fails",
+          title: "Failure usually comes from weak institutions around the model, not from the model alone",
+          table: {
+            headers: ["Failure pattern", "What it looks like", "Why it happens", "Early safeguard"],
+            rows: [
+              ["Stale data", "A welfare or farmer-support model targets households using outdated registry records.", "No data owner, update routine, or frontline correction channel.", "Check data freshness, assign a data steward, and allow field corrections."],
+              ["Private service provider exits", "A dashboard works during the pilot but cannot be maintained after the contract ends.", "Code, documentation, APIs, and model knowledge were not transferable.", "Require handover, open interfaces, internal operators, and continuity planning."],
+              ["No citizen appeal", "A risk score delays benefits, permits, or inspections, but citizens cannot understand or contest it.", "Redress was treated as a legal afterthought rather than part of service design.", "Design explanation, human review, appeal, and correction before launch."],
+              ["Local offices do not use it", "District officers keep old spreadsheets because the new tool adds work or does not fit their process.", "Frontline staff were not involved in workflow redesign.", "Pilot in real service sites and measure actual daily use."],
+              ["Past bias becomes future bias", "Groups historically under-served by government receive lower priority again.", "Administrative records reflect past exclusion and uneven access.", "Test outcomes by region and group, then revise data and decision rules."]
+            ]
+          },
+          note: "This slide makes risk concrete without relying on abstract ethical language. It prepares officials to ask implementation questions before approving AI projects.",
+          footer: "Failure patterns before pilots"
+        },
+        {
+          type: "split",
+          image: "assets/implementation-gap.png",
+          imageAlt: "A partially built bridge between policy vision, data infrastructure, operations, and citizens",
+          caption: "Most AX failures happen in the gap between a good demonstration and daily government work.",
+          kicker: "Risk cases for discussion",
+          title: "Ask participants: which of these failures is most likely in your ministry?",
+          items: [
+            "The data are old: newly moved households, informal workers, or changed farm conditions are invisible.",
+            "The private service provider leaves: nobody in government can update the model or repair the data pipeline.",
+            "The citizen cannot appeal: a harmful score changes service access without a clear reason or contact point.",
+            "The local office does not use it: the tool is technically correct but does not match staffing, forms, or incentives.",
+            "The model drifts silently: accuracy falls after a policy change, seasonal shock, or new user behavior."
+          ],
+          note: "Use this as an interactive moment. The aim is not to make officials pessimistic, but to normalize early risk diagnosis as part of responsible AX.",
+          footer: "Discuss likely failure first"
+        },
+        {
+          kicker: "Why the AI question changed",
+          title: "Recent AI changes government work because it can read, reason, act, and scale",
+          cols: 4,
+          boxes: [
+            { title: "Read", text: "LLMs read laws, forms, complaints, case notes, and policy documents in ordinary language." },
+            { title: "Reason with context", text: "Models summarize evidence, compare rules, draft options, and explain trade-offs for officials." },
+            { title: "Act through tools", text: "Agentic workflows call APIs, search records, route cases, and prepare service steps for human approval." },
+            { title: "Scale through infrastructure", text: "Cloud, GPUs, secure networks, databases, and MLOps make the service reliable after launch." }
+          ],
+          quote: "The shift is not simply better prediction. AI is becoming an operating layer for administrative work, so governance must cover workflow, data, infrastructure, and accountability.",
+          note: "This slide aligns the technology message with the public-sector implication: AX is broader than automation because AI now touches how officials read, judge, route, and maintain work.",
+          footer: "AI as work infrastructure"
+        },
+        {
+          kicker: "Plain-language technology map",
+          title: "",
+          cols: 3,
+          boxes: [
+            { title: "LLM", items: ["Meaning: reads and writes language.", "Example: explains permit rules in plain words."] },
+            { title: "API", items: ["Meaning: connects systems safely.", "Example: checks records without copying all data."] },
+            { title: "MCP", items: ["Meaning: Model Context Protocol, a standard way for AI to use approved tools and data.", "Example: an AI assistant checks a ministry database without direct, uncontrolled access."] },
+            { title: "Cloud", items: ["Meaning: shared secure computing.", "Example: scales flood alerts during peak demand."] },
+            { title: "MLOps", items: ["Meaning: monitors and updates models.", "Example: tracks accuracy, incidents, and versions."] },
+            { title: "Model drift", items: ["Meaning: accuracy falls as conditions change.", "Example: rainfall shifts weaken a crop-risk model."] }
+          ],
+          quote: "A public manager does not need to become an AI engineer, but must know enough to ask the right governance questions.",
+          note: "This slide translates technical vocabulary into administrative examples. Use it to slow down before introducing execution models.",
+          footer: "Technical terms in public language"
+        },
+        {
+          type: "split",
+          image: "assets/ax-collaboration.png",
+          imageAlt: "Public officials, citizens, researchers, and private service providers working around a digital service map",
+          caption: "AI becomes useful when models, data, infrastructure, operations, and public responsibility are connected.",
+          kicker: "How the pieces fit",
+          title: "Think of AI as a service chain, not a single model",
+          items: [
+            "LLM turns citizen questions, documents, or case notes into usable language.",
+            "APIs connect the answer to verified records, rules, and service systems.",
+            "Cloud provides secure capacity for many users and local offices.",
+            "MLOps monitors drift, incidents, updates, and evidence after launch.",
+            "Officials remain responsible for final rules, exceptions, appeals, and public communication."
+          ],
+          note: "The visual point is that AI implementation is an ecosystem. If one link is missing, even a strong model will not become a reliable public service.",
+          footer: "AI as service infrastructure"
+        },
+        {
+          kicker: "Implications for government",
+          title: "The new AI wave changes four government functions at once",
+          table: {
+            headers: ["Function", "Earlier digital-government question", "New AX question"],
+            rows: [
+              ["Service delivery", "How do we put services online?", "How do we redesign services when AI can guide, triage, and personalize interaction?"],
+              ["Administrative work", "How do we digitize forms and workflows?", "How do civil servants work with AI assistants without losing judgment and accountability?"],
+              ["Data governance", "How do we open and integrate data?", "How do we govern training data, model outputs, drift, bias, and redress?"],
+              ["State capacity", "How do we build IT systems?", "How do we combine public authority, private capability, and public trust?"]
+            ]
+          },
+          note: "This slide creates the bridge from AI technology to public administration. It avoids a purely technical introduction.",
+          footer: "AX changes government work"
+        },
+        {
+          kicker: "Korea's policy trajectory",
+          title: "Korea's AI transition builds on a longer digital-government path",
+          flow: [
+            { label: "E-government", text: "Build core digital public services, identity, portals, and administrative information systems." },
+            { label: "Data-based government", text: "Open public data, connect administrative datasets, and use analytics for policy support." },
+            { label: "Digital Platform Government", text: "Move toward cross-agency data linkage, integrated services, and platform-style public administration." },
+            { label: "National AI strategy", text: "Treat AI, semiconductors, compute, cloud, and talent as national strategic capabilities." },
+            { label: "AI trust and AX", text: "Combine promotion with legal, ethical, and operational rules for trustworthy public-sector use." }
+          ],
+          paragraphs: ["Korea's experience is useful not because every institution should be copied, but because it shows how AX depends on prior digital infrastructure, data governance, and public-private coordination."],
+          note: "The dates and institutional labels can be updated for a formal policy chronology, but the teaching point is the sequence: infrastructure, data, platform, AI strategy, trust, and operational AX.",
+          footer: "Korean policy flow"
+        },
+        {
+          kicker: "What Korea teaches developing countries",
+          title: "The core lesson is not faster adoption, but cumulative capability building",
+          cols: 3,
+          boxes: [
+            { title: "AI-ready infrastructure first", text: "AI value depends on a full stack: LLMs, GPUs and accelerators, secure networks, databases, cloud operations, and reliable administrative data." },
+            { title: "Private capability matters", text: "Government rarely has all technical capacity internally, so it must learn to govern partnerships." },
+            { title: "Trust is operational", text: "AI trust is not only ethics discourse; it requires audit, explanation, redress, and service continuity." }
+          ],
+          quote: "AX begins as a technology agenda, but succeeds only when it becomes an administrative-capacity agenda.",
+          note: "This slide softens the jump from Korean policy flow to the problem-type execution models.",
+          footer: "From policy flow to execution"
+        },
+        {
+          kicker: "Core reframing",
+          title: "The first question is not 'Which AI?', but 'What kind of administrative problem is this?'",
+          cols: 4,
+          boxes: [
+            { title: "Public value target", text: "Which public value should improve first: access, speed, accuracy, fairness, resilience, or trust?" },
+            { title: "Data condition", text: "Are data standardized, regularly updated, and linked across agencies?" },
+            { title: "Operational setting", text: "Is the main bottleneck central analytics, frontline workflow, or citizen interface?" },
+            { title: "Capability gap", text: "What must be built by government, and what can be borrowed from the market?" }
+          ],
+          quote: "AX implementation should begin with a problem diagnosis, then select a partnership model, data arrangement, accountability design, and evaluation metric.",
+          note: "This slide sets the new logic of the lecture. The audience should stop thinking of AX as a general modernization agenda and start thinking of it as a portfolio of problem-specific institutional designs.",
+          footer: "Diagnose before choosing tools"
+        },
+        {
+          kicker: "Execution model map",
+          title: "Separate the AI function, private capability, and public authority",
+          table: {
+            headers: ["Problem type", "AI technology layer", "Private-sector role", "Government role"],
+            rows: [
+              ["Social protection and eligibility", "Record linkage, eligibility-support models, case-prioritization tools", "Build data pipelines, interfaces, and model monitoring tools with caseworkers", "Define eligibility rules, approve decisions, protect appeals and redress"],
+              ["Agriculture and disaster early warning", "Geospatial AI, forecasting models, alert-targeting systems", "Provide satellite analytics, cloud operations, telecom channels, and MLOps", "Set warning thresholds, local response protocols, and public communication rules"],
+              ["Citizen service and licensing bottlenecks", "LLM service assistant, document triage, process mining, queue prediction", "Design service UX, integrate workflow software, and maintain digital channels", "Own service standards, process redesign, rejection reasons, and appeal rules"],
+              ["Tax, customs, and procurement risk", "Anomaly detection, risk scoring, network analysis, audit analytics", "Provide secure analytics tooling, model testing, and specialist engineering", "Retain inspection authority, due process, audit trails, and sanction decisions"],
+              ["Public data and civic information services", "Open APIs, search, translation, retrieval, civic-service apps", "Build apps and developer ecosystems using public data interfaces", "Guarantee data quality, equal access, licensing, privacy, and continuity"]
+            ]
+          },
+          note: "The table separates technical affordance, market capability, and public authority. This prevents public-private cooperation from becoming vague outsourcing.",
+          footer: "Role clarity before partnership"
+        },
+        {
+          kicker: "Model 1: Social protection and eligibility",
+          title: "Use AI to support case discovery, but keep eligibility and redress firmly public",
+          cols: 3,
+          boxes: [
+            { title: "Administrative problem", items: ["Eligible households remain invisible to welfare offices.", "Duplicate, outdated, or inconsistent records weaken targeting.", "Frontline workers face high caseloads and incomplete information."] },
+            { title: "Private participation model", items: ["Joint delivery team with ministry staff, local caseworkers, and private service provider engineers.", "Private service provider builds data pipeline, matching tool, and case-management interface.", "University or audit body validates bias and error patterns."] },
+            { title: "Safeguards and metrics", items: ["Human approval for benefit decisions.", "Clear appeal channel for exclusion or incorrect classification.", "Measure take-up among eligible groups, false exclusion, and caseworker workload."] }
+          ],
+          note: "This model is high public-value but high rights-risk. It is not appropriate for automated denial of benefits. The better frame is case discovery and decision support.",
+          footer: "Social protection model"
+        },
+        {
+          kicker: "Model 2: Agriculture and disaster early warning",
+          title: "Use private analytics and telecom channels, but make warning thresholds and response protocols public",
+          cols: 3,
+          boxes: [
+            { title: "Administrative problem", items: ["Flood, drought, pest, and crop risks are detected too late.", "Central forecasts do not always reach farmers or local officials in usable form.", "Data come from weather, satellite, local reports, and market signals."] },
+            { title: "Private participation model", items: ["GovTech sandbox for model comparison using shared test datasets.", "Managed service for cloud model operations and alert delivery.", "Telecom and platform partners distribute localized warnings."] },
+            { title: "Safeguards and metrics", items: ["Publicly defined alert thresholds and escalation rules.", "Local government feedback after each event.", "Measure lead time, false alarm rate, response adoption, and avoided losses."] }
+          ],
+          note: "This is a good entry point for developing countries because AI helps integrate data streams, while the final value depends on local response capacity.",
+          footer: "Early warning model"
+        },
+        {
+          kicker: "Model 3: Citizen service and licensing bottlenecks",
+          title: "Do not automate a broken process; use AI only after the service pathway is redesigned",
+          cols: 3,
+          boxes: [
+            { title: "Administrative problem", items: ["Permit, licensing, and complaint processes are slow and opaque.", "Citizens submit incomplete documents or visit multiple offices.", "Managers cannot see where work actually gets stuck."] },
+            { title: "Private participation model", items: ["Outcome-based procurement tied to processing time, error reduction, and satisfaction.", "Joint process-mining and workflow redesign with frontline officials.", "AI document triage and citizen assistant integrated into existing systems."] },
+            { title: "Safeguards and metrics", items: ["No hidden rule changes through model logic.", "Visible reasons for rejection or additional-document requests.", "Measure processing time, repeat visits, appeals, and service equity."] }
+          ],
+          note: "This model works only if administrative leadership owns process redesign. If the old procedure remains intact, AI becomes another layer of automated bureaucracy.",
+          footer: "Service bottleneck model"
+        },
+        {
+          kicker: "Model 4: Tax, customs, and procurement risk",
+          title: "Use AI for risk prioritization, not as an automatic accusation machine",
+          cols: 3,
+          boxes: [
+            { title: "Administrative problem", items: ["Inspection resources are limited, but transaction volume is high.", "Fraud, collusion, underreporting, and procurement irregularities are hard to detect manually.", "False positives can impose serious burdens on firms and citizens."] },
+            { title: "Private participation model", items: ["Secure analytic enclave where private service providers test models without extracting sensitive data.", "Framework agreement or private service provider pool for modular analytics tasks.", "Independent model evaluation before operational use."] },
+            { title: "Safeguards and metrics", items: ["Human review before sanction, audit, or inspection escalation.", "Audit trail for data inputs, risk-score changes, and officer decisions.", "Measure detection yield, false-positive burden, appeal outcomes, and deterrence."] }
+          ],
+          note: "This model requires stronger safeguards than service chatbots. The model can prioritize attention, but coercive authority must remain accountable to law and review.",
+          footer: "Risk analytics model"
+        },
+        {
+          kicker: "Model 5: Public data and civic information services",
+          title: "Korea's mask-app lesson: government can create value by opening reliable data rather than building every app itself",
+          cols: 4,
+          boxes: [
+            { title: "Problem", text: "Citizens need timely, localized information, especially during crisis or service disruption." },
+            { title: "Model", text: "Public data/API partnership with equal access for qualified civic and private developers." },
+            { title: "Government role", text: "Guarantee data quality, update frequency, licensing, privacy, and service continuity." },
+            { title: "Metrics", text: "API reliability, app diversity, coverage of vulnerable groups, and error correction speed." }
+          ],
+          paragraphs: ["For Viet Nam and similar contexts, this model is useful when state data authority is strong but user-facing innovation can be faster outside government."],
+          note: "This reframes the Korean mask-app case as a governance model, not merely a successful app story. It shows how public authority and private speed can be combined.",
+          footer: "Public data/API model"
+        },
+        {
+          kicker: "Choosing the private participation model",
+          title: "Private capability should be matched to the administrative problem, not inserted as a generic outsourcing solution",
+          table: {
+            headers: ["Participation model", "Use when...", "Do not use when...", "Main government control"],
+            rows: [
+              ["Outcome-based procurement", "The outcome is measurable and service standards are clear.", "The problem definition is still politically contested.", "Outcome definition and independent evaluation."],
+              ["Joint delivery team", "Workflow redesign and domain knowledge are central.", "The agency cannot assign real product owners.", "Knowledge transfer and public product ownership."],
+              ["GovTech challenge or sandbox", "Solutions are uncertain and several firms can compete.", "Sensitive data cannot be safely shared or simulated.", "Transparent selection and data-protection rules."],
+              ["Public data/API partnership", "Citizen-facing services can be built by an ecosystem.", "Data quality and update responsibility are unclear.", "API standards, licensing, and equal access."],
+              ["Managed service", "High-availability infrastructure or model operations are needed.", "Exit clauses, audit rights, and data sovereignty are weak.", "Monitoring, incident reporting, and portability."]
+            ]
+          },
+          note: "This slide is a decision tool. It prevents the lecture from sounding like 'use the private sector' in general and instead asks which model fits which governance condition.",
+          footer: "Model selection logic"
+        },
+        {
+          kicker: "Minimum public capability",
+          title: "When internal technical capacity is thin, government still needs a small but strong capability core",
+          cols: 3,
+          boxes: [
+            { title: "Product owner", text: "Defines the public problem, users, service standard, and acceptable error trade-off." },
+            { title: "Data steward", text: "Controls definitions, quality checks, access permissions, and update routines." },
+            { title: "Technical architect", text: "Sets interoperability, security, portability, and private-service-provider integration requirements." },
+            { title: "Procurement manager", text: "Writes contracts that reward outcomes, learning, documentation, and maintenance." },
+            { title: "Model evaluator", text: "Tests performance, bias, drift, and operational failure before and after deployment." },
+            { title: "Rights and redress lead", text: "Ensures explanation, appeal, correction, and citizen communication channels." }
+          ],
+          quote: "Government does not need to build every model, but it must understand enough to govern models, contracts, data, and consequences.",
+          note: "This answers the question: what must remain inside government even when private technical expertise is used?",
+          footer: "Capability core"
+        },
+        {
+          kicker: "Inter-ministerial coordination",
+          title: "AI policy needs shared authority, not isolated ministry pilots",
+          table: {
+            headers: ["Coordination task", "Lead role", "Shared responsibility", "Cooperation routine"],
+            rows: [
+              ["Problem portfolio", "Central AI/AX coordination unit", "Line ministries propose high-value problems; finance links budget to learning milestones.", "Quarterly portfolio review: start, stop, scale, or redesign pilots."],
+              ["Data and infrastructure", "Digital government/data agency", "Sector ministries classify data; cyber and privacy bodies set safeguards; cloud operators meet common standards.", "Shared data catalog, API standards, security review, and reuse registry."],
+              ["Sector implementation", "Responsible line ministry", "Local governments and frontline offices co-design workflows; private partners build under public direction.", "Problem labs and joint delivery teams with named owners."],
+              ["Risk and accountability", "Line ministry with audit, privacy, and rights bodies", "Legal units, ombuds offices, and local offices manage explanation, appeal, and incidents.", "Risk register, redress protocol, model incident review, and public reporting."],
+              ["Learning and scaling", "Civil service academy or digital capability center", "Ministries share templates, reusable components, failures, and evaluation results.", "Post-pilot learning review and common playbook update."]
+            ]
+          },
+          note: "The coordination issue is not simply who owns AI policy. It is how budget, data, sector expertise, legal responsibility, local delivery, and private capability are made to work together.",
+          footer: "Shared responsibility architecture"
+        },
+        {
+          kicker: "Korea as a learning case",
+          title: "Korea's lesson is not to copy institutions, but to translate mechanisms",
+          cols: 3,
+          boxes: [
+            { title: "Mechanism 1: reliable state data", text: "Identity, registration, tax, health, and public-data infrastructures made later digital services possible." },
+            { title: "Mechanism 2: public-private speed", text: "The mask-app case showed how public data authority and private/civic development speed can combine during crisis." },
+            { title: "Mechanism 3: unfinished governance", text: "Korea still faces silos, privacy disputes, dependence on private service providers, and uneven organizational learning." }
+          ],
+          paragraphs: ["For Viet Nam and other developing countries, the practical lesson is to build the smallest reliable state capability that can mobilize outside expertise without losing public control."],
+          note: "This keeps Korea in the deck but avoids making the lecture sound like a Korea-promotion narrative. The focus is mechanism transfer.",
+          footer: "Translate mechanisms, not templates"
+        },
+        {
+          kicker: "National AX governance system",
+          title: "A national AX unit must organize decision, execution, monitoring, and learning",
+          cols: 3,
+          boxes: [
+            { title: "High-level AX Decision Council", text: "Sets national priorities, approves risk principles, resolves cross-ministry conflicts, and reviews public-value results." },
+            { title: "National AX Coordination Unit", text: "Maintains the strategy dashboard, aligns standards and budgets, tracks pilots, and escalates stalled projects." },
+            { title: "Line Ministries", text: "Own sector problems, legal mandates, service redesign, data classification, and citizen-facing accountability." },
+            { title: "Implementation Agencies", text: "Operate shared platforms, cloud and data services, procurement support, cybersecurity, training, and technical assistance." },
+            { title: "Policy Think Tank and Evaluation Network", text: "Scans use cases, designs policy options, and tests bias, usability, model drift, rights risks, and public-value outcomes." },
+            { title: "Local Implementation and Feedback Sites", text: "Provinces and cities test workflows, gather frontline feedback, and report barriers to the national unit." }
+          ],
+          note: "This slide reframes Viet Nam's challenge: not only selecting AI projects, but building the institutional machinery that can decide, implement, monitor, learn, and coordinate across government.",
+          footer: "Build the coordination system"
+        },
+        {
+          kicker: "Culture and learning innovation",
+          title: "AX requires a government that learns from failure, not only celebrates successful pilots",
+          cols: 3,
+          boxes: [
+            { title: "From compliance to problem solving", text: "Officials need permission to diagnose bottlenecks, question existing rules, and redesign workflows before adding AI." },
+            { title: "Failure logs as public assets", text: "Each pilot should record data gaps, false positives, user resistance, model drift, and operational burdens." },
+            { title: "Safe-to-fail experiments", text: "Small pilots should use reversible decisions, human review, redress channels, and clear stop rules." },
+            { title: "Cross-ministry learning routines", text: "Monthly clinics let ministries compare what failed, what scaled, and which components can be reused." },
+            { title: "Korea example: mask-app learning", text: "The value came not from one app, but from rapid feedback among public data owners, private developers, and users." },
+            { title: "Rule for developing countries", text: "A pilot is not successful until it leaves a playbook, trained staff, cleaner data, and a reusable component." }
+          ],
+          quote: "AX capacity grows when government treats failed pilots as evidence, not embarrassment.",
+          note: "This slide shifts the lecture from project sequencing to organization-wide learning. The key point is cultural: AX needs disciplined experimentation, honest reporting of failure, and routines that convert lessons into institutional capability.",
+          footer: "Failure becomes learning"
+        },
+        {
+          kicker: "Government-wide AX success evidence",
+          title: "Success is visible when AX changes how government works, not when it counts more pilots",
+          table: {
+            headers: ["Transformation evidence", "What should change", "Evidence to look for", "Warning sign"],
+            rows: [
+              ["National coordination works", "AI priorities are governed as one portfolio across ministries.", "A central dashboard reviews projects, stops duplicates, and reallocates budget based on evidence.", "Many pilot announcements but no portfolio decision process."],
+              ["Shared data and infrastructure are reused", "Ministries build on common cloud, APIs, data catalog, security, and privacy standards.", "New projects reuse existing data interfaces and platform components.", "Each agency buys separate systems and creates new data silos."],
+              ["Administrative processes are redesigned", "AI changes rules, workflows, forms, staffing, and citizen communication, not only back-office analytics.", "Service standards, human review, and redress channels are updated after deployment.", "AI is layered onto a broken procedure without process reform."],
+              ["Public capability grows inside government", "Officials can define problems, govern private service providers, evaluate models, and maintain systems after pilots.", "Product owners, data stewards, and model evaluators exist across ministries and local sites.", "Capability remains inside private service providers or one temporary project team."],
+              ["Learning and trust improve", "Successes and failures become reusable rules, playbooks, training, and accountability routines.", "Failure logs, post-pilot reviews, public-value metrics, and citizen complaints feed redesign.", "Only success stories are reported and citizen-facing value is unclear."]
+            ]
+          },
+          note: "The unit of success is not the individual AI project. It is whether the whole government becomes better at coordinating, learning, protecting rights, and redesigning public services responsibly.",
+          footer: "System-level success evidence"
+        },
+        {
+          type: "split",
+          image: "assets/implementation-gap.png",
+          imageAlt: "A layered bridge across policy vision, data infrastructure, organization, citizen trust, and implementation",
+          caption: "Implementation fails when one link in the chain is assumed rather than designed.",
+          kicker: "What decision makers will challenge",
+          title: "The hard questions are not technical demos, but governance failures",
+          items: ["Who is accountable when the model is wrong?", "Can the ministry operate the system after the private service provider leaves?", "Are citizens able to understand and contest harmful outcomes?", "Will the project build reusable capability or only a one-off dashboard?", "Can local governments actually use the system in daily work?"],
+          note: "This slide can be used to shift from optimism to implementation realism without becoming anti-AI.",
+          footer: "Governance failure questions"
+        },
+        {
+          kicker: "Workshop canvas",
+          title: "Design one AX project by filling the execution model, not by naming a technology",
+          table: {
+            headers: ["Question", "Answer the team must produce"],
+            rows: [
+              ["1. Problem type", "Which administrative problem is being solved, and who experiences it?"],
+              ["2. Decision risk", "Does the system affect benefits, sanctions, inspections, permits, or rights?"],
+              ["3. Data arrangement", "Which agency owns the data, how often are they updated, and how will errors be corrected?"],
+              ["4. Private role", "Which participation model fits: joint delivery, sandbox, API partnership, private service provider pool, or managed service?"],
+              ["5. Public capability", "Which product owner, data steward, model evaluator, and redress lead will government assign?"],
+              ["6. Evidence", "Which outcome, risk, and capacity metrics will determine whether the project scales?"]
+            ]
+          },
+          note: "This gives the lecture a concrete ending activity. Participants can use it to redesign a project from their own ministry.",
+          footer: "Execution model canvas"
+        },
+        {
+          kicker: "Future vision",
+          title: "From AI adoption to an adaptive, learning state",
+          cols: 3,
+          boxes: [
+            { title: "Intelligent public services", text: "AI helps citizens navigate services, detects emerging risks, and supports frontline decisions with human accountability." },
+            { title: "Whole-of-government nervous system", text: "Shared data, cloud, standards, and AX coordination turn separate agencies into a connected problem-solving system." },
+            { title: "Public-private learning ecosystem", text: "Government, firms, universities, local sites, and citizens test, fail, improve, and scale what creates public value." }
+          ],
+          quote: "The future goal is not an automated state. It is a capable state that learns faster, protects rights better, and uses AI to expand public value.",
+          note: "This closing reconnects the practical execution models to a larger reform vision: developing countries can use AX not merely to digitize tasks, but to build a more adaptive, collaborative, and accountable state.",
+          footer: "Adaptive public value state"
+        }
+      ],
+      vi: [
+        {
+          type: "hero",
+          kicker: "Từ chiến lược đến thực thi",
+          title: "Các mô hình thực thi AX trong khu vực công",
+          subtitle: "Dành cho Việt Nam và các nước đang phát triển: hãy chọn mô hình theo loại vấn đề hành chính, không phải theo công nghệ AI.",
+          presenter: "Kilkon Ko, Giám đốc Công nghệ Thông tin, Đại học Quốc gia Seoul; Giáo sư, Trường Sau đại học Hành chính công, Đại học Quốc gia Seoul",
+          image: "assets/ax-collaboration.png",
+          imageAlt: "Công chức, nhà nghiên cứu, người dân và chuyên gia công nghệ cùng thảo luận quanh bản đồ dịch vụ công số",
+          caption: "Câu hỏi thực tiễn là kết hợp quyền lực công với năng lực tư nhân và xã hội như thế nào.",
+          note: "Phiên bản này giảm lý thuyết chung về AX. Trọng tâm là: với một vấn đề công cụ thể, nhà nước nên dùng mô hình thực thi nào và phải giữ lại năng lực nào?",
+          footer: "Mô hình theo loại vấn đề"
+        },
+        {
+          kicker: "Điều kiện thực thi",
+          title: "Vì sao AX khó hơn ở các nước đang phát triển",
+          cols: 3,
+          boxes: [
+            { title: "Khoảng trống chất lượng dữ liệu", text: "Hồ sơ có thể thiếu, lỗi thời, trùng lặp hoặc nằm trong các hệ thống không dùng chung định nghĩa." },
+            { title: "Chia cắt giữa bộ ngành", text: "Cơ quan có dữ liệu, cơ quan có ngân sách và cơ quan tiếp xúc với công dân thường không phải là một." },
+            { title: "Ràng buộc ngân sách", text: "Thí điểm có thể được tài trợ, nhưng bảo trì, tích hợp, đào tạo và đánh giá lại không có kinh phí." },
+            { title: "Năng lực kỹ thuật còn mỏng", text: "Ít công chức có thể làm chủ sản phẩm, quản trị dữ liệu, đánh giá mô hình hoặc kiến trúc kỹ thuật." },
+            { title: "Phụ thuộc vào đơn vị cung cấp dịch vụ tư nhân", text: "Chuyên môn bên ngoài có thể tăng tốc triển khai, nhưng cũng có thể giữ lại tri thức, dữ liệu và lựa chọn tương lai." },
+            { title: "Năng lực địa phương không đều", text: "Chiến lược AX trung ương sẽ thất bại nếu tỉnh, huyện hoặc tuyến đầu không thể thay đổi công việc hằng ngày." }
+          ],
+          quote: "Nhiệm vụ AX đầu tiên không phải là chọn mô hình tiên tiến nhất, mà là nhận diện ràng buộc sẽ làm hỏng việc thực thi.",
+          note: "Trang này bắt đầu từ thực tế hành chính của người nghe. Nó thừa nhận các ràng buộc thực tế trước khi trình bày kinh nghiệm Hàn Quốc và mô hình thực thi.",
+          footer: "Bắt đầu từ ràng buộc thực thi"
+        },
+        {
+          kicker: "Trước khi chọn AI",
+          title: "Hãy chẩn đoán ràng buộc hành chính trước khi chẩn đoán công nghệ",
+          table: {
+            headers: ["Ràng buộc", "Câu hỏi cho công chức", "Phản ứng tối thiểu"],
+            rows: [
+              ["Dữ liệu", "Hồ sơ có đầy đủ, cập nhật, liên kết được và dùng hợp pháp không?", "Giao chủ sở hữu dữ liệu, sửa các trường quan trọng và định nghĩa quy trình cập nhật."],
+              ["Điều phối", "Cơ quan nào sở hữu quyết định, dữ liệu, ngân sách và tiếp xúc công dân?", "Tạo nhóm đồng sở hữu, kênh leo thang và chỉ số thành công chung."],
+              ["Ngân sách", "Có kinh phí cho bảo trì, đào tạo, đánh giá và thiết kế lại sau thí điểm không?", "Chuyển từ tài trợ thí điểm sang ngân sách vòng đời."],
+              ["Kỹ năng", "Ai có thể quản trị đơn vị cung cấp dịch vụ tư nhân, đánh giá mô hình và hỗ trợ tuyến đầu?", "Xây lõi năng lực công nhỏ trước khi mua sắm."],
+              ["Thực thi địa phương", "Văn phòng địa phương có thật sự dùng được công cụ và giải thích cho công dân không?", "Thí điểm tại điểm dịch vụ thật và đưa rào cản về đơn vị AX quốc gia."]
+            ]
+          },
+          note: "Trang này tạo thói quen chẩn đoán thực tế cho công chức. Nó làm AX bớt trừu tượng và chuẩn bị cho các mô hình thực thi theo loại vấn đề.",
+          footer: "Chẩn đoán ràng buộc trước"
+        },
+        {
+          kicker: "AX thất bại ở đâu",
+          title: "Thất bại thường đến từ thể chế quanh mô hình yếu, không chỉ từ bản thân mô hình",
+          table: {
+            headers: ["Mẫu thất bại", "Biểu hiện", "Vì sao xảy ra", "Bảo đảm sớm"],
+            rows: [
+              ["Dữ liệu lỗi thời", "Mô hình phúc lợi hoặc hỗ trợ nông dân nhắm mục tiêu bằng hồ sơ đăng ký đã cũ.", "Không có chủ dữ liệu, quy trình cập nhật hoặc kênh sửa lỗi tuyến đầu.", "Kiểm tra độ mới của dữ liệu, giao quản trị dữ liệu và cho phép sửa từ hiện trường."],
+              ["Đơn vị cung cấp dịch vụ tư nhân rời đi", "Dashboard chạy tốt trong thí điểm nhưng không thể duy trì sau khi hợp đồng kết thúc.", "Mã, tài liệu, API và tri thức mô hình không được chuyển giao.", "Yêu cầu bàn giao, giao diện mở, người vận hành nội bộ và kế hoạch liên tục."],
+              ["Không có khiếu nại của công dân", "Điểm rủi ro làm chậm phúc lợi, giấy phép hoặc thanh tra, nhưng công dân không hiểu hoặc không phản đối được.", "Sửa sai bị coi là việc pháp lý sau cùng, không phải một phần của thiết kế dịch vụ.", "Thiết kế giải thích, rà soát của con người, khiếu nại và sửa lỗi trước khi triển khai."],
+              ["Văn phòng địa phương không dùng", "Cán bộ huyện vẫn dùng bảng tính cũ vì công cụ mới tăng việc hoặc không hợp quy trình.", "Tuyến đầu không tham gia thiết kế lại quy trình.", "Thí điểm tại điểm dịch vụ thật và đo mức sử dụng hằng ngày."],
+              ["Thiên lệch cũ thành thiên lệch mới", "Nhóm từng ít được phục vụ lại tiếp tục nhận ưu tiên thấp.", "Hồ sơ hành chính phản ánh loại trừ trước đây và tiếp cận không đều.", "Kiểm thử kết quả theo vùng và nhóm, rồi sửa dữ liệu và quy tắc quyết định."]
+            ]
+          },
+          note: "Trang này làm rủi ro trở nên cụ thể mà không biến thành thảo luận đạo đức trừu tượng. Nó giúp công chức đặt câu hỏi thực thi trước khi phê duyệt dự án AI.",
+          footer: "Mẫu thất bại trước thí điểm"
+        },
+        {
+          type: "split",
+          image: "assets/implementation-gap.png",
+          imageAlt: "Cây cầu còn dang dở giữa tầm nhìn chính sách, hạ tầng dữ liệu, vận hành và công dân",
+          caption: "Phần lớn thất bại AX nằm trong khoảng cách giữa trình diễn tốt và công việc hằng ngày của chính phủ.",
+          kicker: "Tình huống rủi ro để thảo luận",
+          title: "Hỏi người tham gia: thất bại nào dễ xảy ra nhất trong bộ của bạn?",
+          items: [
+            "Dữ liệu đã cũ: hộ mới chuyển đến, lao động phi chính thức hoặc điều kiện nông nghiệp mới không được nhìn thấy.",
+            "Đơn vị cung cấp dịch vụ tư nhân rời đi: không ai trong chính phủ cập nhật mô hình hoặc sửa đường ống dữ liệu.",
+            "Công dân không thể khiếu nại: điểm số có hại thay đổi quyền tiếp cận dịch vụ mà không có lý do rõ hoặc đầu mối liên hệ.",
+            "Văn phòng địa phương không dùng: công cụ đúng về kỹ thuật nhưng không khớp nhân sự, biểu mẫu hoặc động cơ làm việc.",
+            "Mô hình trôi âm thầm: độ chính xác giảm sau thay đổi chính sách, cú sốc mùa vụ hoặc hành vi người dùng mới."
+          ],
+          note: "Dùng trang này như một điểm tương tác. Mục tiêu không phải làm công chức bi quan, mà bình thường hóa chẩn đoán rủi ro sớm trong AX có trách nhiệm.",
+          footer: "Thảo luận thất bại có khả năng nhất"
+        },
+        {
+          kicker: "Vì sao câu hỏi về AI đã thay đổi",
+          title: "AI gần đây thay đổi công việc chính phủ vì có thể đọc, suy luận, hành động và mở rộng",
+          cols: 4,
+          boxes: [
+            { title: "Đọc", text: "LLM đọc luật, biểu mẫu, khiếu nại, ghi chú hồ sơ và tài liệu chính sách bằng ngôn ngữ thường." },
+            { title: "Suy luận theo bối cảnh", text: "Mô hình tóm tắt bằng chứng, so sánh quy tắc, phác thảo lựa chọn và giải thích đánh đổi." },
+            { title: "Hành động qua công cụ", text: "Quy trình tác nhân gọi API, tìm hồ sơ, chuyển tuyến hồ sơ và chuẩn bị bước dịch vụ để con người phê duyệt." },
+            { title: "Mở rộng bằng hạ tầng", text: "Cloud, GPU, mạng an toàn, cơ sở dữ liệu và MLOps giúp dịch vụ ổn định sau triển khai." }
+          ],
+          quote: "Không chỉ là dự báo tốt hơn. AI đang thành lớp vận hành cho công việc hành chính; vì vậy quản trị phải bao phủ quy trình, dữ liệu, hạ tầng và trách nhiệm.",
+          note: "Trang này nối thông điệp công nghệ với hàm ý khu vực công: AX rộng hơn tự động hóa vì AI chạm vào cách công chức đọc, phán đoán, chuyển tuyến và duy trì công việc.",
+          footer: "AI như hạ tầng công việc"
+        },
+        {
+          kicker: "Bản đồ công nghệ bằng ngôn ngữ dễ hiểu",
+          title: "",
+          cols: 3,
+          boxes: [
+            { title: "LLM", items: ["Nghĩa: đọc và tạo ngôn ngữ.", "Ví dụ: giải thích điều kiện cấp phép."] },
+            { title: "API", items: ["Nghĩa: kết nối hệ thống an toàn.", "Ví dụ: kiểm tra hồ sơ không sao chép dữ liệu."] },
+            { title: "MCP", items: ["Nghĩa: Model Context Protocol, cách chuẩn để AI dùng công cụ và dữ liệu đã duyệt.", "Ví dụ: trợ lý AI kiểm tra cơ sở dữ liệu bộ ngành mà không truy cập tùy tiện."] },
+            { title: "Cloud", items: ["Nghĩa: năng lực tính toán dùng chung.", "Ví dụ: mở rộng cảnh báo lũ khi nhu cầu tăng."] },
+            { title: "MLOps", items: ["Nghĩa: giám sát và cập nhật mô hình.", "Ví dụ: theo dõi độ chính xác, sự cố, phiên bản."] },
+            { title: "Model drift", items: ["Nghĩa: độ chính xác giảm khi bối cảnh đổi.", "Ví dụ: mẫu mưa mới làm yếu mô hình cây trồng."] }
+          ],
+          quote: "Nhà quản lý công không cần trở thành kỹ sư AI, nhưng phải hiểu đủ để đặt đúng câu hỏi quản trị.",
+          note: "Trang này dịch thuật ngữ kỹ thuật thành ví dụ hành chính. Dùng nó để làm chậm nhịp trước khi đi vào mô hình thực thi.",
+          footer: "Thuật ngữ kỹ thuật bằng ngôn ngữ công"
+        },
+        {
+          type: "split",
+          image: "assets/ax-collaboration.png",
+          imageAlt: "Công chức, người dân, nhà nghiên cứu và đơn vị cung cấp dịch vụ tư nhân cùng làm việc quanh bản đồ dịch vụ số",
+          caption: "AI hữu ích khi mô hình, dữ liệu, hạ tầng, vận hành và trách nhiệm công được nối với nhau.",
+          kicker: "Các phần kết nối như thế nào",
+          title: "Hãy nghĩ về AI như một chuỗi dịch vụ, không phải một mô hình riêng lẻ",
+          items: [
+            "LLM biến câu hỏi, tài liệu hoặc ghi chú hồ sơ thành ngôn ngữ dễ dùng.",
+            "API nối câu trả lời với hồ sơ, quy tắc và hệ thống dịch vụ đã được xác thực.",
+            "Cloud cung cấp năng lực an toàn cho nhiều người dùng và văn phòng địa phương.",
+            "MLOps giám sát trôi mô hình, sự cố, cập nhật và bằng chứng sau triển khai.",
+            "Công chức vẫn chịu trách nhiệm về quy tắc cuối cùng, ngoại lệ, khiếu nại và truyền thông công."
+          ],
+          note: "Ý chính của hình ảnh là thực thi AI là một hệ sinh thái. Nếu thiếu một mắt xích, mô hình mạnh cũng không trở thành dịch vụ công đáng tin cậy.",
+          footer: "AI như hạ tầng dịch vụ"
+        },
+        {
+          kicker: "Hàm ý cho chính phủ",
+          title: "Làn sóng AI mới thay đổi đồng thời bốn chức năng của chính phủ",
+          table: {
+            headers: ["Chức năng", "Câu hỏi chính phủ số trước đây", "Câu hỏi AX mới"],
+            rows: [
+              ["Cung ứng dịch vụ", "Làm thế nào đưa dịch vụ lên trực tuyến?", "Làm thế nào thiết kế lại dịch vụ khi AI có thể hướng dẫn, phân loại và cá nhân hóa tương tác?"],
+              ["Công việc hành chính", "Làm thế nào số hóa biểu mẫu và quy trình?", "Công chức làm việc với trợ lý AI thế nào mà không mất phán đoán và trách nhiệm giải trình?"],
+              ["Quản trị dữ liệu", "Làm thế nào mở và liên thông dữ liệu?", "Quản trị dữ liệu huấn luyện, đầu ra mô hình, trôi mô hình, thiên lệch và khiếu nại thế nào?"],
+              ["Năng lực nhà nước", "Làm thế nào xây hệ thống CNTT?", "Làm thế nào kết hợp quyền lực công, năng lực tư nhân và niềm tin công?"]
+            ]
+          },
+          note: "Trang này nối công nghệ AI với hành chính công, tránh phần mở đầu thuần kỹ thuật.",
+          footer: "AX thay đổi công việc chính phủ"
+        },
+        {
+          kicker: "Dòng chính sách của Hàn Quốc",
+          title: "Chuyển đổi AI của Hàn Quốc dựa trên một lộ trình chính phủ số dài hơn",
+          flow: [
+            { label: "Chính phủ điện tử", text: "Xây dịch vụ công số cốt lõi, định danh, cổng dịch vụ và hệ thống thông tin hành chính." },
+            { label: "Chính phủ dựa trên dữ liệu", text: "Mở dữ liệu công, kết nối dữ liệu hành chính và dùng phân tích hỗ trợ chính sách." },
+            { label: "Chính phủ nền tảng số", text: "Tiến tới liên kết dữ liệu liên cơ quan, dịch vụ tích hợp và hành chính công kiểu nền tảng." },
+            { label: "Chiến lược AI quốc gia", text: "Xem AI, bán dẫn, năng lực tính toán, đám mây và nhân lực là năng lực chiến lược quốc gia." },
+            { label: "Tin cậy AI và AX", text: "Kết hợp thúc đẩy AI với quy tắc pháp lý, đạo đức và vận hành cho sử dụng đáng tin cậy trong khu vực công." }
+          ],
+          paragraphs: ["Kinh nghiệm Hàn Quốc hữu ích không phải vì nên sao chép mọi thể chế, mà vì nó cho thấy AX phụ thuộc vào hạ tầng số, quản trị dữ liệu và phối hợp công tư tích lũy từ trước."],
+          note: "Có thể cập nhật mốc thời gian cụ thể trong bản niên biểu chính sách chính thức; điểm giảng dạy là chuỗi hạ tầng, dữ liệu, nền tảng, chiến lược AI, tin cậy và AX vận hành.",
+          footer: "Dòng chính sách Hàn Quốc"
+        },
+        {
+          kicker: "Bài học từ Hàn Quốc cho các nước đang phát triển",
+          title: "Bài học cốt lõi không phải là áp dụng nhanh hơn, mà là tích lũy năng lực",
+          cols: 3,
+          boxes: [
+            { title: "Hạ tầng sẵn sàng cho AI đi trước", text: "Giá trị AI phụ thuộc vào một hệ thống đầy đủ: LLM, GPU và bộ tăng tốc, mạng an toàn, cơ sở dữ liệu, vận hành đám mây và dữ liệu hành chính đáng tin cậy." },
+            { title: "Năng lực tư nhân rất quan trọng", text: "Chính phủ hiếm khi có đủ năng lực kỹ thuật nội bộ, nên phải học cách quản trị quan hệ đối tác." },
+            { title: "Niềm tin là vấn đề vận hành", text: "Tin cậy AI không chỉ là đạo đức; nó cần kiểm toán, giải thích, khiếu nại và liên tục dịch vụ." }
+          ],
+          quote: "AX bắt đầu như một chương trình công nghệ, nhưng chỉ thành công khi trở thành chương trình xây dựng năng lực hành chính.",
+          note: "Trang này làm mềm bước chuyển từ dòng chính sách Hàn Quốc sang mô hình thực thi theo loại vấn đề.",
+          footer: "Từ dòng chính sách đến thực thi"
+        },
+        {
+          kicker: "Đổi khung câu hỏi",
+          title: "Câu hỏi đầu tiên không phải là 'AI nào?', mà là 'Đây là loại vấn đề hành chính nào?'",
+          cols: 4,
+          boxes: [
+            { title: "Mục tiêu giá trị công", text: "Giá trị công nào cần được cải thiện trước: tiếp cận, tốc độ, độ chính xác, công bằng, khả năng chống chịu hay niềm tin?" },
+            { title: "Điều kiện dữ liệu", text: "Dữ liệu có chuẩn hóa, cập nhật thường xuyên và liên thông giữa các cơ quan không?" },
+            { title: "Bối cảnh vận hành", text: "Nút thắt chính nằm ở phân tích trung ương, quy trình tuyến đầu hay giao diện với người dân?" },
+            { title: "Khoảng trống năng lực", text: "Phần nào chính phủ phải tự xây dựng, phần nào có thể huy động từ thị trường?" }
+          ],
+          quote: "Thực thi AX nên bắt đầu bằng chẩn đoán vấn đề, sau đó mới chọn mô hình hợp tác, cách tổ chức dữ liệu, thiết kế trách nhiệm giải trình và chỉ số đánh giá.",
+          note: "Trang này đặt lại logic của bài giảng: AX không phải là chương trình hiện đại hóa chung chung, mà là một danh mục thiết kế thể chế theo từng loại vấn đề.",
+          footer: "Chẩn đoán trước khi chọn công cụ"
+        },
+        {
+          kicker: "Bản đồ mô hình thực thi",
+          title: "Tách rõ chức năng AI, năng lực tư nhân và thẩm quyền công",
+          table: {
+            headers: ["Loại vấn đề", "Tầng công nghệ AI", "Vai trò khu vực tư nhân", "Vai trò chính phủ"],
+            rows: [
+              ["An sinh xã hội và điều kiện thụ hưởng", "Liên kết hồ sơ, mô hình hỗ trợ điều kiện thụ hưởng, công cụ ưu tiên hồ sơ", "Xây đường ống dữ liệu, giao diện và công cụ giám sát mô hình cùng cán bộ hồ sơ", "Định nghĩa quy tắc thụ hưởng, phê duyệt quyết định, bảo vệ khiếu nại và sửa sai"],
+              ["Nông nghiệp và cảnh báo sớm thiên tai", "AI không gian, mô hình dự báo, hệ thống nhắm mục tiêu cảnh báo", "Cung cấp phân tích vệ tinh, vận hành đám mây, kênh viễn thông và MLOps", "Đặt ngưỡng cảnh báo, quy trình phản ứng địa phương và quy tắc truyền thông công"],
+              ["Dịch vụ công và nút thắt cấp phép", "Trợ lý dịch vụ LLM, phân loại tài liệu, khai phá quy trình, dự báo hàng chờ", "Thiết kế UX dịch vụ, tích hợp phần mềm quy trình và duy trì kênh số", "Sở hữu chuẩn dịch vụ, tái thiết kế quy trình, lý do từ chối và quy tắc khiếu nại"],
+              ["Thuế, hải quan và rủi ro mua sắm công", "Phát hiện bất thường, chấm điểm rủi ro, phân tích mạng, phân tích kiểm toán", "Cung cấp công cụ phân tích an toàn, kiểm thử mô hình và kỹ thuật chuyên sâu", "Giữ thẩm quyền thanh tra, thủ tục công bằng, dấu vết kiểm toán và quyết định xử phạt"],
+              ["Dữ liệu công và dịch vụ thông tin công dân", "API mở, tìm kiếm, dịch thuật, truy xuất tăng cường, ứng dụng dịch vụ công dân", "Xây ứng dụng và hệ sinh thái nhà phát triển dựa trên giao diện dữ liệu công", "Bảo đảm chất lượng dữ liệu, tiếp cận bình đẳng, giấy phép, quyền riêng tư và liên tục dịch vụ"]
+            ]
+          },
+          note: "Bảng này tách khả năng kỹ thuật, năng lực thị trường và thẩm quyền công. Nhờ đó hợp tác công tư không biến thành thuê ngoài mơ hồ.",
+          footer: "Làm rõ vai trò trước hợp tác"
+        },
+        {
+          kicker: "Mô hình 1: An sinh xã hội và điều kiện thụ hưởng",
+          title: "Dùng AI để hỗ trợ phát hiện hồ sơ, nhưng quyết định thụ hưởng và khiếu nại phải thuộc khu vực công",
+          cols: 3,
+          boxes: [
+            { title: "Vấn đề hành chính", items: ["Nhiều hộ đủ điều kiện vẫn không được cơ quan phúc lợi nhận diện.", "Hồ sơ trùng lặp, lỗi thời hoặc không nhất quán làm yếu khả năng nhắm đúng đối tượng.", "Cán bộ tuyến đầu có quá nhiều hồ sơ và thiếu thông tin đầy đủ."] },
+            { title: "Mô hình tư nhân tham gia", items: ["Nhóm triển khai chung gồm bộ, cán bộ địa phương và kỹ sư của đơn vị cung cấp dịch vụ tư nhân.", "Đơn vị cung cấp dịch vụ tư nhân xây dựng đường ống dữ liệu, công cụ đối sánh và giao diện quản lý hồ sơ.", "Đại học hoặc cơ quan kiểm toán kiểm định sai lệch và mô thức lỗi."] },
+            { title: "Bảo đảm và chỉ số", items: ["Con người phê duyệt quyết định thụ hưởng.", "Có kênh khiếu nại rõ ràng khi bị loại trừ hoặc phân loại sai.", "Đo tỷ lệ tiếp cận của nhóm đủ điều kiện, loại trừ sai và tải công việc của cán bộ."] }
+          ],
+          note: "Mô hình này có giá trị công cao nhưng rủi ro quyền lợi cũng cao. Không nên dùng để tự động từ chối phúc lợi. Khung tốt hơn là phát hiện hồ sơ và hỗ trợ quyết định.",
+          footer: "Mô hình an sinh xã hội"
+        },
+        {
+          kicker: "Mô hình 2: Nông nghiệp và cảnh báo sớm thiên tai",
+          title: "Dùng phân tích tư nhân và kênh viễn thông, nhưng ngưỡng cảnh báo và quy trình phản ứng phải do nhà nước xác định",
+          cols: 3,
+          boxes: [
+            { title: "Vấn đề hành chính", items: ["Lũ lụt, hạn hán, sâu bệnh và rủi ro mùa vụ thường được phát hiện quá muộn.", "Dự báo trung ương không phải lúc nào cũng đến được nông dân hoặc cán bộ địa phương dưới dạng dễ dùng.", "Dữ liệu đến từ thời tiết, vệ tinh, báo cáo địa phương và tín hiệu thị trường."] },
+            { title: "Mô hình tư nhân tham gia", items: ["Sandbox GovTech để so sánh mô hình bằng bộ dữ liệu thử nghiệm chung.", "Dịch vụ được quản lý cho vận hành mô hình trên đám mây và phân phối cảnh báo.", "Đối tác viễn thông và nền tảng gửi cảnh báo theo địa bàn."] },
+            { title: "Bảo đảm và chỉ số", items: ["Ngưỡng cảnh báo và quy tắc leo thang được xác định công khai.", "Chính quyền địa phương phản hồi sau mỗi sự kiện.", "Đo thời gian cảnh báo sớm, tỷ lệ cảnh báo sai, mức độ phản ứng và thiệt hại tránh được."] }
+          ],
+          note: "Đây là điểm khởi đầu phù hợp với nhiều nước đang phát triển vì AI giúp tích hợp nhiều dòng dữ liệu, nhưng giá trị cuối cùng phụ thuộc vào năng lực phản ứng địa phương.",
+          footer: "Mô hình cảnh báo sớm"
+        },
+        {
+          kicker: "Mô hình 3: Dịch vụ công và nút thắt cấp phép",
+          title: "Đừng tự động hóa một quy trình hỏng; chỉ dùng AI sau khi đã thiết kế lại đường đi của dịch vụ",
+          cols: 3,
+          boxes: [
+            { title: "Vấn đề hành chính", items: ["Quy trình cấp phép, giấy phép và xử lý khiếu nại chậm và thiếu minh bạch.", "Người dân nộp hồ sơ thiếu hoặc phải đi nhiều cơ quan.", "Nhà quản lý không thấy rõ công việc bị tắc ở đâu."] },
+            { title: "Mô hình tư nhân tham gia", items: ["Mua sắm theo kết quả gắn với thời gian xử lý, giảm lỗi và hài lòng.", "Khai phá quy trình và tái thiết kế quy trình cùng cán bộ tuyến đầu.", "AI phân loại hồ sơ và trợ lý công dân được tích hợp vào hệ thống hiện có."] },
+            { title: "Bảo đảm và chỉ số", items: ["Không để mô hình âm thầm thay đổi quy tắc.", "Lý do từ chối hoặc yêu cầu bổ sung hồ sơ phải hiển thị rõ.", "Đo thời gian xử lý, số lần quay lại, khiếu nại và công bằng dịch vụ."] }
+          ],
+          note: "Mô hình này chỉ hoạt động khi lãnh đạo hành chính sở hữu việc tái thiết kế quy trình. Nếu quy trình cũ vẫn giữ nguyên, AI chỉ trở thành một tầng quan liêu tự động hóa.",
+          footer: "Mô hình nút thắt dịch vụ"
+        },
+        {
+          kicker: "Mô hình 4: Thuế, hải quan và rủi ro mua sắm công",
+          title: "Dùng AI để ưu tiên rủi ro, không dùng như một cỗ máy tự động buộc tội",
+          cols: 3,
+          boxes: [
+            { title: "Vấn đề hành chính", items: ["Nguồn lực thanh tra hạn chế trong khi khối lượng giao dịch lớn.", "Gian lận, thông đồng, khai thiếu và bất thường trong mua sắm công khó phát hiện thủ công.", "Dương tính giả có thể tạo gánh nặng lớn cho doanh nghiệp và công dân."] },
+            { title: "Mô hình tư nhân tham gia", items: ["Vùng phân tích an toàn để đơn vị cung cấp dịch vụ tư nhân kiểm thử mô hình mà không lấy dữ liệu nhạy cảm ra ngoài.", "Thỏa thuận khung hoặc nhóm đơn vị cung cấp dịch vụ tư nhân cho các nhiệm vụ phân tích mô-đun.", "Đánh giá mô hình độc lập trước khi vận hành."] },
+            { title: "Bảo đảm và chỉ số", items: ["Con người xem xét trước khi xử phạt, kiểm toán hoặc nâng mức thanh tra.", "Lưu dấu dữ liệu đầu vào, thay đổi điểm rủi ro và quyết định của cán bộ.", "Đo hiệu quả phát hiện, gánh nặng dương tính giả, kết quả khiếu nại và tác dụng răn đe."] }
+          ],
+          note: "Mô hình này cần bảo đảm mạnh hơn chatbot dịch vụ. Mô hình có thể ưu tiên sự chú ý, nhưng quyền lực cưỡng chế phải chịu trách nhiệm trước pháp luật và cơ chế xem xét.",
+          footer: "Mô hình phân tích rủi ro"
+        },
+        {
+          kicker: "Mô hình 5: Dữ liệu công và dịch vụ thông tin công dân",
+          title: "Bài học ứng dụng khẩu trang của Hàn Quốc: chính phủ có thể tạo giá trị bằng dữ liệu đáng tin cậy thay vì tự xây mọi ứng dụng",
+          cols: 4,
+          boxes: [
+            { title: "Vấn đề", text: "Người dân cần thông tin kịp thời, theo địa phương, nhất là khi khủng hoảng hoặc dịch vụ gián đoạn." },
+            { title: "Mô hình", text: "Hợp tác dữ liệu công/API với quyền truy cập bình đẳng cho nhà phát triển tư nhân và công nghệ công dân đủ điều kiện." },
+            { title: "Vai trò chính phủ", text: "Bảo đảm chất lượng dữ liệu, tần suất cập nhật, giấy phép, quyền riêng tư và tính liên tục dịch vụ." },
+            { title: "Chỉ số", text: "Độ ổn định API, đa dạng ứng dụng, bao phủ nhóm dễ tổn thương và tốc độ sửa lỗi." }
+          ],
+          paragraphs: ["Với Việt Nam và các bối cảnh tương tự, mô hình này hữu ích khi nhà nước có thẩm quyền dữ liệu mạnh nhưng đổi mới giao diện người dùng có thể nhanh hơn bên ngoài chính phủ."],
+          note: "Trang này diễn giải trường hợp ứng dụng khẩu trang của Hàn Quốc như một mô hình quản trị, không chỉ là một câu chuyện ứng dụng thành công.",
+          footer: "Mô hình dữ liệu công/API"
+        },
+        {
+          kicker: "Chọn mô hình tư nhân tham gia",
+          title: "Năng lực tư nhân phải khớp với vấn đề hành chính, không phải được đưa vào như một giải pháp thuê ngoài chung chung",
+          table: {
+            headers: ["Mô hình tham gia", "Dùng khi...", "Không nên dùng khi...", "Kiểm soát chính của chính phủ"],
+            rows: [
+              ["Mua sắm theo kết quả", "Kết quả đo được và chuẩn dịch vụ rõ.", "Định nghĩa vấn đề còn tranh chấp chính trị.", "Định nghĩa kết quả và đánh giá độc lập."],
+              ["Nhóm triển khai chung", "Tái thiết kế quy trình và tri thức chuyên ngành là trung tâm.", "Cơ quan không thể giao chủ sở hữu sản phẩm thực sự.", "Chuyển giao tri thức và quyền sở hữu sản phẩm công."],
+              ["Thử thách GovTech hoặc sandbox", "Giải pháp chưa chắc chắn và nhiều doanh nghiệp có thể cạnh tranh.", "Dữ liệu nhạy cảm không thể chia sẻ hoặc mô phỏng an toàn.", "Quy tắc tuyển chọn minh bạch và bảo vệ dữ liệu."],
+              ["Hợp tác dữ liệu công/API", "Dịch vụ hướng tới công dân có thể được xây bởi hệ sinh thái.", "Chất lượng và trách nhiệm cập nhật dữ liệu chưa rõ.", "Chuẩn API, giấy phép và tiếp cận bình đẳng."],
+              ["Dịch vụ được quản lý", "Cần hạ tầng sẵn sàng cao hoặc vận hành mô hình liên tục.", "Điều khoản thoát, quyền kiểm toán và chủ quyền dữ liệu yếu.", "Giám sát, báo cáo sự cố và khả năng chuyển đổi."]
+            ]
+          },
+          note: "Đây là công cụ ra quyết định để tránh nói chung chung rằng 'hãy dùng khu vực tư nhân'.",
+          footer: "Logic chọn mô hình"
+        },
+        {
+          kicker: "Năng lực công tối thiểu",
+          title: "Khi năng lực kỹ thuật nội bộ còn mỏng, chính phủ vẫn cần một lõi năng lực nhỏ nhưng mạnh",
+          cols: 3,
+          boxes: [
+            { title: "Chủ sở hữu sản phẩm", text: "Xác định vấn đề công, người dùng, chuẩn dịch vụ và đánh đổi lỗi có thể chấp nhận." },
+            { title: "Quản trị dữ liệu", text: "Kiểm soát định nghĩa, kiểm tra chất lượng, quyền truy cập và quy trình cập nhật." },
+            { title: "Kiến trúc kỹ thuật", text: "Đặt yêu cầu liên thông, bảo mật, khả chuyển và tích hợp đơn vị cung cấp dịch vụ tư nhân." },
+            { title: "Quản lý mua sắm", text: "Viết hợp đồng thưởng cho kết quả, học hỏi, tài liệu hóa và bảo trì." },
+            { title: "Đánh giá mô hình", text: "Kiểm thử hiệu năng, thiên lệch, trôi mô hình và lỗi vận hành trước và sau triển khai." },
+            { title: "Quyền và khiếu nại", text: "Bảo đảm giải thích, khiếu nại, sửa lỗi và truyền thông với công dân." }
+          ],
+          quote: "Chính phủ không cần tự xây mọi mô hình, nhưng phải hiểu đủ để quản trị mô hình, hợp đồng, dữ liệu và hậu quả.",
+          note: "Đây là câu trả lời cho câu hỏi: điều gì phải ở lại bên trong chính phủ khi sử dụng chuyên môn kỹ thuật tư nhân?",
+          footer: "Lõi năng lực"
+        },
+        {
+          kicker: "Điều phối liên bộ",
+          title: "Chính sách AI cần thẩm quyền chia sẻ, không phải các thí điểm rời rạc của từng bộ",
+          table: {
+            headers: ["Nhiệm vụ điều phối", "Vai trò dẫn dắt", "Trách nhiệm chia sẻ", "Cơ chế hợp tác"],
+            rows: [
+              ["Danh mục vấn đề", "Đơn vị điều phối AI/AX trung ương", "Các bộ đề xuất vấn đề giá trị cao; cơ quan tài chính gắn ngân sách với mốc học hỏi.", "Rà soát danh mục hằng quý: bắt đầu, dừng, mở rộng hoặc thiết kế lại thí điểm."],
+              ["Dữ liệu và hạ tầng", "Cơ quan chính phủ số/dữ liệu", "Bộ ngành phân loại dữ liệu; cơ quan an ninh mạng và riêng tư đặt bảo đảm; nhà vận hành đám mây theo chuẩn chung.", "Danh mục dữ liệu chung, chuẩn API, rà soát an ninh và sổ đăng ký tái sử dụng."],
+              ["Thực thi theo ngành", "Bộ chủ quản", "Chính quyền địa phương và tuyến đầu đồng thiết kế quy trình; đối tác tư nhân xây dựng dưới định hướng công.", "Phòng thí nghiệm vấn đề và nhóm triển khai chung có người chịu trách nhiệm rõ."],
+              ["Rủi ro và trách nhiệm giải trình", "Bộ chủ quản cùng kiểm toán, riêng tư và cơ quan bảo vệ quyền", "Bộ phận pháp chế, ombuds và địa phương cùng quản lý giải thích, khiếu nại và sự cố.", "Sổ đăng ký rủi ro, quy trình sửa sai, rà soát sự cố mô hình và báo cáo công khai."],
+              ["Học hỏi và mở rộng", "Học viện công vụ hoặc trung tâm năng lực số", "Các bộ chia sẻ mẫu, cấu phần tái sử dụng, thất bại và kết quả đánh giá.", "Rà soát sau thí điểm và cập nhật playbook chung."]
+            ]
+          },
+          note: "Vấn đề điều phối không chỉ là ai sở hữu chính sách AI. Điều quan trọng là làm cho ngân sách, dữ liệu, chuyên môn ngành, trách nhiệm pháp lý, thực thi địa phương và năng lực tư nhân cùng vận hành.",
+          footer: "Kiến trúc trách nhiệm chia sẻ"
+        },
+        {
+          kicker: "Hàn Quốc như một trường hợp học hỏi",
+          title: "Bài học từ Hàn Quốc không phải là sao chép thể chế, mà là chuyển dịch cơ chế",
+          cols: 3,
+          boxes: [
+            { title: "Cơ chế 1: dữ liệu nhà nước đáng tin cậy", text: "Hạ tầng định danh, đăng ký, thuế, y tế và dữ liệu công làm nền cho dịch vụ số sau này." },
+            { title: "Cơ chế 2: tốc độ công tư", text: "Trường hợp ứng dụng khẩu trang cho thấy thẩm quyền dữ liệu công và tốc độ phát triển tư nhân/công dân có thể kết hợp khi khủng hoảng." },
+            { title: "Cơ chế 3: quản trị chưa hoàn tất", text: "Hàn Quốc vẫn gặp chia cắt bộ ngành, tranh chấp riêng tư, phụ thuộc vào đơn vị cung cấp dịch vụ tư nhân và học hỏi tổ chức không đều." }
+          ],
+          paragraphs: ["Với Việt Nam và các nước đang phát triển, bài học thực tế là xây lõi năng lực nhà nước nhỏ nhưng đáng tin cậy để huy động chuyên môn bên ngoài mà không mất kiểm soát công."],
+          note: "Giữ Hàn Quốc trong bài giảng nhưng tránh biến bài giảng thành quảng bá mô hình Hàn Quốc. Trọng tâm là chuyển dịch cơ chế.",
+          footer: "Chuyển cơ chế, không chép khuôn mẫu"
+        },
+        {
+          kicker: "Hệ thống quản trị AX quốc gia",
+          title: "Đơn vị AX quốc gia phải tổ chức quyết định, thực thi, giám sát và học hỏi",
+          cols: 3,
+          boxes: [
+            { title: "Hội đồng quyết định AX cấp cao", text: "Đặt ưu tiên quốc gia, phê duyệt nguyên tắc rủi ro, xử lý xung đột liên bộ và xem xét kết quả giá trị công." },
+            { title: "Đơn vị điều phối AX quốc gia", text: "Duy trì bảng theo dõi chiến lược, liên kết chuẩn và ngân sách, theo dõi thí điểm và báo động dự án đình trệ." },
+            { title: "Các bộ chủ quản", text: "Sở hữu vấn đề ngành, thẩm quyền pháp lý, tái thiết kế dịch vụ, phân loại dữ liệu và trách nhiệm với công dân." },
+            { title: "Cơ quan thực thi", text: "Vận hành nền tảng chung, dịch vụ đám mây và dữ liệu, hỗ trợ mua sắm, an ninh mạng, đào tạo và trợ giúp kỹ thuật." },
+            { title: "Think tank chính sách và mạng lưới đánh giá", text: "Quét ca sử dụng, thiết kế phương án chính sách, kiểm thử thiên lệch, khả dụng, trôi mô hình, rủi ro quyền và giá trị công." },
+            { title: "Địa điểm thực thi và phản hồi địa phương", text: "Tỉnh và thành phố kiểm thử quy trình, thu nhận phản hồi tuyến đầu và báo cáo rào cản cho đơn vị quốc gia." }
+          ],
+          note: "Trang này định khung lại thách thức của Việt Nam: không chỉ chọn dự án AI, mà phải xây bộ máy thể chế có thể quyết định, thực thi, giám sát, học hỏi và điều phối toàn chính phủ.",
+          footer: "Xây hệ thống điều phối"
+        },
+        {
+          kicker: "Đổi mới văn hóa và học hỏi",
+          title: "AX cần một chính phủ học từ thất bại, không chỉ ăn mừng thí điểm thành công",
+          cols: 3,
+          boxes: [
+            { title: "Từ tuân thủ sang giải quyết vấn đề", text: "Công chức cần được phép chẩn đoán nút thắt, đặt câu hỏi về quy tắc hiện có và thiết kế lại quy trình trước khi thêm AI." },
+            { title: "Nhật ký thất bại là tài sản công", text: "Mỗi thí điểm phải ghi lại thiếu hụt dữ liệu, dương tính giả, kháng cự của người dùng, trôi mô hình và gánh nặng vận hành." },
+            { title: "Thử nghiệm có thể thất bại an toàn", text: "Thí điểm nhỏ cần quyết định có thể đảo ngược, rà soát của con người, kênh sửa sai và quy tắc dừng rõ ràng." },
+            { title: "Thói quen học hỏi liên bộ", text: "Các buổi học hằng tháng giúp bộ ngành so sánh điều gì thất bại, điều gì mở rộng được và cấu phần nào có thể tái sử dụng." },
+            { title: "Ví dụ Hàn Quốc: học từ ứng dụng khẩu trang", text: "Giá trị không đến từ một ứng dụng, mà từ phản hồi nhanh giữa chủ sở hữu dữ liệu công, nhà phát triển tư nhân và người dùng." },
+            { title: "Quy tắc cho nước đang phát triển", text: "Một thí điểm chỉ thành công khi để lại playbook, nhân sự được đào tạo, dữ liệu sạch hơn và cấu phần tái sử dụng." }
+          ],
+          quote: "Năng lực AX tăng lên khi chính phủ xem thí điểm thất bại là bằng chứng để học hỏi, không phải điều đáng xấu hổ.",
+          note: "Trang này chuyển trọng tâm từ trình tự dự án sang học hỏi toàn tổ chức. Điểm cốt lõi là văn hóa: AX cần thử nghiệm có kỷ luật, báo cáo thất bại trung thực và cơ chế biến bài học thành năng lực thể chế.",
+          footer: "Thất bại trở thành học hỏi"
+        },
+        {
+          kicker: "Bằng chứng thành công của AX toàn chính phủ",
+          title: "Thành công thể hiện khi AX thay đổi cách chính phủ vận hành, không phải khi có nhiều thí điểm hơn",
+          table: {
+            headers: ["Bằng chứng chuyển đổi", "Điều cần thay đổi", "Bằng chứng cần tìm", "Dấu hiệu cảnh báo"],
+            rows: [
+              ["Điều phối quốc gia vận hành", "Ưu tiên AI được quản trị như một danh mục chung giữa các bộ.", "Bảng theo dõi trung ương rà soát dự án, dừng trùng lặp và phân bổ lại ngân sách theo bằng chứng.", "Nhiều thông báo thí điểm nhưng không có quy trình quyết định danh mục."],
+              ["Dữ liệu và hạ tầng chung được tái sử dụng", "Các bộ dùng chung đám mây, API, danh mục dữ liệu, chuẩn an ninh và riêng tư.", "Dự án mới tái sử dụng giao diện dữ liệu và cấu phần nền tảng đã có.", "Mỗi cơ quan mua hệ thống riêng và tạo silo dữ liệu mới."],
+              ["Quy trình hành chính được thiết kế lại", "AI thay đổi quy tắc, quy trình, biểu mẫu, bố trí nhân sự và truyền thông công dân, không chỉ phân tích nội bộ.", "Chuẩn dịch vụ, rà soát của con người và kênh sửa sai được cập nhật sau triển khai.", "AI được đặt lên quy trình hỏng mà không cải cách quy trình."],
+              ["Năng lực công tăng bên trong chính phủ", "Công chức có thể định nghĩa vấn đề, quản trị đơn vị cung cấp dịch vụ tư nhân, đánh giá mô hình và duy trì hệ thống sau thí điểm.", "Có chủ sở hữu sản phẩm, quản trị dữ liệu và người đánh giá mô hình ở bộ ngành và địa phương.", "Năng lực nằm trong đơn vị cung cấp dịch vụ tư nhân hoặc một nhóm dự án tạm thời."],
+              ["Học hỏi và niềm tin được cải thiện", "Thành công và thất bại trở thành quy tắc, playbook, đào tạo và trách nhiệm giải trình có thể tái sử dụng.", "Nhật ký thất bại, rà soát sau thí điểm, chỉ số giá trị công và khiếu nại công dân quay lại thiết kế lại.", "Chỉ báo cáo câu chuyện thành công và giá trị đối với công dân không rõ."]
+            ]
+          },
+          note: "Đơn vị thành công không phải là từng dự án AI. Đó là việc toàn bộ chính phủ có phối hợp, học hỏi, bảo vệ quyền và thiết kế lại dịch vụ công một cách có trách nhiệm hơn hay không.",
+          footer: "Bằng chứng thành công cấp hệ thống"
+        },
+        {
+          type: "split",
+          image: "assets/implementation-gap.png",
+          imageAlt: "Cây cầu nhiều lớp giữa tầm nhìn chính sách, hạ tầng dữ liệu, tổ chức, niềm tin công dân và thực thi",
+          caption: "Thực thi thất bại khi một mắt xích trong chuỗi được giả định thay vì được thiết kế.",
+          kicker: "Điều nhà ra quyết định sẽ chất vấn",
+          title: "Câu hỏi khó không phải là demo kỹ thuật, mà là thất bại quản trị",
+          items: ["Ai chịu trách nhiệm khi mô hình sai?", "Bộ ngành có vận hành được hệ thống sau khi đơn vị cung cấp dịch vụ tư nhân rời đi không?", "Công dân có hiểu và khiếu nại được kết quả có hại không?", "Dự án có xây năng lực tái sử dụng hay chỉ tạo thêm một dashboard một lần?", "Chính quyền địa phương có dùng được hệ thống trong công việc hằng ngày không?"],
+          note: "Trang này giúp chuyển từ lạc quan công nghệ sang hiện thực thực thi mà không trở thành chống AI.",
+          footer: "Câu hỏi về thất bại quản trị"
+        },
+        {
+          kicker: "Khung bài tập",
+          title: "Thiết kế một dự án AX bằng mô hình thực thi, không phải bằng tên công nghệ",
+          table: {
+            headers: ["Câu hỏi", "Nhóm phải trả lời"],
+            rows: [
+              ["1. Loại vấn đề", "Vấn đề hành chính nào đang được giải quyết và ai đang trải nghiệm nó?"],
+              ["2. Rủi ro quyết định", "Hệ thống có ảnh hưởng đến phúc lợi, xử phạt, thanh tra, giấy phép hoặc quyền không?"],
+              ["3. Tổ chức dữ liệu", "Cơ quan nào sở hữu dữ liệu, cập nhật bao lâu một lần và lỗi được sửa thế nào?"],
+              ["4. Vai trò tư nhân", "Mô hình nào phù hợp: nhóm chung, sandbox, hợp tác API, nhóm đơn vị cung cấp dịch vụ tư nhân hay dịch vụ quản lý?"],
+              ["5. Năng lực công", "Chính phủ sẽ giao ai làm chủ sản phẩm, quản trị dữ liệu, đánh giá mô hình và phụ trách khiếu nại?"],
+              ["6. Bằng chứng", "Kết quả, rủi ro và năng lực nào quyết định việc mở rộng dự án?"]
+            ]
+          },
+          note: "Đây là hoạt động cuối bài. Người tham gia có thể dùng nó để thiết kế lại một dự án từ bộ ngành của mình.",
+          footer: "Canvas mô hình thực thi"
+        },
+        {
+          kicker: "Tầm nhìn tương lai",
+          title: "Từ áp dụng AI đến một nhà nước thích ứng và biết học hỏi",
+          cols: 3,
+          boxes: [
+            { title: "Dịch vụ công thông minh", text: "AI giúp công dân tìm đúng dịch vụ, phát hiện rủi ro mới nổi và hỗ trợ quyết định tuyến đầu với trách nhiệm của con người." },
+            { title: "Hệ thần kinh toàn chính phủ", text: "Dữ liệu, đám mây, chuẩn chung và điều phối AX biến các cơ quan riêng lẻ thành hệ thống giải quyết vấn đề liên thông." },
+            { title: "Hệ sinh thái học hỏi công tư", text: "Chính phủ, doanh nghiệp, đại học, địa phương và công dân cùng thử nghiệm, thất bại, cải thiện và mở rộng điều tạo giá trị công." }
+          ],
+          quote: "Mục tiêu tương lai không phải là một nhà nước tự động hóa. Đó là một nhà nước có năng lực học nhanh hơn, bảo vệ quyền tốt hơn và dùng AI để mở rộng giá trị công.",
+          note: "Kết luận này nối các mô hình thực thi cụ thể với tầm nhìn cải cách lớn hơn: các nước đang phát triển có thể dùng AX không chỉ để số hóa nhiệm vụ, mà để xây một nhà nước thích ứng, hợp tác và có trách nhiệm hơn.",
+          footer: "Nhà nước thích ứng vì giá trị công"
+        }
+      ],
+      ko: [
+        {
+          type: "hero",
+          kicker: "전략에서 실행으로",
+          title: "공공부문 AX 실행모델",
+          subtitle: "베트남과 개발도상국을 위해: AI 기술이 아니라 행정문제 유형에 따라 실행모델을 선택한다.",
+          presenter: "발표자: 고길곤, 서울대학교 정보화본부장; 서울대학교 행정대학원 교수",
+          image: "assets/ax-collaboration.png",
+          imageAlt: "공무원, 연구자, 시민, 기술자가 디지털 공공서비스 지도를 중심으로 협업하는 장면",
+          caption: "실천적 질문은 공적 권한과 민간·시민 역량을 어떻게 결합할 것인가이다.",
+          note: "이 버전은 AX 일반론을 줄이고, 특정 공공문제에 어떤 실행모델을 적용하며 정부가 어떤 역량을 보유해야 하는지를 중심으로 구성한다.",
+          footer: "문제유형별 실행모델"
+        },
+        {
+          kicker: "개발도상국의 실행 조건",
+          title: "개발도상국에서 AX가 더 어려운 이유",
+          cols: 3,
+          boxes: [
+            { title: "데이터 품질 부족", text: "기록이 불완전하거나 오래되었거나 중복되어 있고, 서로 다른 시스템이 같은 정의를 쓰지 않을 수 있다." },
+            { title: "부처 간 칸막이", text: "데이터를 가진 기관, 예산을 가진 기관, 시민을 만나는 기관이 서로 다른 경우가 많다." },
+            { title: "예산 제약", text: "시범사업 예산은 있지만 유지보수, 통합, 교육, 평가 예산은 빠지는 경우가 많다." },
+            { title: "낮은 기술역량", text: "제품 책임자, 데이터 스튜어드, 모델 평가자, 기술 아키텍트 역할을 맡을 공무원이 부족하다." },
+            { title: "민간 서비스 공급자 의존", text: "외부 전문성은 실행을 빠르게 하지만 지식, 데이터, 미래 선택권을 민간에 묶어둘 수 있다." },
+            { title: "지방정부 역량 격차", text: "성·시·군이나 현장기관이 일상 업무를 바꾸지 못하면 중앙 AX 전략은 작동하지 않는다." }
+          ],
+          quote: "AX의 첫 과제는 가장 앞선 모델을 고르는 것이 아니라 실행을 무너뜨릴 제약을 찾는 것이다.",
+          note: "이 슬라이드는 청중이 실제로 마주하는 행정 현실에서 출발한다. 한국 경험과 실행모델을 설명하기 전에 현실적 제약을 정당한 분석대상으로 만든다.",
+          footer: "실행 제약에서 출발"
+        },
+        {
+          kicker: "AI 선택 전에",
+          title: "기술을 진단하기 전에 행정 제약을 먼저 진단해야 한다",
+          table: {
+            headers: ["제약", "공무원이 물어야 할 질문", "최소 대응"],
+            rows: [
+              ["데이터", "기록은 완전하고 최신이며 연계 가능하고 합법적으로 사용할 수 있는가?", "데이터 소유자를 정하고, 핵심 필드를 정비하며, 갱신 루틴을 만든다."],
+              ["조정", "결정, 데이터, 예산, 시민 접점을 어느 기관이 소유하는가?", "공동 책임그룹, 상향 조정 채널, 공유 성공지표를 만든다."],
+              ["예산", "파일럿 이후 유지보수, 교육, 평가, 재설계 예산이 있는가?", "시범사업 예산에서 생애주기 예산으로 전환한다."],
+              ["기술", "누가 민간 서비스 공급자를 관리하고, 모델을 평가하며, 현장을 지원할 수 있는가?", "조달 전에 작은 공공역량 핵심부를 만든다."],
+              ["지역 실행", "지방 사무소가 실제로 도구를 쓰고 시민에게 설명할 수 있는가?", "실제 서비스 현장에서 파일럿을 하고 장벽을 국가 AX 유닛에 환류한다."]
+            ]
+          },
+          note: "이 슬라이드는 공무원이 바로 사용할 수 있는 진단 습관을 제공한다. AX를 덜 추상적으로 만들고 뒤의 문제유형별 실행모델로 자연스럽게 연결한다.",
+          footer: "제약 먼저 진단"
+        },
+        {
+          kicker: "AX는 어디서 실패하는가",
+          title: "실패는 모델 자체보다 모델을 둘러싼 제도와 운영이 약할 때 발생한다",
+          table: {
+            headers: ["실패 패턴", "어떻게 나타나는가", "왜 발생하는가", "초기 안전장치"],
+            rows: [
+              ["낡은 데이터", "복지나 농업지원 모델이 오래된 등록자료로 가구를 표적화한다.", "데이터 소유자, 갱신 루틴, 현장 수정 채널이 없다.", "데이터 최신성을 점검하고, 데이터 스튜어드를 지정하며, 현장 수정을 허용한다."],
+              ["민간 서비스 공급자 이탈", "파일럿 때 작동하던 대시보드가 계약 종료 후 유지되지 않는다.", "코드, 문서, API, 모델 지식이 이전 가능하게 설계되지 않았다.", "인수인계, 개방형 인터페이스, 내부 운영자, 서비스 연속성 계획을 요구한다."],
+              ["시민 이의제기 부재", "위험점수가 급여, 인허가, 조사 지연에 영향을 주지만 시민은 이해하거나 다툴 수 없다.", "권리구제를 서비스 설계의 일부가 아니라 사후 법무 문제로만 보았다.", "배포 전 설명, 인간 검토, 이의제기, 오류수정 절차를 설계한다."],
+              ["지방 현장 미사용", "군·구 담당자가 새 도구 대신 기존 엑셀을 계속 쓴다.", "현장 인력이 업무흐름 재설계에 참여하지 않았다.", "실제 서비스 현장에서 파일럿을 하고 일상 사용률을 측정한다."],
+              ["과거 편향의 재생산", "과거에 정부 서비스를 덜 받은 집단이 다시 낮은 우선순위를 받는다.", "행정기록이 과거의 배제와 불평등한 접근을 반영한다.", "지역·집단별 결과를 검증하고 데이터와 결정규칙을 수정한다."]
+            ]
+          },
+          note: "이 슬라이드는 위험을 추상적 윤리 언어가 아니라 구체적 실패 패턴으로 보여준다. 공무원이 AI 사업 승인 전에 실행 질문을 던지게 만드는 역할을 한다.",
+          footer: "파일럿 전 실패 패턴"
+        },
+        {
+          type: "split",
+          image: "assets/implementation-gap.png",
+          imageAlt: "정책 비전, 데이터 인프라, 운영, 시민 사이에 아직 완성되지 않은 다리",
+          caption: "대부분의 AX 실패는 좋은 시연과 일상 행정업무 사이의 간극에서 발생한다.",
+          kicker: "토론용 위험 사례",
+          title: "참석자에게 묻기: 우리 부처에서 가장 일어나기 쉬운 실패는 무엇인가?",
+          items: [
+            "데이터가 낡았다: 이주 가구, 비공식 노동자, 달라진 농업 조건이 보이지 않는다.",
+            "민간 서비스 공급자가 떠났다: 정부 안에서 모델을 갱신하거나 데이터 파이프라인을 고칠 사람이 없다.",
+            "시민이 이의제기하지 못한다: 해로운 점수가 명확한 이유나 연락창구 없이 서비스 접근을 바꾼다.",
+            "지방 현장이 쓰지 않는다: 기술적으로는 맞지만 인력, 서식, 업무 유인과 맞지 않는다.",
+            "모델이 조용히 드리프트된다: 정책 변화, 계절 충격, 새로운 사용자 행동 이후 정확도가 떨어진다."
+          ],
+          note: "이 슬라이드는 상호작용용으로 쓰기 좋다. 목적은 공무원을 비관적으로 만드는 것이 아니라, 책임 있는 AX에서 초기 위험진단이 정상적인 절차임을 보여주는 것이다.",
+          footer: "가능성 높은 실패부터 토론"
+        },
+        {
+          kicker: "AI 질문이 달라진 이유",
+          title: "최근 AI는 읽고, 추론하고, 행동하고, 확장되면서 정부 업무를 바꾼다",
+          cols: 4,
+          boxes: [
+            { title: "읽는다", text: "LLM은 법령, 서식, 민원, 사례기록, 정책문서를 일상 언어로 처리한다." },
+            { title: "맥락 속에서 추론한다", text: "모델은 근거를 요약하고 규칙을 비교하며 선택지를 만들고 정책 균형을 설명한다." },
+            { title: "도구로 행동한다", text: "에이전트형 워크플로는 API를 호출하고 기록을 검색하며 사례를 배정하고 서비스 단계를 준비한다." },
+            { title: "인프라로 확장된다", text: "클라우드, GPU, 보안망, 데이터베이스, MLOps가 배포 이후 서비스 신뢰성을 만든다." }
+          ],
+          quote: "변화의 핵심은 더 나은 예측만이 아니다. AI가 행정업무의 운영 층위가 되면서 거버넌스도 업무흐름, 데이터, 인프라, 책임성을 함께 다뤄야 한다.",
+          note: "이 슬라이드는 기술 메시지를 공공부문 함의와 맞춘다. AX가 자동화보다 넓은 이유는 AI가 공무원이 읽고, 판단하고, 배정하고, 운영하는 방식에 개입하기 때문이다.",
+          footer: "업무 인프라로서의 AI"
+        },
+        {
+          kicker: "쉬운 기술 용어 지도",
+          title: "",
+          cols: 3,
+          boxes: [
+            { title: "LLM", items: ["뜻: 문장을 읽고 쓴다.", "예시: 인허가 요건을 쉽게 설명한다."] },
+            { title: "API", items: ["뜻: 시스템을 안전하게 연결한다.", "예시: 데이터 복사 없이 기록을 확인한다."] },
+            { title: "MCP", items: ["뜻: Model Context Protocol, AI가 승인된 도구와 데이터를 쓰는 표준 연결 방식.", "예시: AI 보조자가 무단 접근 없이 부처 데이터베이스를 확인한다."] },
+            { title: "Cloud", items: ["뜻: 함께 쓰는 보안 인프라.", "예시: 홍수경보 수요 증가에 대응한다."] },
+            { title: "MLOps", items: ["뜻: 모델을 감시하고 갱신한다.", "예시: 정확도, 사고, 버전을 추적한다."] },
+            { title: "Model drift", items: ["뜻: 환경 변화로 정확도가 떨어진다.", "예시: 강수 변화가 작물위험 모델을 약화시킨다."] }
+          ],
+          quote: "공공관리자가 AI 엔지니어가 될 필요는 없지만, 올바른 거버넌스 질문을 던질 만큼은 이해해야 한다.",
+          note: "이 슬라이드는 기술 용어를 행정 예시로 번역한다. 실행모델로 넘어가기 전에 청중의 이해 속도를 맞추는 보조 슬라이드다.",
+          footer: "공공언어로 번역한 기술 용어"
+        },
+        {
+          type: "split",
+          image: "assets/ax-collaboration.png",
+          imageAlt: "공무원, 시민, 연구자, 민간 서비스 공급자가 디지털 서비스 지도를 중심으로 협업하는 장면",
+          caption: "AI는 모델, 데이터, 인프라, 운영, 공적 책임이 연결될 때 공공서비스가 된다.",
+          kicker: "기술요소가 연결되는 방식",
+          title: "AI를 하나의 모델이 아니라 서비스 체인으로 이해해야 한다",
+          items: [
+            "LLM은 시민 질문, 문서, 사례기록을 사용할 수 있는 언어로 바꾼다.",
+            "API는 검증된 기록, 규칙, 서비스 시스템과 답변을 연결한다.",
+            "Cloud는 많은 사용자와 지방 사무소가 쓸 수 있는 보안 역량을 제공한다.",
+            "MLOps는 배포 후 드리프트, 사고, 업데이트, 근거를 모니터링한다.",
+            "공무원은 최종 규칙, 예외, 이의제기, 공공 커뮤니케이션에 책임을 진다."
+          ],
+          note: "시각적 핵심은 AI 실행이 생태계라는 점이다. 하나의 고리가 빠지면 강한 모델도 신뢰할 수 있는 공공서비스가 되기 어렵다.",
+          footer: "서비스 인프라로서의 AI"
+        },
+        {
+          kicker: "정부에 주는 함의",
+          title: "새로운 AI 물결은 정부의 네 가지 기능을 동시에 바꾼다",
+          table: {
+            headers: ["기능", "기존 디지털정부의 질문", "새로운 AX 질문"],
+            rows: [
+              ["서비스 전달", "서비스를 어떻게 온라인화할 것인가?", "AI가 안내, 분류, 개인화 상호작용을 할 수 있을 때 서비스를 어떻게 재설계할 것인가?"],
+              ["행정업무", "서식과 업무흐름을 어떻게 전자화할 것인가?", "공무원이 AI 보조자와 일하면서도 판단과 책임성을 어떻게 유지할 것인가?"],
+              ["데이터 거버넌스", "데이터를 어떻게 개방하고 연계할 것인가?", "학습데이터, 모델 산출, 드리프트, 편향, 권리구제를 어떻게 관리할 것인가?"],
+              ["국가역량", "IT 시스템을 어떻게 구축할 것인가?", "공적 권한, 민간 역량, 시민 신뢰를 어떻게 결합할 것인가?"]
+            ]
+          },
+          note: "기술 변화와 공공행정을 연결하는 슬라이드다. 도입부가 기술 설명만으로 흐르지 않게 한다.",
+          footer: "AX는 정부업무를 바꾼다"
+        },
+        {
+          kicker: "한국의 정책 흐름",
+          title: "한국의 AI 전환은 더 긴 디지털정부 경로 위에서 형성되었다",
+          flow: [
+            { label: "전자정부", text: "핵심 디지털 공공서비스, 신원확인, 포털, 행정정보시스템을 구축했다." },
+            { label: "데이터 기반 정부", text: "공공데이터 개방, 행정데이터 연계, 정책분석 활용을 확대했다." },
+            { label: "디지털플랫폼정부", text: "부처 간 데이터 연결, 통합서비스, 플랫폼형 행정으로 이동했다." },
+            { label: "국가 AI 전략", text: "AI, 반도체, 연산자원, 클라우드, 인재를 국가 전략역량으로 다루기 시작했다." },
+            { label: "AI 신뢰와 AX", text: "AI 진흥과 함께 법·윤리·운영 규칙을 결합해 공공부문 활용의 신뢰 기반을 만들고 있다." }
+          ],
+          paragraphs: ["한국 경험이 유용한 이유는 제도를 그대로 복사해야 해서가 아니라, AX가 선행 디지털 인프라, 데이터 거버넌스, 공공-민간 조정 위에서 작동한다는 점을 보여주기 때문이다."],
+          note: "공식 정책 연표에서는 세부 연도와 기관명을 더 정밀하게 보완할 수 있다. 강의의 핵심은 인프라, 데이터, 플랫폼, AI 전략, 신뢰, 운영 AX의 순서다.",
+          footer: "한국 정책 흐름"
+        },
+        {
+          kicker: "한국 경험의 개발도상국 함의",
+          title: "핵심 교훈은 빠른 도입이 아니라 누적적 역량 형성이다",
+          cols: 3,
+          boxes: [
+            { title: "AI-ready 인프라가 먼저다", text: "AI의 가치는 LLM, GPU와 가속기, 보안 네트워크, 데이터베이스, 클라우드 운영, 신뢰할 수 있는 행정데이터를 포함한 전체 스택에 의존한다." },
+            { title: "민간 역량이 중요하다", text: "정부가 모든 기술역량을 내부에 갖추기는 어렵기 때문에 파트너십을 다스리는 능력이 필요하다." },
+            { title: "신뢰는 운영 문제다", text: "AI 신뢰는 윤리 담론만이 아니라 감사, 설명, 권리구제, 서비스 연속성으로 구현된다." }
+          ],
+          quote: "AX는 기술 의제로 출발하지만, 행정역량 의제가 될 때만 성공한다.",
+          note: "한국 정책 흐름에서 문제유형별 실행모델로 넘어가는 연결 슬라이드다.",
+          footer: "정책 흐름에서 실행으로"
+        },
+        {
+          kicker: "핵심 재구성",
+          title: "첫 질문은 '어떤 AI인가?'가 아니라 '어떤 행정문제인가?'이다",
+          cols: 4,
+          boxes: [
+            { title: "공공가치 목표", text: "접근성, 속도, 정확성, 형평성, 회복력, 신뢰 중 어떤 공공가치를 먼저 개선하려는가?" },
+            { title: "데이터 조건", text: "데이터가 표준화되어 있고, 정기적으로 갱신되며, 기관 간 연계되는가?" },
+            { title: "운영 맥락", text: "핵심 병목은 중앙분석, 현장 업무흐름, 시민 접점 중 어디에 있는가?" },
+            { title: "역량 격차", text: "정부가 직접 갖춰야 할 것은 무엇이고, 시장에서 빌릴 수 있는 것은 무엇인가?" }
+          ],
+          quote: "AX 실행은 문제 진단에서 출발해 협력모델, 데이터 배치, 책임설계, 평가 지표를 선택하는 과정이어야 한다.",
+          note: "이 슬라이드는 강의의 논리를 바꾼다. AX를 일반적 현대화 의제로 보는 대신 문제유형별 제도설계 포트폴리오로 보게 만든다.",
+          footer: "도구 선택 전 문제 진단"
+        },
+        {
+          kicker: "실행모델 지도",
+          title: "AI 기능, 민간 역량, 공적 권한을 분리해 보아야 한다",
+          table: {
+            headers: ["문제 유형", "AI 기술 층위", "민간 부문의 역할", "정부의 역할"],
+            rows: [
+              ["사회보장과 수급자격", "기록 연계, 수급자격 지원모델, 사례 우선순위화 도구", "사례관리자와 함께 데이터 파이프라인, 인터페이스, 모델 모니터링 도구를 구축", "수급자격 규칙을 정의하고, 최종 결정을 승인하며, 이의제기와 권리구제를 보호"],
+              ["농업과 재난 조기경보", "공간 AI, 예측모델, 경보 대상화 시스템", "위성분석, 클라우드 운영, 통신 채널, MLOps를 제공", "경보 기준, 지역 대응 프로토콜, 공공 커뮤니케이션 규칙을 설정"],
+              ["민원·인허가 병목", "LLM 서비스 보조, 문서 분류, 프로세스 마이닝, 대기 예측", "서비스 UX를 설계하고 업무흐름 소프트웨어와 디지털 채널을 통합·운영", "서비스 기준, 절차 재설계, 거부 사유, 이의제기 규칙을 소유"],
+              ["세정·관세·조달 위험", "이상탐지, 위험점수화, 네트워크 분석, 감사분석", "보안 분석 도구, 모델 검증, 전문 엔지니어링을 제공", "조사권한, 적법절차, 감사기록, 제재 결정을 보유"],
+              ["공공데이터와 시민 정보서비스", "개방형 API, 검색, 번역, 검색증강, 시민서비스 앱", "공공데이터 인터페이스를 활용해 앱과 개발자 생태계를 구축", "데이터 품질, 평등한 접근, 라이선스, 개인정보, 서비스 연속성을 보장"]
+            ]
+          },
+          note: "이 표는 기술적 가능성, 시장의 실행역량, 공적 권한을 분리한다. 그래야 공공-민간 협력이 모호한 외주로 흐르지 않는다.",
+          footer: "협력 전 역할 명료화"
+        },
+        {
+          kicker: "모델 1: 사회보장과 수급자격",
+          title: "AI는 사례 발굴을 지원하되, 수급자격 결정과 권리구제는 공적으로 유지해야 한다",
+          cols: 3,
+          boxes: [
+            { title: "행정문제", items: ["수급 자격이 있는 가구가 복지 사무소에 포착되지 않는다.", "중복·노후·불일치 기록이 표적화의 정확성을 낮춘다.", "현장 담당자는 많은 사례와 불완전한 정보에 직면한다."] },
+            { title: "민간 참여모델", items: ["부처 담당자, 지방 사례관리자, 민간 서비스 공급자 엔지니어가 함께하는 공동 전달팀.", "민간 서비스 공급자는 데이터 파이프라인, 매칭 도구, 사례관리 인터페이스를 구축한다.", "대학 또는 감사기관이 편향과 오류 패턴을 검증한다."] },
+            { title: "안전장치와 지표", items: ["급여 결정은 인간이 승인한다.", "배제나 오분류에 대한 명확한 이의제기 채널을 둔다.", "수급 가능 집단의 포착률, 부당 배제, 사례관리자 업무부담을 측정한다."] }
+          ],
+          note: "공공가치는 크지만 권리위험도 큰 모델이다. 자동화된 급여 거부가 아니라 사례 발굴과 의사결정 지원으로 설계해야 한다.",
+          footer: "사회보장 모델"
+        },
+        {
+          kicker: "모델 2: 농업과 재난 조기경보",
+          title: "민간 분석과 통신 채널을 활용하되, 경보 기준과 대응 프로토콜은 공적으로 정해야 한다",
+          cols: 3,
+          boxes: [
+            { title: "행정문제", items: ["홍수, 가뭄, 병충해, 작황 위험이 너무 늦게 발견된다.", "중앙 예측이 농민이나 지역 공무원에게 사용 가능한 형태로 전달되지 않는다.", "데이터는 기상, 위성, 지역 보고, 시장 신호에서 온다."] },
+            { title: "민간 참여모델", items: ["공유 시험 데이터로 모델을 비교하는 GovTech 샌드박스.", "클라우드 모델 운영과 경보 전달을 위한 관리형 서비스.", "통신사와 플랫폼 파트너가 지역화된 경보를 배포한다."] },
+            { title: "안전장치와 지표", items: ["경보 기준과 단계별 대응 규칙을 공적으로 정의한다.", "각 사건 이후 지방정부 피드백을 반영한다.", "선행시간, 오경보율, 대응 채택률, 회피 손실을 측정한다."] }
+          ],
+          note: "AI가 여러 데이터 흐름을 통합할 수 있지만 최종 가치는 지역 대응역량에 달려 있어 개발도상국에 적합한 초기 적용 영역이다.",
+          footer: "조기경보 모델"
+        },
+        {
+          kicker: "모델 3: 민원·인허가 병목",
+          title: "망가진 절차를 자동화하지 말고, 서비스 경로를 재설계한 뒤 AI를 써야 한다",
+          cols: 3,
+          boxes: [
+            { title: "행정문제", items: ["인허가와 민원 절차가 느리고 불투명하다.", "시민은 불완전한 서류를 제출하거나 여러 기관을 반복 방문한다.", "관리자는 일이 실제로 어디서 막히는지 보지 못한다."] },
+            { title: "민간 참여모델", items: ["처리시간, 오류감소, 만족도와 연계한 성과기반 조달.", "현장 공무원과 함께하는 프로세스 마이닝 및 업무흐름 재설계.", "AI 문서분류와 시민 안내 보조를 기존 시스템에 통합한다."] },
+            { title: "안전장치와 지표", items: ["모델 논리로 규칙이 몰래 바뀌지 않게 한다.", "거부나 추가서류 요청의 이유를 명시한다.", "처리시간, 반복방문, 이의제기, 서비스 형평성을 측정한다."] }
+          ],
+          note: "행정 리더십이 절차 재설계를 소유할 때만 작동한다. 기존 절차가 그대로라면 AI는 자동화된 관료제의 한 층이 된다.",
+          footer: "서비스 병목 모델"
+        },
+        {
+          kicker: "모델 4: 세정·관세·조달 위험",
+          title: "AI는 위험 우선순위화에 쓰되, 자동 고발 기계가 되어서는 안 된다",
+          cols: 3,
+          boxes: [
+            { title: "행정문제", items: ["거래량은 크지만 조사 자원은 제한적이다.", "탈세, 담합, 과소신고, 조달 이상징후를 수작업으로 찾기 어렵다.", "오탐은 기업과 시민에게 큰 부담을 줄 수 있다."] },
+            { title: "민간 참여모델", items: ["민감데이터를 외부로 반출하지 않는 보안 분석 구역에서 민간 서비스 공급자가 모델을 시험한다.", "모듈형 분석 과업을 위한 프레임워크 계약 또는 민간 서비스 공급자 풀.", "운영 투입 전 독립적 모델 평가."] },
+            { title: "안전장치와 지표", items: ["제재, 감사, 조사 확대 전에 인간 검토를 둔다.", "데이터 입력, 위험점수 변화, 담당자 결정을 감사기록으로 남긴다.", "탐지성과, 오탐 부담, 이의제기 결과, 억제효과를 측정한다."] }
+          ],
+          note: "서비스 챗봇보다 훨씬 강한 안전장치가 필요하다. 모델은 관심의 우선순위를 정할 수 있지만 강제권은 법과 심사에 책임져야 한다.",
+          footer: "위험분석 모델"
+        },
+        {
+          kicker: "모델 5: 공공데이터와 시민 정보서비스",
+          title: "한국 마스크 앱의 교훈: 정부가 모든 앱을 만들기보다 신뢰할 수 있는 데이터를 열어 가치를 만들 수 있다",
+          cols: 4,
+          boxes: [
+            { title: "문제", text: "시민은 위기나 서비스 중단 상황에서 시의성 있고 지역화된 정보가 필요하다." },
+            { title: "모델", text: "자격 있는 시민기술·민간 개발자에게 평등한 접근을 제공하는 공공데이터/API 협력." },
+            { title: "정부 역할", text: "데이터 품질, 갱신 주기, 라이선스, 개인정보, 서비스 지속성을 보장한다." },
+            { title: "지표", text: "API 안정성, 앱 다양성, 취약집단 포괄성, 오류 수정 속도." }
+          ],
+          paragraphs: ["베트남과 유사한 맥락에서는 국가의 데이터 권한이 강하지만 시민 접점 혁신은 정부 밖에서 더 빠를 때 이 모델이 유용하다."],
+          note: "한국 마스크 앱 사례를 성공한 앱 이야기가 아니라 공적 권한과 민간 속도를 결합한 거버넌스 모델로 재해석한다.",
+          footer: "공공데이터/API 모델"
+        },
+        {
+          kicker: "민간 참여모델 선택",
+          title: "민간 역량은 일반적 외주가 아니라 행정문제에 맞게 결합되어야 한다",
+          table: {
+            headers: ["참여모델", "사용할 때", "피해야 할 때", "정부의 핵심 통제"],
+            rows: [
+              ["성과기반 조달", "성과가 측정 가능하고 서비스 기준이 명확할 때.", "문제 정의가 여전히 정치적으로 논쟁적일 때.", "성과 정의와 독립 평가."],
+              ["공동 전달팀", "업무흐름 재설계와 분야 지식이 핵심일 때.", "기관이 실제 제품 책임자를 배정할 수 없을 때.", "지식 이전과 공공 제품 소유권."],
+              ["GovTech 챌린지 또는 샌드박스", "해법이 불확실하고 여러 기업이 경쟁할 수 있을 때.", "민감데이터를 안전하게 공유하거나 모의할 수 없을 때.", "투명한 선정과 데이터 보호 규칙."],
+              ["공공데이터/API 협력", "시민 접점 서비스가 생태계에서 만들어질 수 있을 때.", "데이터 품질과 갱신 책임이 불명확할 때.", "API 표준, 라이선스, 평등한 접근."],
+              ["관리형 서비스", "고가용성 인프라나 모델 운영이 필요할 때.", "계약 종료, 감사권, 데이터 주권 조항이 약할 때.", "모니터링, 사고보고, 이전 가능성."]
+            ]
+          },
+          note: "민간을 활용하자는 일반론을 피하고, 어떤 거버넌스 조건에서 어떤 모델을 쓸지 판단하게 만드는 의사결정 도구다.",
+          footer: "모델 선택 논리"
+        },
+        {
+          kicker: "최소 공공역량",
+          title: "내부 기술역량이 얇을수록 정부에는 작지만 강한 역량 핵심부가 필요하다",
+          cols: 3,
+          boxes: [
+            { title: "제품 책임자", text: "공공문제, 사용자, 서비스 기준, 허용 가능한 오류의 균형을 정의한다." },
+            { title: "데이터 스튜어드", text: "정의, 품질점검, 접근권한, 갱신 루틴을 통제한다." },
+            { title: "기술 아키텍트", text: "상호운용성, 보안, 이전 가능성, 민간 서비스 공급자 통합 요구사항을 설정한다." },
+            { title: "조달 관리자", text: "성과, 학습, 문서화, 유지보수를 보상하는 계약을 작성한다." },
+            { title: "모델 평가자", text: "배포 전후의 성능, 편향, 드리프트, 운영 실패를 검증한다." },
+            { title: "권리구제 담당자", text: "설명, 이의제기, 수정, 시민 커뮤니케이션 채널을 보장한다." }
+          ],
+          quote: "정부가 모든 모델을 직접 만들 필요는 없지만, 모델·계약·데이터·결과를 다스릴 만큼은 이해해야 한다.",
+          note: "민간 전문성을 사용할 때에도 정부 내부에 반드시 남아 있어야 할 역량을 답한다.",
+          footer: "역량 핵심부"
+        },
+        {
+          kicker: "부처 간 조정",
+          title: "AI 정책은 개별 부처 시범사업이 아니라 공유된 권한과 책임이 필요하다",
+          table: {
+            headers: ["조정 과제", "주도 역할", "공유 책임", "협력 루틴"],
+            rows: [
+              ["문제 포트폴리오", "중앙 AI/AX 조정기구", "소관 부처는 고가치 문제를 제안하고, 재정당국은 예산을 학습 마일스톤과 연결한다.", "분기별 포트폴리오 점검: 시작, 중단, 확산, 재설계 결정."],
+              ["데이터와 인프라", "디지털정부·데이터 전담기관", "부처는 데이터를 분류하고, 보안·개인정보 기관은 안전장치를 정하며, 클라우드 운영자는 공통 표준을 따른다.", "공유 데이터 카탈로그, API 표준, 보안심사, 재사용 등록."],
+              ["부문별 실행", "소관 부처", "지방정부와 현장기관은 업무흐름을 공동 설계하고, 민간 파트너는 공적 지휘 아래 구축한다.", "문제 실험실과 공동 전달팀에 명시적 책임자를 둔다."],
+              ["위험과 책임성", "소관 부처와 감사·개인정보·권리보호 기관", "법무부서, 옴부즈, 지방기관이 설명, 이의제기, 사고 대응을 함께 관리한다.", "위험등록부, 권리구제 프로토콜, 모델 사고 검토, 공개 보고."],
+              ["학습과 확산", "공무원 교육기관 또는 디지털 역량센터", "부처들은 템플릿, 재사용 구성요소, 실패 사례, 평가 결과를 공유한다.", "시범사업 종료 후 학습 검토와 공통 플레이북 갱신."]
+            ]
+          },
+          note: "조정의 핵심은 AI 정책을 누가 소유하느냐가 아니다. 예산, 데이터, 부문 전문성, 법적 책임, 지역 전달, 민간 역량이 함께 움직이도록 만드는 것이다.",
+          footer: "공유책임 아키텍처"
+        },
+        {
+          kicker: "한국은 학습 사례",
+          title: "한국의 교훈은 제도 복사가 아니라 메커니즘 번역이다",
+          cols: 3,
+          boxes: [
+            { title: "메커니즘 1: 신뢰할 수 있는 국가 데이터", text: "신원, 등록, 세정, 보건, 공공데이터 인프라가 이후 디지털서비스의 기반이 되었다." },
+            { title: "메커니즘 2: 공공-민간 속도 결합", text: "마스크 앱 사례는 위기 시 공공데이터 권한과 민간·시민 개발 속도가 결합될 수 있음을 보여주었다." },
+            { title: "메커니즘 3: 미완의 거버넌스", text: "한국도 부처 칸막이, 개인정보 논쟁, 민간 서비스 공급자 의존, 불균등한 조직학습을 겪고 있다." }
+          ],
+          paragraphs: ["베트남과 개발도상국에 필요한 실천적 교훈은 외부 전문성을 동원하되 공적 통제를 잃지 않는 최소한의 신뢰 가능한 국가역량을 만드는 것이다."],
+          note: "한국을 홍보 사례가 아니라 메커니즘 번역의 사례로 유지한다.",
+          footer: "제도 복사보다 메커니즘 번역"
+        },
+        {
+          kicker: "국가 AX 거버넌스 시스템",
+          title: "국가 AX 유닛은 의사결정, 집행, 모니터링, 학습을 조직해야 한다",
+          cols: 3,
+          boxes: [
+            { title: "고위 AX 의사결정위원회", text: "국가 우선순위를 정하고, 위험 원칙을 승인하며, 부처 간 갈등을 조정하고 공공가치 성과를 점검한다." },
+            { title: "국가 AX 조정유닛", text: "전략 대시보드를 운영하고, 표준과 예산을 정렬하며, 시범사업을 추적하고 지연 과제를 상향 보고한다." },
+            { title: "소관 부처", text: "부문별 문제, 법적 권한, 서비스 재설계, 데이터 분류, 시민에 대한 책임성을 소유한다." },
+            { title: "집행기관", text: "공통 플랫폼, 클라우드·데이터 서비스, 조달 지원, 사이버보안, 교육, 기술지원을 운영한다." },
+            { title: "정책 씽크탱크와 평가 네트워크", text: "활용사례를 탐색하고, 정책대안을 설계하며, 편향, 사용성, 모델 드리프트, 권리위험, 공공가치 성과를 검증한다." },
+            { title: "지역 실행·피드백 현장", text: "성·시 단위에서 업무흐름을 시험하고, 현장 피드백을 수집하며, 실행 장벽을 국가 유닛에 보고한다." }
+          ],
+          note: "이 슬라이드는 베트남의 과제를 다시 정의한다. AI 프로젝트를 고르는 것만이 아니라 결정, 집행, 모니터링, 학습, 부처 간 조정을 수행할 제도적 장치를 구축해야 한다.",
+          footer: "조정 시스템 구축"
+        },
+        {
+          kicker: "문화 혁신과 학습 혁신",
+          title: "AX에는 성공한 파일럿만 홍보하는 정부가 아니라 실패에서 배우는 정부가 필요하다",
+          cols: 3,
+          boxes: [
+            { title: "준수 문화에서 문제해결 문화로", text: "공무원이 AI를 붙이기 전에 병목을 진단하고 기존 규칙을 질문하며 업무흐름을 재설계할 수 있어야 한다." },
+            { title: "실패 로그를 공공자산으로", text: "각 파일럿은 데이터 결손, 오탐, 사용자 저항, 모델 드리프트, 운영부담을 기록해야 한다." },
+            { title: "안전하게 실패하는 실험", text: "작은 파일럿은 되돌릴 수 있는 결정, 인간 검토, 권리구제 채널, 명확한 중단 규칙을 가져야 한다." },
+            { title: "부처 간 학습 루틴", text: "월례 학습 클리닉에서 무엇이 실패했는지, 무엇이 확산 가능한지, 어떤 구성요소를 재사용할지 비교한다." },
+            { title: "한국 사례: 마스크 앱 학습", text: "가치는 하나의 앱이 아니라 공공데이터 담당자, 민간 개발자, 사용자의 빠른 피드백에서 나왔다." },
+            { title: "개발도상국을 위한 원칙", text: "파일럿은 플레이북, 훈련된 인력, 더 깨끗한 데이터, 재사용 구성요소를 남길 때 성공이다." }
+          ],
+          quote: "AX 역량은 실패한 파일럿을 창피한 일이 아니라 학습 증거로 다룰 때 축적된다.",
+          note: "이 슬라이드는 프로젝트 순서보다 정부조직 전체의 학습역량을 강조한다. 핵심은 문화다. AX에는 절제된 실험, 실패의 정직한 보고, 교훈을 제도역량으로 바꾸는 루틴이 필요하다.",
+          footer: "실패를 학습으로 전환"
+        },
+        {
+          kicker: "정부 전체 AX 전환의 성공 증거",
+          title: "성공은 파일럿 수가 아니라 정부가 일하는 방식의 변화로 드러난다",
+          table: {
+            headers: ["전환 증거", "무엇이 바뀌어야 하는가", "확인할 증거", "경고 신호"],
+            rows: [
+              ["국가 조정이 작동한다", "AI 우선순위가 부처별 사업이 아니라 하나의 포트폴리오로 관리된다.", "중앙 대시보드가 사업을 점검하고, 중복을 중단하며, 근거에 따라 예산을 재배분한다.", "파일럿 발표는 많지만 포트폴리오 의사결정 절차가 없다."],
+              ["공통 데이터와 인프라가 재사용된다", "부처들이 공통 클라우드, API, 데이터 카탈로그, 보안·개인정보 표준 위에서 구축한다.", "새 사업이 기존 데이터 인터페이스와 플랫폼 구성요소를 재사용한다.", "기관마다 별도 시스템을 구매하고 새로운 데이터 사일로를 만든다."],
+              ["행정절차가 재설계된다", "AI가 내부 분석만이 아니라 규칙, 업무흐름, 서식, 인력 배치, 시민 커뮤니케이션을 바꾼다.", "배포 후 서비스 기준, 인간 검토, 권리구제 채널이 갱신된다.", "망가진 절차 위에 AI만 얹고 절차개혁은 없다."],
+              ["공공역량이 정부 안에 축적된다", "공무원이 문제를 정의하고, 민간 서비스 공급자를 관리하며, 모델을 평가하고, 파일럿 이후 시스템을 유지할 수 있다.", "부처와 지역 현장에 제품 책임자, 데이터 스튜어드, 모델 평가자가 존재한다.", "역량이 민간 서비스 공급자나 임시 프로젝트팀 안에만 남아 있다."],
+              ["학습과 신뢰가 개선된다", "성공과 실패가 재사용 가능한 규칙, 플레이북, 교육, 책임 루틴으로 바뀐다.", "실패 로그, 사후 검토, 공공가치 지표, 시민 민원이 재설계로 환류된다.", "성공담만 보고되고 시민이 체감하는 가치는 불분명하다."]
+            ]
+          },
+          note: "성공의 단위는 개별 AI 사업이 아니다. 정부 전체가 더 잘 조정하고, 배우고, 권리를 보호하며, 공공서비스를 책임 있게 재설계할 수 있게 되었는지가 핵심이다.",
+          footer: "시스템 수준의 성공 증거"
+        },
+        {
+          type: "split",
+          image: "assets/implementation-gap.png",
+          imageAlt: "정책 비전, 데이터 인프라, 조직, 시민 신뢰, 실행 사이의 다층적 다리",
+          caption: "실행은 하나의 고리가 설계되지 않고 가정될 때 실패한다.",
+          kicker: "정책결정자가 물을 질문",
+          title: "어려운 질문은 기술 시연이 아니라 거버넌스 실패에 관한 것이다",
+          items: ["모델이 틀리면 누가 책임지는가?", "민간 서비스 공급자가 떠난 뒤 부처가 시스템을 운영할 수 있는가?", "시민은 해로운 결과를 이해하고 다툴 수 있는가?", "프로젝트는 재사용 가능한 역량을 만드는가, 일회성 대시보드만 남기는가?", "지방정부는 일상 업무에서 실제로 사용할 수 있는가?"],
+          note: "AI에 반대하지 않으면서 낙관론에서 실행 현실주의로 전환하는 슬라이드다.",
+          footer: "거버넌스 실패 질문"
+        },
+        {
+          kicker: "워크숍 캔버스",
+          title: "기술 이름이 아니라 실행모델을 채워 AX 프로젝트를 설계한다",
+          table: {
+            headers: ["질문", "팀이 산출해야 할 답"],
+            rows: [
+              ["1. 문제 유형", "어떤 행정문제를 해결하며, 누가 그 문제를 경험하는가?"],
+              ["2. 결정 위험", "시스템이 급여, 제재, 조사, 인허가, 권리에 영향을 미치는가?"],
+              ["3. 데이터 배치", "어떤 기관이 데이터를 소유하며, 얼마나 자주 갱신되고, 오류는 어떻게 수정되는가?"],
+              ["4. 민간 역할", "공동 전달팀, 샌드박스, API 협력, 민간 서비스 공급자 풀, 관리형 서비스 중 무엇이 맞는가?"],
+              ["5. 공공역량", "정부는 제품 책임자, 데이터 스튜어드, 모델 평가자, 권리구제 담당자를 누구로 지정할 것인가?"],
+              ["6. 증거", "어떤 성과, 위험, 역량 지표가 확산 여부를 결정하는가?"]
+            ]
+          },
+          note: "참석자가 자기 부처의 프로젝트를 재설계하는 마지막 활동으로 사용할 수 있다.",
+          footer: "실행모델 캔버스"
+        },
+        {
+          kicker: "미래 비전",
+          title: "AI 도입을 넘어 적응하고 학습하는 국가로",
+          cols: 3,
+          boxes: [
+            { title: "지능형 공공서비스", text: "AI는 시민이 필요한 서비스를 찾도록 돕고, 새로운 위험을 감지하며, 인간 책임 아래 현장 결정을 지원한다." },
+            { title: "전정부 문제해결 신경망", text: "공유 데이터, 클라우드, 표준, AX 조정체계가 흩어진 기관을 연결된 문제해결 시스템으로 바꾼다." },
+            { title: "공공-민간 학습 생태계", text: "정부, 기업, 대학, 지역 현장, 시민이 함께 실험하고, 실패하고, 개선하며, 공공가치를 만드는 것을 확산한다." }
+          ],
+          quote: "미래의 목표는 자동화된 국가가 아니다. 더 빨리 배우고, 권리를 더 잘 보호하며, AI로 공공가치를 확장하는 유능한 국가다.",
+          note: "이 마무리는 구체적 실행모델을 더 큰 개혁 비전과 다시 연결한다. 개발도상국은 AX를 단순한 업무 디지털화가 아니라 적응적이고 협력적이며 책임 있는 국가를 만드는 계기로 삼을 수 있다.",
+          footer: "공공가치를 위한 적응형 국가"
+        }
+      ]
+    };
+
+    const deck = document.getElementById("deck");
+    const counter = document.getElementById("counter");
+    const prev = document.getElementById("prev");
+    const next = document.getElementById("next");
+    const notes = document.getElementById("notes");
+    const langButtons = Array.from(document.querySelectorAll("[data-lang]"));
+    let current = 0;
+    let slides = [];
+    let currentLang = localStorage.getItem("axDeckLang") || "en";
+    if (!slidesByLang[currentLang]) currentLang = "en";
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function renderList(items) {
+      return `<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ul>`;
+    }
+
+    function renderBox(box) {
+      const body = box.items ? renderList(box.items) : `<p>${escapeHtml(box.text)}</p>`;
+      return `<div class="box"><h3>${escapeHtml(box.title)}</h3>${body}</div>`;
+    }
+
+    function renderBoxes(slide) {
+      return `<div class="grid cols-${slide.cols || 3}">${slide.boxes.map(renderBox).join("")}</div>`;
+    }
+
+    function renderTable(table) {
+      return `
+        <table class="matrix">
+          <tr>${table.headers.map(header => `<th>${escapeHtml(header)}</th>`).join("")}</tr>
+          ${table.rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`).join("")}
+        </table>`;
+    }
+
+    function renderFlow(flow) {
+      return `<div class="flow">${flow.map(step => `<div class="step"><b>${escapeHtml(step.label)}</b><span>${escapeHtml(step.text)}</span></div>`).join("")}</div>`;
+    }
+
+    function renderParagraphs(slide) {
+      return (slide.paragraphs || []).map(text => `<p>${escapeHtml(text)}</p>`).join("");
+    }
+
+    function renderNote(slide) {
+      return slide.note ? `<p class="note">${escapeHtml(slide.note)}</p>` : "";
+    }
+
+    function renderFooter(slide, index) {
+      return `<div class="footer"><span>${escapeHtml(slide.footer)}</span><span>${index + 1}</span></div>`;
+    }
+
+    function renderSlide(slide, index) {
+      if (slide.type === "hero") {
+        return `
+          <section class="slide${index === current ? " active" : ""}">
+            <div class="inner">
+              <div class="hero-layout">
+                <div class="hero-copy">
+                  <p class="kicker">${escapeHtml(slide.kicker)}</p>
+                  <h1>${escapeHtml(slide.title)}</h1>
+                  <p class="subtitle">${escapeHtml(slide.subtitle)}</p>
+                  ${slide.presenter ? `<p class="presenter">${escapeHtml(slide.presenter)}</p>` : ""}
+                </div>
+                <figure class="image-panel">
+                  <img src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.imageAlt)}" />
+                  <figcaption class="image-caption">${escapeHtml(slide.caption)}</figcaption>
+                </figure>
+              </div>
+              ${renderNote(slide)}
+            </div>
+            ${renderFooter(slide, index)}
+          </section>`;
+      }
+
+      if (slide.type === "split") {
+        return `
+          <section class="slide${index === current ? " active" : ""}">
+            <div class="inner">
+              <div class="split-visual">
+                <figure class="image-panel">
+                  <img src="${escapeHtml(slide.image)}" alt="${escapeHtml(slide.imageAlt)}" />
+                  <figcaption class="image-caption">${escapeHtml(slide.caption)}</figcaption>
+                </figure>
+                <div>
+                  <p class="kicker">${escapeHtml(slide.kicker)}</p>
+                  ${slide.title ? `<h2>${escapeHtml(slide.title)}</h2>` : ""}
+                  ${renderList(slide.items)}
+                </div>
+              </div>
+              ${renderNote(slide)}
+            </div>
+            ${renderFooter(slide, index)}
+          </section>`;
+      }
+
+      return `
+        <section class="slide${index === current ? " active" : ""}">
+          <div class="inner">
+            <p class="kicker">${escapeHtml(slide.kicker)}</p>
+            ${slide.title ? `<h2>${escapeHtml(slide.title)}</h2>` : ""}
+            ${slide.boxes ? renderBoxes(slide) : ""}
+            ${slide.table ? renderTable(slide.table) : ""}
+            ${slide.flow ? renderFlow(slide.flow) : ""}
+            ${renderParagraphs(slide)}
+            ${slide.quote ? `<p class="quote">${escapeHtml(slide.quote)}</p>` : ""}
+            ${renderNote(slide)}
+          </div>
+          ${renderFooter(slide, index)}
+        </section>`;
+    }
+
+    function showSlide(index) {
+      slides = Array.from(document.querySelectorAll(".slide"));
+      current = Math.max(0, Math.min(index, slides.length - 1));
+      slides.forEach((slide, i) => slide.classList.toggle("active", i === current));
+      counter.textContent = `${current + 1} / ${slides.length}`;
+      const hash = `#${current + 1}`;
+      if (location.hash !== hash) history.replaceState(null, "", hash);
+    }
+
+    function renderDeck(lang) {
+      const meta = langMeta[lang];
+      const data = slidesByLang[lang];
+      document.documentElement.lang = meta.lang;
+      document.title = meta.title;
+      deck.innerHTML = data.map(renderSlide).join("");
+      langButtons.forEach(button => button.classList.toggle("active", button.dataset.lang === lang));
+      currentLang = lang;
+      localStorage.setItem("axDeckLang", lang);
+      if (current >= data.length) current = data.length - 1;
+      showSlide(current);
+    }
+
+    langButtons.forEach(button => {
+      button.addEventListener("click", () => renderDeck(button.dataset.lang));
+    });
+
+    prev.addEventListener("click", () => showSlide(current - 1));
+    next.addEventListener("click", () => showSlide(current + 1));
+    notes.addEventListener("click", () => document.body.classList.toggle("show-notes"));
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight" || event.key === "PageDown" || event.key === " ") showSlide(current + 1);
+      if (event.key === "ArrowLeft" || event.key === "PageUp") showSlide(current - 1);
+      if (event.key.toLowerCase() === "n") document.body.classList.toggle("show-notes");
+      if (/^[0-9]$/.test(event.key)) {
+        const target = Number(event.key);
+        if (target > 0 && target <= slides.length) showSlide(target - 1);
+      }
+    });
+
+    const initial = Number(location.hash.replace("#", ""));
+    if (Number.isInteger(initial) && initial >= 1 && initial <= slidesByLang[currentLang].length) current = initial - 1;
+    renderDeck(currentLang);
+  </script>
+</body>
+</html>
